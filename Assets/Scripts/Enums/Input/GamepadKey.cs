@@ -1,4 +1,4 @@
-namespace Redsilver2.Framework.Inputs
+namespace RedSilver2.Framework.Inputs
 {
     public enum GamepadKey
     {

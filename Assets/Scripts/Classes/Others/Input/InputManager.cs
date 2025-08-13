@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
-namespace Redsilver2.Framework.Inputs
+namespace RedSilver2.Framework.Inputs
 {
     public static class InputManager
     {
@@ -192,5 +194,50 @@ namespace Redsilver2.Framework.Inputs
 
 
         #endregion
+
+        public static bool GetKey(KeyboardKey key)
+        {
+            var button = InputSystem.FindControl(GetPath(key)) as ButtonControl;
+
+            if (button != null) return button.isPressed;
+            return false;
+        }
+        public static bool GetKey(GamepadKey key)
+        {
+            var button = InputSystem.FindControl(GetPath(key)) as ButtonControl;
+
+            if (button != null) return button.isPressed;
+            return false;
+        }
+
+        public static bool GetKeyDown(KeyboardKey key)
+        {
+            var button = InputSystem.FindControl(GetPath(key)) as ButtonControl;
+
+            if (button != null) return button.wasPressedThisFrame;
+            return false;
+        }
+        public static bool GetKeyDown(GamepadKey key)
+        {
+            var button = InputSystem.FindControl(GetPath(key)) as ButtonControl;
+
+            if (button != null) return button.wasPressedThisFrame;
+            return false;
+        }
+
+        public static bool GetKeyUp(KeyboardKey key)
+        {
+            var button = InputSystem.FindControl(GetPath(key)) as ButtonControl;
+
+            if (button != null) return button.wasReleasedThisFrame;
+            return false;
+        }
+        public static bool GetKeyUp(GamepadKey key)
+        {
+            var button = InputSystem.FindControl(GetPath(key)) as ButtonControl;
+
+            if (button != null) return button.wasReleasedThisFrame;
+            return false;
+        }
     }
 }
