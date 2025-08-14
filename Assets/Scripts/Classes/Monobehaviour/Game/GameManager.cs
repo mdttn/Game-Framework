@@ -8,9 +8,7 @@ namespace RedSilver2.Framework
         public static GameManager instance;
         public static GameManager Instance => instance;
 
-        private HoldInput    holdInput;
-        private PressInput   pressInput;
-        private ReleaseInput releaseInput;
+        private Vector2Input rotationInput;
 
         private void Awake()
         {
@@ -21,24 +19,18 @@ namespace RedSilver2.Framework
 
         private void Start()
         {
-            holdInput    = new HoldInput (KeyboardKey.Alpha1, GamepadKey.ButtonEast);
-            pressInput   = new PressInput(KeyboardKey.Alpha2, GamepadKey.ButtonNorth);
-            releaseInput = new ReleaseInput(KeyboardKey.Alpha3, GamepadKey.ButtonSouth);
+            rotationInput = new KeyboardVector2Input
+            (new KeyboardVector2Input.Vector2Keyboard(KeyboardKey.W, KeyboardKey.S, 
+                                                      KeyboardKey.A, KeyboardKey.D),
+            true);
 
-            holdInput.AddOnUpdateListener(() => Debug.Log($"Is Holding Input | {holdInput.GetKeysPaths()}"));
-            pressInput.AddOnUpdateListener(() => Debug.Log($"Is Pressing Input | {pressInput.GetKeysPaths()}"));
-            releaseInput.AddOnUpdateListener(() => Debug.Log($"Is Input Released | {releaseInput.GetKeysPaths()}"));
-           
-            holdInput.Enable();
-            pressInput.Enable();
-            releaseInput.Enable();  
+            rotationInput.AddOnUpdateListener(vector => Debug.Log(vector));
+            rotationInput.Enable();
         }
 
         private void Update()
         {
-             holdInput.Update();
-             pressInput.Update();
-             releaseInput.Update();
+            rotationInput.Update();
         }
     }
 }
