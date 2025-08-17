@@ -19,8 +19,7 @@ namespace RedSilver2.Framework.Inputs
         #endregion
 
         #region Thumbsticks
-        LeftStick     , RightStick     , LeftStickAxisY , 
-        LeftStickAxisX, RightStickAxisY, RightStickAxisX,
+        LeftStick     , RightStick     , 
         LeftStickPress, RightStickPress,
         #endregion
 

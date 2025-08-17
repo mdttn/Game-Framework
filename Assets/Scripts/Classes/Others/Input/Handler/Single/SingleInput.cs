@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace RedSilver2.Framework.Inputs
 {
-    public abstract class SingleInput : InputHandler
+    public abstract class SingleInput : InputHandler, IOverridableSingleInput
     {
         private UnityEvent onUpdate;
 
@@ -15,9 +15,7 @@ namespace RedSilver2.Framework.Inputs
         public KeyboardKey KeyboardKey => keyboardKey;
         public GamepadKey  GamepadKey  => gamepadKey;
 
-        protected SingleInput() { }
-
-        public SingleInput(KeyboardKey defaultKeyboardKey, GamepadKey defaultGamepadKey) : base()
+        public SingleInput(string inputHandlerName, KeyboardKey defaultKeyboardKey, GamepadKey defaultGamepadKey) : base(inputHandlerName)
         {
             Value       = false;
             onUpdate    = new UnityEvent();
@@ -26,7 +24,7 @@ namespace RedSilver2.Framework.Inputs
             gamepadKey  = defaultGamepadKey;
         }
 
-        public override void Update()
+        public sealed override void Update()
         {
             Value = IsEnabled ?  GetKeyboardKeyValue()
                               || GetGamepadKeyValue() : false;
@@ -63,7 +61,7 @@ namespace RedSilver2.Framework.Inputs
         public string GetKeyboardKeyPath() => InputManager.GetPath(keyboardKey);
         public string GetGamepadKeyPath()  => InputManager.GetPath(gamepadKey);
 
-        public override string GetKeysPaths() => $"Keyboard Path: {GetKeyboardKeyPath()} | Gamepad Path: {GetGamepadKeyPath()}";
+        public sealed override string GetPaths() => $"Keyboard Path: {GetKeyboardKeyPath()} | Gamepad Path: {GetGamepadKeyPath()}";
 
         public abstract bool GetKeyboardKeyValue();
         public abstract bool GetGamepadKeyValue();

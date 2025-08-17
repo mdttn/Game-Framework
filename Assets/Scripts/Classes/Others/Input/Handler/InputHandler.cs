@@ -1,4 +1,3 @@
-using UnityEngine;
 using UnityEngine.Events;
 
 namespace RedSilver2.Framework.Inputs
@@ -6,17 +5,19 @@ namespace RedSilver2.Framework.Inputs
     public abstract class InputHandler
     {
         private bool isEnabled = false;
-
         private UnityEvent onEnable;
         private UnityEvent onDisable;
 
         public  bool IsEnabled => isEnabled;
 
-        protected InputHandler() 
+        private InputHandler() { }
+
+        protected InputHandler(string name) 
         { 
             onEnable  = new UnityEvent();
             onDisable = new UnityEvent();
-        }
+            InputManager.AddInputHandler(name, this);
+        }   
 
         public void Enable() 
         { 
@@ -36,6 +37,6 @@ namespace RedSilver2.Framework.Inputs
         }
 
         public abstract void Update();
-        public abstract string GetKeysPaths();
+        public abstract string GetPaths();
     }
 }
