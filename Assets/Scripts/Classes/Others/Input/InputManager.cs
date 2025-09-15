@@ -283,6 +283,12 @@ namespace RedSilver2.Framework.Inputs
             return keys.Where(x => GetKey(x)).Count() > 0;
         }
 
+        public static bool GetKey(KeyboardKey keyboardKey, GamepadKey gamepadKey)
+        {
+            if (GetKey(keyboardKey) || GetKey(gamepadKey)) return true;
+            return false;
+        }
+
         public static bool GetKeyDown(KeyboardKey key)
         {
             return keyboardKeysDatas[key].GetKeyDown();
@@ -303,6 +309,12 @@ namespace RedSilver2.Framework.Inputs
             return keys.Where(x => GetKeyDown(x)).Count() > 0;
         }
 
+        public static bool GetKeyDown(KeyboardKey keyboardKey, GamepadKey gamepadKey)
+        {
+            if (GetKeyDown(keyboardKey) || GetKeyDown(gamepadKey)) return true;
+            return false;
+        }
+
         public static bool GetKeyUp(KeyboardKey key)
         { 
             return keyboardKeysDatas[key].GetKeyUp();
@@ -321,6 +333,12 @@ namespace RedSilver2.Framework.Inputs
         {
             if (keys != null) keys = keys.Distinct().ToArray();
             return keys.Where(x => GetKeyUp(x)).Count() > 0;
+        }
+
+        public static bool GetKeyUp(KeyboardKey keyboardKey, GamepadKey gamepadKey)
+        {
+            if (GetKeyUp(keyboardKey) || GetKeyUp(gamepadKey)) return true;
+            return false;
         }
 
         public static float GetAxis(KeyboardKey posititveKey, KeyboardKey negativeKey)

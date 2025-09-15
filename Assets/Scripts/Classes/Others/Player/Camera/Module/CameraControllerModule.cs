@@ -8,7 +8,6 @@ namespace RedSilver2.Framework.Player
         private void Awake()
         {
             SetCameraController(GetCameraController());
-            enabled = false;
         }
 
         protected abstract void Update();
