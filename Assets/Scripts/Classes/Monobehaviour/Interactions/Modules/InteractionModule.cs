@@ -12,7 +12,6 @@ namespace RedSilver2.Framework.Interactions
 
         protected virtual void Awake()
         {
-            onInteract = new UnityEvent();
             InteractionHandler.AddInteractionModuleInstance(GetComponent<Collider>(), this);
         }
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace RedSilver2.Framework.Interactions.Collectibles
 { 
-    public class Note : PressCollectible
+    public class Note : PressInteractableCollectible
     {
         [SerializeField] private NoteData noteData;
 
@@ -12,7 +12,7 @@ namespace RedSilver2.Framework.Interactions.Collectibles
             gameObject.SetActive(false);
         }
 
-        public override CollectibleData GetData()
+        public sealed override CollectibleData GetData()
         {
             return noteData;
         }

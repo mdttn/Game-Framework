@@ -9,6 +9,8 @@ namespace RedSilver2.Framework.Player
         private PlayerStateMachine stateMachine;
         public PlayerStateMachine StateMachine => stateMachine;
 
+
+        public static PlayerController Current { get; private set; }
         public const string PLAYER_LAYER_NAME = "Player";
 
         private void Awake()
@@ -21,6 +23,7 @@ namespace RedSilver2.Framework.Player
 
         private void Start()
         {
+            SetCurrent();
             stateMachine.ChangeState(PlayerStateMachine.IdolState.STATE_NAME);
         }
 
@@ -32,6 +35,16 @@ namespace RedSilver2.Framework.Player
         private void LateUpdate()
         {
             if (stateMachine != null) stateMachine.LateUpdate();
+        }
+
+        private void OnEnable () { }
+        private void OnDisable() { }
+
+        public void SetCurrent()
+        {
+            if (Current != null) Current.enabled = false;
+            Current      = this;
+            this.enabled = true;
         }
 
         public string GetTransition(PlayerStateMachine.PlayerStateTransitionCondition transitionCondition)

@@ -12,9 +12,9 @@ namespace RedSilver2.Framework.Interactions.Collectibles
         {
             if(model != null && parent != null)
             {
-                model.SetActive(true);
-                model.transform.parent = parent.transform;
-
+                model.SetActive(true); 
+                model.transform.SetParent(parent.transform);
+                
                 yield return StartCoroutine(UpdateModelShown(model));
                 model.SetActive(false);
             }
@@ -22,11 +22,21 @@ namespace RedSilver2.Framework.Interactions.Collectibles
 
         private IEnumerator UpdateModelShown(GameObject model)
         {
-            while (model != null)
+            Transform transform = null;
+
+            if (model != null)
             {
-                Transform transform = model.transform;
+                transform                  = model.transform;
+                transform.localEulerAngles = Vector3.zero;
+                yield return StartCoroutine(UpdateModelShown(transform));
+            }
+        }
+
+        private IEnumerator UpdateModelShown(Transform transform)
+        {
+            while (transform != null)
+            {
                 transform.localPosition = Vector3.forward * distance;
-            
                 transform.localEulerAngles += Time.deltaTime * Vector3.up * rotationSpeed;
                 yield return null;
             }
