@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44a0bbd26c1a49d40aeafc8e529107b6, type: 3}
   m_Name: New Note Data
   m_EditorClassIdentifier: 
-  collectibleName: 'A Grand Father''s Note '
+  collectibleName: '{Note}'
   collectibleDescription: Wow this is like super duper awesome
+  canTriggerInitialNotification: 1
+  alwaysTriggerInitialNotification: 0
+  minModelRotation: {x: 0, y: 0}
+  maxModelRotation: {x: 0, y: 0}
   icon: {fileID: 0}
   model: {fileID: 1438876043487786052, guid: 1e10b5cb6a48622448a415610cb81b66, type: 3}
-  canTriggerInitialNotification: 1
-  alwaysTriggerInitialNotification: 1
   pages: []

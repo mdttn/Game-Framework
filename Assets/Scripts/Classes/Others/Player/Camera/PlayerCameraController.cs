@@ -53,8 +53,8 @@ namespace RedSilver2.Framework.Player
 
         public void ResetRotation()
         {
-            if (body != null) rotationClampX = body.localEulerAngles.y;
-            if (head != null) rotationClampY = head.localEulerAngles.x;
+            if (body != null) rotationClampX = body.localEulerAngles.x;
+            if (head != null) rotationClampY = head.localEulerAngles.y;
         }
 
         public void Enable()

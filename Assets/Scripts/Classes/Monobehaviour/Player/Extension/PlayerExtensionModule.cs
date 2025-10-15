@@ -6,6 +6,7 @@ namespace RedSilver2.Framework.Player
     {
         private void Awake()
         {
+            Debug.Log(transform.root);
             Setup(transform.root.GetComponent<PlayerController>());
         }
 

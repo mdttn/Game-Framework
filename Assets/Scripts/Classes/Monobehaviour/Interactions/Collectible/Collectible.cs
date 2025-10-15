@@ -27,15 +27,10 @@ namespace RedSilver2.Framework.Interactions.Collectibles
             if (interactionModule != null) { interactionModule.RemoveOnInteractListener(OnInteract); }
         }
 
-        public void Interact()
-        {
-            if (interactionModule != null) { interactionModule.Interact(); }
-        }
-
         protected virtual void OnInteract()
         {
-            CollectibleNotificationManager notificationManager = GameManager.GetCollectibleNotificationManager();
-            if (notificationManager != null) notificationManager.Notify(this);
+            CollectibleNotificationManager collectibleNotification = GameManager.Instance.CollectibleNotification;
+            if(collectibleNotification != null) collectibleNotification.Notify(this);
         }
 
 

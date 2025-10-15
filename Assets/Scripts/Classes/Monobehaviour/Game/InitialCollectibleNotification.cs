@@ -30,8 +30,6 @@ namespace RedSilver2.Framework.Interactions.Collectibles
 
         protected override void OnNotificationShown(Collectible collectible)
         {
-            base.OnNotificationShown(collectible);
-
             if (collectible != null)
             {
                 CollectibleData data = collectible.GetData();
@@ -54,12 +52,12 @@ namespace RedSilver2.Framework.Interactions.Collectibles
 
         protected sealed override IEnumerator DisplayNotification(Collectible collectible)
         {
-            GameManager manager = GameManager.Instance;
+            CollectibleNotificationManager manager = GameManager.Instance.CollectibleNotification;
 
-            if (manager != null)
+            while (manager != null)
             {
-                CollectibleNotificationManager notificationManager = GameManager.GetCollectibleNotificationManager();
-                if(notificationManager != null) yield return StartCoroutine(notificationManager.CloseInitialNotification());
+                if (manager.CanCloseIntialNotification()) break;
+                yield return null;
             }
         }
     }
