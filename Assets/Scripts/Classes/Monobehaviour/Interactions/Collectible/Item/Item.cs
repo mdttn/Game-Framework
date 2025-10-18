@@ -1,16 +1,11 @@
+using RedSilver2.Framework.Interactions.Collectibles;
 using UnityEngine;
 
-public class Item : MonoBehaviour
+namespace RedSilver2.Framework.Interactions.Items
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public abstract class Item : Collectible {
+        protected override void OnInteract() {
+            base.OnInteract();
+        }
     }
 }

@@ -6,8 +6,7 @@ namespace RedSilver2.Framework.Interactions.Collectibles
     {
         private InteractionModule interactionModule;
 
-        private void Awake()
-        {
+        private void Awake() {
             interactionModule = GetComponent<InteractionModule>();
             CollectibleModelViewer.AddCollectibleModel(GetData());
         }
@@ -27,8 +26,7 @@ namespace RedSilver2.Framework.Interactions.Collectibles
             if (interactionModule != null) { interactionModule.RemoveOnInteractListener(OnInteract); }
         }
 
-        protected virtual void OnInteract()
-        {
+        protected virtual void OnInteract()  {
             CollectibleNotificationManager collectibleNotification = GameManager.GetCollectibleNotification();
             if(collectibleNotification != null) collectibleNotification.Notify(this);
         }

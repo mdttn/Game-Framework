@@ -13,8 +13,7 @@ namespace RedSilver2.Framework.Player
         private FPSCameraController controller;
         public  FPSCameraController Controller => controller;
 
-        protected sealed override void Update()
-        {
+        protected sealed override void Update() {
             if (controller != null) controller.Update();
         }
 

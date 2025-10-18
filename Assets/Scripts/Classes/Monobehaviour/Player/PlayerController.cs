@@ -10,14 +10,14 @@ namespace RedSilver2.Framework.Player
         private PlayerStateMachine stateMachine;
 
         private static PlayerController current;
-        private static List<PlayerController> controllers = new List<PlayerController>();
+        private static List<PlayerController> instances = new List<PlayerController>();
 
-        public static PlayerController[] Controllers
+        public static PlayerController[] Instances
         {
             get
             {
-                if (controllers == null) return new PlayerController[0];
-                return controllers.ToArray();
+                if (instances == null) return new PlayerController[0];
+                return instances.ToArray();
             }
         }
 
@@ -30,7 +30,7 @@ namespace RedSilver2.Framework.Player
             stateMachine = new PlayerStateMachine(this);    
             stateMachine.AddOnStateEnterListener (state => { if (state != null) Debug.Log($"Entering {state.GetStateName()} State | {GetTransitions(state.GetTransitionConditions())}"); });
             stateMachine.AddOnStateExitListener  (state => { if (state != null) Debug.Log($"Exiting { state.GetStateName()} State | {GetTransitions(state.GetTransitionConditions())}"); });
-            controllers.Add(this);
+            instances.Add(this);
         }
 
         protected virtual void Start() {
@@ -48,7 +48,7 @@ namespace RedSilver2.Framework.Player
         }
 
         private void OnDestroy() {
-            if(controllers.Contains(this)) controllers.Remove(this);
+            if(instances.Contains(this)) instances.Remove(this);
         }
 
         public string GetTransition(PlayerStateMachine.PlayerStateTransitionCondition transitionCondition)
@@ -103,21 +103,21 @@ namespace RedSilver2.Framework.Player
         }
 
         public static void CleanControllers() {
-            if(controllers != null) controllers = controllers.Where(x => x != null).ToList();
+            if(instances != null) instances = instances.Where(x => x != null).ToList();
         }
 
 
         public static PlayerController GetController(int index) {
-            if(controllers.Count == 0 || index < 0 || index >= controllers.Count)
+            if(instances.Count == 0 || index < 0 || index >= instances.Count)
                 return null;
-            return controllers[index];
+            return instances[index];
         }
 
         public static PlayerController GetController(string controllerName)
         {
-            if(controllers == null || string.IsNullOrEmpty(controllerName)) return null;
+            if(instances == null || string.IsNullOrEmpty(controllerName)) return null;
 
-            var results = controllers.Where(x => x != null)
+            var results = instances.Where(x => x != null)
                                      .Where(x => x.name.ToLower() == controllerName.ToLower());
 
             if (results.Count() > 0) return results.First();
