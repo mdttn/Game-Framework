@@ -4,7 +4,7 @@ namespace RedSilver2.Framework.Inputs
 {
     public class ReleaseInput : SingleInput
     {
-        public ReleaseInput(string name, KeyboardKey defaultKeyboardKey, GamepadKey defaultGamepadKey) : base(name, defaultKeyboardKey, defaultGamepadKey)
+        public ReleaseInput(string name, KeyboardKey defaultKeyboardKey, GamepadButton defaultGamepadKey) : base(name, defaultKeyboardKey, defaultGamepadKey)
         {
 
         }

@@ -79,41 +79,24 @@ namespace RedSilver2.Framework.Interactions
         }
 
         public sealed override void Interact(InteractionHandler handler) {
-             UpdateInputPress  (handler);
-             UpdateInputHold   (handler);
-             UpdateInputRelease(handler);
-        }
-
-        private void UpdateInputPress(InteractionHandler handler){
-
-            if (handler != null && enabled) {
-                if (handler.IsInputPressed) {
-                    if(onInputPressed != null) onInputPressed.Invoke();
-                }
+            if (handler != null && enabled)
+            {
+               if      (handler.IsInputPressed)  UpdateInputPress();
+               else if (handler.IsInputReleased) Release();
+                else if (handler.IsInputHeld)    UpdateInputHold();
             }
         }
 
-        private void UpdateInputHold(InteractionHandler handler)
+        private void UpdateInputPress()
         {
-            if (handler != null && enabled) {
-
-                Debug.Log("Input is beign held: " + handler.IsInputHeld);
-
-                if (handler.IsInputHeld) {
-                    interactionTime += Time.deltaTime * interactionSpeed; 
-                    if (interactionTime >= maxInteractionTime) interactionTime = maxInteractionTime;
-                    if (onInteract != null) onInteract.Invoke(interactionTime/maxInteractionTime);
-                }
-            }
+            if (onInputPressed != null) onInputPressed.Invoke();
         }
 
-        private void UpdateInputRelease(InteractionHandler handler)
+        private void UpdateInputHold()
         {
-            if (handler != null && enabled) {
-                if (handler.IsInputReleased) {
-                    Release();
-                }
-            }
+            interactionTime += Time.deltaTime * interactionSpeed;
+            if (interactionTime >= maxInteractionTime) interactionTime = maxInteractionTime;
+            if (onInteract != null) onInteract.Invoke(interactionTime / maxInteractionTime);
         }
 
         private void OnInputPressed() {

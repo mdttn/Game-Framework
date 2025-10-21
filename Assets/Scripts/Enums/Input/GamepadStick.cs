@@ -2,7 +2,10 @@ namespace RedSilver2.Framework.Inputs
 {
     public enum GamepadStick 
     {
-        LeftStick,
-        RightStick
+        #region Thumbsticks
+        LeftStick     , RightStick,
+        LeftStickUp   , LeftStickDown  , LeftStickRight , LeftStickLeft ,
+        RightStickUp  , RightStickDown , RightStickRight, RightStickLeft,
+        #endregion
     }
 }

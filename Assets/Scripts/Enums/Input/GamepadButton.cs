@@ -1,6 +1,6 @@
 namespace RedSilver2.Framework.Inputs
 {
-    public enum GamepadKey
+    public enum GamepadButton
     {
         #region Action Buttons
         ButtonSouth, ButtonEast, ButtonNorth, ButtonWest,
@@ -19,8 +19,7 @@ namespace RedSilver2.Framework.Inputs
         #endregion
 
         #region Thumbsticks
-        LeftStick     , RightStick     , 
-        LeftStickPress, RightStickPress,
+         LeftStickPress, RightStickPress,
         #endregion
 
         #region D-Pad

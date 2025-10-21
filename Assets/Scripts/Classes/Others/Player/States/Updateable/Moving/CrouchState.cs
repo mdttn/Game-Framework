@@ -47,14 +47,14 @@ namespace RedSilver2.Framework.Player
             public static OverrideableHoldInput GetCrouchHoldInput()
             {
                 OverrideableHoldInput result = InputManager.GetInputHandler(CROUCH_HOLD_INPUT_NAME) as OverrideableHoldInput;
-                if (result == null) return new OverrideableHoldInput(CROUCH_HOLD_INPUT_NAME, KeyboardKey.C, GamepadKey.ButtonEast);
+                if (result == null) return new OverrideableHoldInput(CROUCH_HOLD_INPUT_NAME, KeyboardKey.C, GamepadButton.ButtonEast);
                 return result;
             }
 
             public static OverrideablePressInput GetCrouchPressInput()
             {
                 OverrideablePressInput result = InputManager.GetInputHandler(CROUCH_PRESS_INPUT_NAME) as OverrideablePressInput;
-                if (result == null) return new OverrideablePressInput(CROUCH_PRESS_INPUT_NAME, KeyboardKey.C, GamepadKey.ButtonEast);
+                if (result == null) return new OverrideablePressInput(CROUCH_PRESS_INPUT_NAME, KeyboardKey.C, GamepadButton.ButtonEast);
                 return result;
             }
         }

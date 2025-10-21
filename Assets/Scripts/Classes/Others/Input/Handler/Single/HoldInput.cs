@@ -4,7 +4,7 @@ namespace RedSilver2.Framework.Inputs
 {
     public class HoldInput : SingleInput
     {
-        public HoldInput(string name, KeyboardKey defaultKeyboardKey, GamepadKey defaultGamepadKey) : base(name, defaultKeyboardKey, defaultGamepadKey)
+        public HoldInput(string name, KeyboardKey defaultKeyboardKey, GamepadButton defaultGamepadKey) : base(name, defaultKeyboardKey, defaultGamepadKey)
         {
 
         }

@@ -80,7 +80,7 @@ namespace RedSilver2.Framework.Player
         public static MouseVector2Input GetMouseInput()
         {
             MouseVector2Input result = InputManager.GetInputHandler(MOUSE_INPUT_NAME) as MouseVector2Input;
-            if(result == null) return new MouseVector2Input(MOUSE_INPUT_NAME, GamepadStick.RightStick);
+            if(result == null) return new MouseVector2Input(MOUSE_INPUT_NAME, false);
             return result;
         }
     }

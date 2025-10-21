@@ -5,28 +5,30 @@ using UnityEngine.InputSystem.Controls;
 
 namespace RedSilver2.Framework.Inputs
 {
-    public sealed class InputButtonControl : InputControl
+    public class InputButtonControl : InputControl
     {
         private readonly ButtonControl control;
+        private string path;
+        public string Path => path;
 
-        public InputButtonControl(string path, Sprite icon) : base(path, icon)
-        {
+        public InputButtonControl(string path, Sprite icon) : base(icon) {
+            this.path = path;
             control = InputSystem.FindControl(path) as ButtonControl;
         }
 
-        public bool GetKey()
+        public sealed override bool GetKey()
         {
             if (control != null) return control.isPressed;
             return false;
         }
 
-        public bool GetKeyDown()
+        public sealed override bool GetKeyDown()
         {
             if (control != null) return control.wasPressedThisFrame;
             return false;
         }
 
-        public bool GetKeyUp()
+        public sealed override bool GetKeyUp()
         {
             if (control != null) return control.wasReleasedThisFrame;
             return false;

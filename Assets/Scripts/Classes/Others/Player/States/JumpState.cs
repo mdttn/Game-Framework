@@ -131,7 +131,7 @@ namespace RedSilver2.Framework.Player
             public static OverrideablePressInput GetJumpInput()
             {
                 OverrideablePressInput result = InputManager.GetInputHandler(JUMP_INPUT_NAME) as OverrideablePressInput;
-                if (result == null) return new OverrideablePressInput(JUMP_INPUT_NAME, KeyboardKey.Space, GamepadKey.ButtonSouth);
+                if (result == null) return new OverrideablePressInput(JUMP_INPUT_NAME, KeyboardKey.Space, GamepadButton.ButtonSouth);
                 return result;
             }
         }

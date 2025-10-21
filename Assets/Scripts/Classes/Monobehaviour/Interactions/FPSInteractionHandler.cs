@@ -19,12 +19,12 @@ namespace RedSilver2.Framework.Interactions
             this.camera = camera;
         }
 
-        public FPSInteractionHandler(KeyboardKey keyboardKey, GamepadKey gamepadKey, FPSInteractionHandlerModule module) : base(keyboardKey, gamepadKey, module)
+        public FPSInteractionHandler(KeyboardKey keyboardKey, GamepadButton gamepadKey, FPSInteractionHandlerModule module) : base(keyboardKey, gamepadKey, module)
         {
             if (module != null) camera = module.GetComponent<Camera>();
         }
 
-        public FPSInteractionHandler(KeyboardKey keyboardKey, GamepadKey gamepadKey, Camera camera, FPSInteractionHandlerModule module) : base(keyboardKey, gamepadKey, module)
+        public FPSInteractionHandler(KeyboardKey keyboardKey, GamepadButton gamepadKey, Camera camera, FPSInteractionHandlerModule module) : base(keyboardKey, gamepadKey, module)
         {
             this.camera = camera;
         }

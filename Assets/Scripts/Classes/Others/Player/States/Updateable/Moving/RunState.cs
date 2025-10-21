@@ -44,14 +44,14 @@ namespace RedSilver2.Framework.Player
             public static OverrideableHoldInput GetRunHoldInput()
             {
                 OverrideableHoldInput result = InputManager.GetInputHandler(RUN_HOLD_INPUT_NAME) as OverrideableHoldInput;
-                if (result == null) return new OverrideableHoldInput(RUN_HOLD_INPUT_NAME, KeyboardKey.LeftShift, GamepadKey.ButtonEast);
+                if (result == null) return new OverrideableHoldInput(RUN_HOLD_INPUT_NAME, KeyboardKey.LeftShift, GamepadButton.ButtonEast);
                 return result;
             }
 
             public static OverrideablePressInput GetRunPressInput()
             {
                 OverrideablePressInput result = InputManager.GetInputHandler(RUN_PRESS_INPUT_NAME) as OverrideablePressInput;
-                if (result == null) return new OverrideablePressInput(RUN_PRESS_INPUT_NAME, KeyboardKey.LeftShift, GamepadKey.ButtonEast);
+                if (result == null) return new OverrideablePressInput(RUN_PRESS_INPUT_NAME, KeyboardKey.LeftShift, GamepadButton.ButtonEast);
                 return result;
             }
         }

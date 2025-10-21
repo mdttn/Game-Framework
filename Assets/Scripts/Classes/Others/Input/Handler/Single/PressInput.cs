@@ -2,7 +2,7 @@ namespace RedSilver2.Framework.Inputs
 {
     public class PressInput : SingleInput
     {
-        public PressInput(string inputHandlerName, KeyboardKey defaultKeyboardKey, GamepadKey defaultGamepadKey) : base(inputHandlerName, defaultKeyboardKey, defaultGamepadKey)
+        public PressInput(string inputHandlerName, KeyboardKey defaultKeyboardKey, GamepadButton defaultGamepadKey) : base(inputHandlerName, defaultKeyboardKey, defaultGamepadKey)
         {
         }
 

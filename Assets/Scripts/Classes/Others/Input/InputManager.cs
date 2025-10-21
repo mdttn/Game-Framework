@@ -30,9 +30,10 @@ namespace RedSilver2.Framework.Inputs
         public const string GAMEPAD_ROOT_PATH       = "<Gamepad>/";
         public const string XR_CONTROLLER_ROOT_PATH = "<XRController>/";
 
-        private static readonly Dictionary<string     , InputHandler>        inputHandlerInstances = new Dictionary<string, InputHandler>();
-        private static readonly Dictionary<KeyboardKey, InputButtonControl>  keyboardKeysDatas     = GetKeyboardKeysDatas();
-        private static readonly Dictionary<GamepadKey , InputButtonControl>  gamepadKeysDatas      = GetGamepadKeysDatas();
+        private static readonly Dictionary<string      , InputHandler>              inputHandlerInstances = new Dictionary<string, InputHandler>();
+        private static readonly Dictionary<KeyboardKey , InputButtonControl>        keyboardKeysDatas     = GetKeyboardKeysDatas();
+        private static readonly Dictionary<GamepadButton  , InputButtonControl>     gamepadKeysDatas      = GetGamepadKeysDatas();
+        private static readonly Dictionary<GamepadStick, InputGamepadStickControl>  gamepadStickDatas     = GetGamepadStickDatas();
 
 
         #region Input Datas
@@ -47,12 +48,28 @@ namespace RedSilver2.Framework.Inputs
 
             return results;
         }
-        private static Dictionary<GamepadKey, InputButtonControl> GetGamepadKeysDatas()
+        private static Dictionary<GamepadButton, InputButtonControl> GetGamepadKeysDatas()
         {
-            Dictionary<GamepadKey, InputButtonControl> results = new Dictionary<GamepadKey, InputButtonControl>();
+            Dictionary<GamepadButton, InputButtonControl> results = new Dictionary<GamepadButton, InputButtonControl>();
 
-            foreach (GamepadKey key in Enum.GetValues(typeof(GamepadKey)))
+            foreach (GamepadButton key in Enum.GetValues(typeof(GamepadButton)))
+            {
+                string keyString = key.ToString();
                 results.Add(key, new InputButtonControl(GetFormattedKey(key), GetKeyIconFromResources(key.ToString(), GAMEPAD_ICONS_PATH)));
+            }
+
+
+            return results;
+        }
+
+        private static Dictionary<GamepadStick, InputGamepadStickControl> GetGamepadStickDatas()
+        {
+            Dictionary<GamepadStick, InputGamepadStickControl> results = new Dictionary<GamepadStick, InputGamepadStickControl>();
+
+            foreach (GamepadStick key in Enum.GetValues(typeof(GamepadStick))) {
+                Debug.Log(key);
+                results.Add(key, new InputGamepadStickControl(key, GetKeyIconFromResources(key.ToString(), GAMEPAD_ICONS_PATH)));
+            }
 
             return results;
         }
@@ -75,7 +92,7 @@ namespace RedSilver2.Framework.Inputs
         #endregion
 
         #region Gamepad
-        private static string GetFormattedKey(GamepadKey key)
+        private static string GetFormattedKey(GamepadButton key)
         {
             if (TryFormatGamepadDpadKey  (key, out string currentDpad))  { return currentDpad; }
             return GetFormattedKey($"{GAMEPAD_ROOT_PATH}{GetFormattedKey(key.ToString())}");
@@ -84,9 +101,9 @@ namespace RedSilver2.Framework.Inputs
         private static string GetGamepadStickAxisPath(bool isLeftStick, bool isAxisX)
         {
             string axis = isAxisX ? "x" : "y";
-            return $"{GetPath(isLeftStick ? GamepadKey.LeftStick : GamepadKey.RightStick)}/" + axis;
+            return $"{GetPath(isLeftStick ? GamepadStick.LeftStick : GamepadStick.RightStick)}/" + axis;
         }
-        private static bool TryFormatGamepadDpadKey(GamepadKey key, out string result)
+        private static bool TryFormatGamepadDpadKey(GamepadButton key, out string result)
         {
             string currentKey = key.ToString();
             if (!currentKey.Contains("Dpad")) { result = string.Empty; return false; }
@@ -123,12 +140,12 @@ namespace RedSilver2.Framework.Inputs
 
         #region Gamepad
         public static InputButtonControl[] GetGamepadDatas() => GetGamepadDatas(null);
-        public static InputButtonControl[] GetGamepadDatas(GamepadKey[] excludedKeys)
+        public static InputButtonControl[] GetGamepadDatas(GamepadButton[] excludedKeys)
         {
             List<InputButtonControl> results = new List<InputButtonControl>();
             if (excludedKeys != null) excludedKeys = excludedKeys.Distinct().ToArray();
 
-            foreach (GamepadKey key in Enum.GetValues(typeof(GamepadKey)))
+            foreach (GamepadButton key in Enum.GetValues(typeof(GamepadButton)))
             {
                 if (excludedKeys != null)
                     if (excludedKeys.Contains(key)) continue;
@@ -154,7 +171,7 @@ namespace RedSilver2.Framework.Inputs
         #endregion
 
         #region Gamepad
-        public static string GetPath(GamepadKey key)
+        public static string GetPath(GamepadButton key)
         {
             if (gamepadKeysDatas == null || !gamepadKeysDatas.ContainsKey(key)) return string.Empty;
             return gamepadKeysDatas[key].Path;
@@ -163,7 +180,7 @@ namespace RedSilver2.Framework.Inputs
         public static string GetPath(GamepadStick key) => $"{GAMEPAD_ROOT_PATH}{GetFormattedKey(key.ToString())}";
 
         public static string[] GetGamepadPaths() => GetGamepadPaths(null);
-        public static string[] GetGamepadPaths(GamepadKey[] excludedKeys)
+        public static string[] GetGamepadPaths(GamepadButton[] excludedKeys)
         {
             List<string> results = new List<string>();
 
@@ -200,16 +217,28 @@ namespace RedSilver2.Framework.Inputs
 
         #region Gamepad
         
-        public static Sprite GetKeyIcon(GamepadKey key)
+        public static Sprite GetKeyIcon(GamepadButton key)
         {
             if (gamepadKeysDatas == null || !gamepadKeysDatas.ContainsKey(key)) return null;
             return gamepadKeysDatas[key].Icon;
         }
 
-        public static void OverrideKeyIcon(GamepadKey key, Sprite icon)
+        public static void OverrideKeyIcon(GamepadButton key, Sprite icon)
         {
             if (keyboardKeysDatas == null || !gamepadKeysDatas.ContainsKey(key)) return;
             gamepadKeysDatas[key].OverrideIcon(icon);
+        }
+
+        public static Sprite GetKeyIcon(GamepadStick key)
+        {
+            if (gamepadStickDatas == null || !gamepadStickDatas.ContainsKey(key)) return null;
+            return gamepadStickDatas[key].Icon;
+        }
+
+        public static void OverrideKeyIcon(GamepadStick key, Sprite icon)
+        {
+            if (gamepadStickDatas == null || !gamepadStickDatas.ContainsKey(key)) return;
+            gamepadStickDatas[key].OverrideIcon(icon);
         }
 
         #endregion
@@ -265,25 +294,39 @@ namespace RedSilver2.Framework.Inputs
 
         public static bool GetKey(KeyboardKey key)
         {
+            if (keyboardKeysDatas == null) return false;
             return keyboardKeysDatas[key].GetKey();
         }
-        public static bool GetKey(GamepadKey key)
+        public static bool GetKey(GamepadButton key)
         {
+            if (gamepadKeysDatas == null) return false;
             return gamepadKeysDatas[key].GetKey();
         }
+
+        public static bool GetKey(GamepadStick key) {
+            if (gamepadStickDatas == null) return false;
+            return gamepadStickDatas[key].GetKey();
+        }
+
 
         public static bool GetKey(KeyboardKey[] keys)
         {
             if (keys != null) keys = keys.Distinct().ToArray();
             return keys.Where(x => GetKey(x)).Count() > 0;
         }
-        public static bool GetKey(GamepadKey[] keys)
+        public static bool GetKey(GamepadButton[] keys)
         {
             if (keys != null) keys = keys.Distinct().ToArray();
             return keys.Where(x => GetKey(x)).Count() > 0;
         }
 
-        public static bool GetKey(KeyboardKey keyboardKey, GamepadKey gamepadKey)
+        public static bool GetKey(GamepadStick[] keys)
+        {
+            if (keys != null) keys = keys.Distinct().ToArray();
+            return keys.Where(x => GetKey(x)).Count() > 0;
+        }
+
+        public static bool GetKey(KeyboardKey keyboardKey, GamepadButton gamepadKey)
         {
             if (GetKey(keyboardKey) || GetKey(gamepadKey)) return true;
             return false;
@@ -291,11 +334,18 @@ namespace RedSilver2.Framework.Inputs
 
         public static bool GetKeyDown(KeyboardKey key)
         {
+            if (keyboardKeysDatas == null) return false;
             return keyboardKeysDatas[key].GetKeyDown();
         }
-        public static bool GetKeyDown(GamepadKey key)
+        public static bool GetKeyDown(GamepadButton key)
         {
+            if (gamepadKeysDatas == null) return false;
             return gamepadKeysDatas[key].GetKeyDown();
+        }
+
+        public static bool GetKeyDown(GamepadStick key) {
+            if (gamepadStickDatas == null) return false;
+            return gamepadStickDatas[key].GetKeyDown();
         }
 
         public static bool GetKeyDown(KeyboardKey[] keys)
@@ -303,25 +353,39 @@ namespace RedSilver2.Framework.Inputs
             if (keys != null) keys = keys.Distinct().ToArray();
             return keys.Where(x => GetKeyDown(x)).Count() > 0;
         }
-        public static bool GetKeyDown(GamepadKey[] keys)
+        public static bool GetKeyDown(GamepadButton[] keys)
+        {
+            if (keys != null) keys = keys.Distinct().ToArray();
+            return keys.Where(x => GetKeyDown(x)).Count() > 0;
+        }
+        public static bool GetKeyDown(GamepadStick[] keys)
         {
             if (keys != null) keys = keys.Distinct().ToArray();
             return keys.Where(x => GetKeyDown(x)).Count() > 0;
         }
 
-        public static bool GetKeyDown(KeyboardKey keyboardKey, GamepadKey gamepadKey)
+        public static bool GetKeyDown(KeyboardKey keyboardKey, GamepadButton gamepadKey)
         {
             if (GetKeyDown(keyboardKey) || GetKeyDown(gamepadKey)) return true;
             return false;
         }
 
         public static bool GetKeyUp(KeyboardKey key)
-        { 
+        {
+            if (keyboardKeysDatas == null) return false;
             return keyboardKeysDatas[key].GetKeyUp();
         }
-        public static bool GetKeyUp(GamepadKey key)
+
+        public static bool GetKeyUp(GamepadButton key)
         {
+            if (gamepadKeysDatas == null) return false;
             return gamepadKeysDatas[key].GetKeyUp();
+        }
+
+        public static bool GetKeyUp(GamepadStick key)
+        {
+            if (gamepadStickDatas == null) return false;
+            return gamepadStickDatas[key].GetKeyUp();
         }
 
         public static bool GetKeyUp(KeyboardKey[] keys)
@@ -329,13 +393,18 @@ namespace RedSilver2.Framework.Inputs
             if (keys != null) keys = keys.Distinct().ToArray();
             return keys.Where(x => GetKeyUp(x)).Count() > 0;
         }
-        public static bool GetKeyUp(GamepadKey[] keys)
+        public static bool GetKeyUp(GamepadButton[] keys)
+        {
+            if (keys != null) keys = keys.Distinct().ToArray();
+            return keys.Where(x => GetKeyUp(x)).Count() > 0;
+        }
+        public static bool GetKeyUp(GamepadStick[] keys)
         {
             if (keys != null) keys = keys.Distinct().ToArray();
             return keys.Where(x => GetKeyUp(x)).Count() > 0;
         }
 
-        public static bool GetKeyUp(KeyboardKey keyboardKey, GamepadKey gamepadKey)
+        public static bool GetKeyUp(KeyboardKey keyboardKey, GamepadButton gamepadKey)
         {
             if (GetKeyUp(keyboardKey) || GetKeyUp(gamepadKey)) return true;
             return false;
@@ -348,16 +417,24 @@ namespace RedSilver2.Framework.Inputs
             if (GetKey(negativeKey))  result -= 1f;
             return result;
         }
-        public static float GetAxis(GamepadKey posititveKey, GamepadKey negativeKey)
+        public static float GetAxis(GamepadButton posititveKey, GamepadButton negativeKey)
         {
             float result = 0f;
             if (GetKey(posititveKey)) result += 1f;
             if (GetKey(negativeKey)) result -= 1f;
             return result;
         }
-        public static float GetAxis(GamepadStick stick, bool getAxisX)
+        public static float GetAxis(GamepadStick posititveKey, GamepadStick negativeKey)
         {
-            Vector2 result = GetVector2(stick);
+            float result = 0f;
+            if (GetKey(posititveKey)) result += 1f;
+            if (GetKey(negativeKey)) result -= 1f;
+            return result;
+        }
+
+        public static float GetAxis(bool readLeftStick, bool getAxisX)
+        {
+            Vector2 result = GetGamepadVector2(readLeftStick);
             if (getAxisX) return result.x;
             return result.y;
         }
@@ -365,20 +442,23 @@ namespace RedSilver2.Framework.Inputs
         public static float GetAxisX(KeyboardKey left, KeyboardKey right) => GetAxis(right, left);
         public static float GetAxisY(KeyboardKey up, KeyboardKey down)    => GetAxis(up, down);
 
-        public static float GetAxisX(GamepadKey left, GamepadKey right) => GetAxis(right,left);
-        public static float GetAxisY(GamepadKey up  , GamepadKey down)  => GetAxis(up, down);
+        public static float GetAxisX(GamepadButton left, GamepadButton right) => GetAxis(right,left);
+        public static float GetAxisY(GamepadButton up  , GamepadButton down)  => GetAxis(up, down);
 
-        public static float GetAxisX(GamepadStick stick) => GetAxis(stick, true);
-        public static float GetAxisY(GamepadStick stick) => GetAxis(stick, false);
+        public static float GetAxisX(GamepadStick left, GamepadStick right) => GetAxis(right, left);
+        public static float GetAxisY(GamepadStick up  , GamepadStick down) => GetAxis(up, down);
+
+        public static float GetGamepadAxisX(bool readLeftStick) => GetAxis(readLeftStick, true);
+        public static float GetGamepadAxisY(bool readLeftStick) => GetAxis(readLeftStick, false);
 
         public static Vector2 GetVector2(KeyboardKey Up, KeyboardKey Down, KeyboardKey Left, KeyboardKey Right) => Vector2.right * GetAxisX(Left, Right) + Vector2.up * GetAxisY(Up, Down);      
         public static Vector2 GetVector2(KeyboardVector2Input.Vector2Keyboard keys) => GetVector2(keys.Up, keys.Down, keys.Left, keys.Right);
       
-        public static Vector2 GetVector2(GamepadStick stick) 
+        public static Vector2 GetGamepadVector2(bool readLeftStick) 
         {
             Gamepad gamepad = Gamepad.current;
             if (gamepad == null) return Vector2.zero;
-            return stick == GamepadStick.LeftStick ? gamepad.leftStick.value : gamepad.rightStick.value;
+            return readLeftStick ? gamepad.leftStick.value : gamepad.rightStick.value;
         }
 
         public static Vector2 GetMouseVector2()

@@ -7,14 +7,14 @@ namespace RedSilver2.Framework.Inputs
         private UnityEvent onUpdate;
 
         protected KeyboardKey keyboardKey;
-        protected GamepadKey  gamepadKey;
+        protected GamepadButton  gamepadKey;
 
         public bool Value { get; private set; }
        
         public KeyboardKey KeyboardKey => keyboardKey;
-        public GamepadKey  GamepadKey  => gamepadKey;
+        public GamepadButton  GamepadKey  => gamepadKey;
 
-        public SingleInput(string inputHandlerName, KeyboardKey defaultKeyboardKey, GamepadKey defaultGamepadKey) : base(inputHandlerName)
+        public SingleInput(string inputHandlerName, KeyboardKey defaultKeyboardKey, GamepadButton defaultGamepadKey) : base(inputHandlerName)
         {
             Value       = false;
             onUpdate    = new UnityEvent();

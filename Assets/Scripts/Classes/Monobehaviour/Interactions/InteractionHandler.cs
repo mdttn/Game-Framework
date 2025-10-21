@@ -8,7 +8,7 @@ namespace RedSilver2.Framework.Interactions
     public abstract class InteractionHandler 
     {
         private KeyboardKey keyboardKey;
-        private GamepadKey  gamepadKey;
+        private GamepadButton  gamepadKey;
         private InteractionHandlerModule module;
         private InteractionModule currentInteractionModule;
 
@@ -22,17 +22,17 @@ namespace RedSilver2.Framework.Interactions
         protected InteractionHandler()
         {
             this.keyboardKey = KeyboardKey.E;
-            this.gamepadKey  = GamepadKey.ButtonEast;
+            this.gamepadKey  = GamepadButton.ButtonEast;
         }
 
         protected InteractionHandler(InteractionHandlerModule module)
         {
             this.keyboardKey = KeyboardKey.E;
-            this.gamepadKey  = GamepadKey.ButtonEast;
+            this.gamepadKey  = GamepadButton.ButtonEast;
             this.module      = module;
         }
 
-        protected InteractionHandler(KeyboardKey keyboardKey, GamepadKey gamepadKey, InteractionHandlerModule module)
+        protected InteractionHandler(KeyboardKey keyboardKey, GamepadButton gamepadKey, InteractionHandlerModule module)
         {
             this.keyboardKey = keyboardKey;
             this.gamepadKey  = gamepadKey;
@@ -57,9 +57,8 @@ namespace RedSilver2.Framework.Interactions
             if (currentInteractionModule == null || !currentInteractionModule.enabled)
                 return;
 
-                if (interactionModule != currentInteractionModule && currentInteractionModule is TimedHoldInteractionModule)
-                    (currentInteractionModule as TimedHoldInteractionModule).Release();
-
+            if (interactionModule != currentInteractionModule && currentInteractionModule is TimedHoldInteractionModule)
+               (currentInteractionModule as TimedHoldInteractionModule).Release();
         }
 
         protected abstract Collider GetCollider(float interactionRange);

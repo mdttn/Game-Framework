@@ -5,10 +5,8 @@ namespace RedSilver2.Framework.Inputs
 {
     public abstract class Vector2Input : InputHandler
     {
-        protected          GamepadStick    gamepadStick;
-
+        protected bool useLeftGamepadStick;
         private UnityEvent<Vector2> onUpdate;
-        public GamepadStick GamepadStick => gamepadStick;
        
 
         public Vector2 Value { get; private set; }
@@ -19,13 +17,13 @@ namespace RedSilver2.Framework.Inputs
         protected Vector2Input(string name) : base(name)
         {
             onUpdate = new UnityEvent<Vector2>();
-            this.gamepadStick = DEFAULT_GAMEPAD_STICK;
+            this.useLeftGamepadStick = true;
         }
 
-        protected Vector2Input(string name, GamepadStick gamepadStick) : base(name)
+        protected Vector2Input(string name, bool useLeftGamepadStick) : base(name)
         {
-            onUpdate          = new UnityEvent<Vector2>();
-            this.gamepadStick = gamepadStick;
+            onUpdate = new UnityEvent<Vector2>();
+            this.useLeftGamepadStick = useLeftGamepadStick;
         }
 
         public sealed override void Update()
@@ -44,12 +42,13 @@ namespace RedSilver2.Framework.Inputs
             if (onUpdate != null && action != null) onUpdate.RemoveListener(action);
         }
 
-        public string GetGamepadStickPath() => InputManager.GetPath(gamepadStick);
+        // Fix this stupid bug (for future reference)
+        public string GetGamepadStickPath() => InputManager.GetPath(KeyboardKey.A);
 
         public string GetGamepadStickInfos()
         {
             return "| Gamepad Paths |\n" +
-                    $"Gamepad Stick: {gamepadStick.ToString()} | Path: {GetGamepadStickPath()}";
+                    $"Gamepad Stick: { GetGamepadStickPath() } | Path: {GetGamepadStickPath()}";
         }
 
         public override string GetPaths()
@@ -60,7 +59,7 @@ namespace RedSilver2.Framework.Inputs
 
         private bool TryGetGamepadVector2(out Vector2 result)
         {
-            result = InputManager.GetVector2(gamepadStick);
+            result = InputManager.GetGamepadVector2(useLeftGamepadStick);
             if(result.magnitude > 0f) { return true; }
 
             result = Vector2.zero;

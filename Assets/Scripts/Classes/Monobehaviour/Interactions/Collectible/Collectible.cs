@@ -61,7 +61,7 @@ namespace RedSilver2.Framework.Interactions.Collectibles
             gameObject.SetActive(false);
         }
 
-        protected virtual void OnInteract(float progression) {
+        protected void OnInteract(float progression) {
             if(progression >= 1f) 
                 OnInteract();
         }

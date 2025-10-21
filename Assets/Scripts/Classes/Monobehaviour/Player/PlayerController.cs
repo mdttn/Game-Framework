@@ -1,3 +1,4 @@
+using RedSilver2.Framework.Inputs;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -38,8 +39,17 @@ namespace RedSilver2.Framework.Player
             stateMachine.ChangeState(PlayerStateMachine.IdolState.STATE_NAME);
         }
 
-
         protected virtual void Update() {
+
+            if (InputManager.GetKey(GamepadStick.LeftStick))
+                Debug.LogWarning("Left Gamepad Stick Is Held");
+           
+            if (InputManager.GetKeyDown(GamepadStick.LeftStick))
+                Debug.LogWarning("Left Gamepad Stick Is Down");
+
+            if (InputManager.GetKeyUp(GamepadStick.LeftStick))
+                Debug.LogWarning("Left Gamepad Stick Is Up");
+
             if (stateMachine != null) stateMachine.Update();
         }
 

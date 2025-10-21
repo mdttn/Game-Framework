@@ -27,12 +27,12 @@ namespace RedSilver2.Framework.Inputs
             this.keyboardKeys = keyboardKeys;
         }
 
-        public KeyboardVector2Input(string name, GamepadStick gamepadStick) : base(name, gamepadStick)
+        public KeyboardVector2Input(string name, bool useLeftGamepadStick) : base(name, useLeftGamepadStick)
         {
             this.keyboardKeys = new Vector2Keyboard(DEFAULT_UP_KEY, DEFAULT_DOWN_KEY, DEFAULT_LEFT_KEY, DEFAULT_RIGHT_KEY);
         }
 
-        public KeyboardVector2Input(string name, Vector2Keyboard keyboardKeys, GamepadStick gamepadStick) : base(name, gamepadStick) 
+        public KeyboardVector2Input(string name, Vector2Keyboard keyboardKeys, bool useLeftGamepadStick) : base(name, useLeftGamepadStick) 
         {
             this.keyboardKeys = keyboardKeys;
         }

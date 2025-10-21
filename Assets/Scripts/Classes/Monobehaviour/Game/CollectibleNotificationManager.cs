@@ -15,7 +15,7 @@ namespace RedSilver2.Framework.Interactions.Collectibles
 
         [Space]
         [SerializeField] private KeyboardKey keyboardKey;
-        [SerializeField] private GamepadKey  gamepadKey;
+        [SerializeField] private GamepadButton  gamepadKey;
 
         [Space]
         [SerializeField] private bool canPressAnyKey;
