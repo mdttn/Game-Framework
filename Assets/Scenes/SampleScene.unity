@@ -3924,7 +3924,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0167fc076436c49b6d89fe4cb7b41d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainInventory: {fileID: 1856122271}
+  mainInventory: {fileID: 0}
 --- !u!1 &1212440873
 GameObject:
   m_ObjectHideFlags: 0
@@ -3934,6 +3934,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1212440874}
+  - component: {fileID: 1212440877}
+  - component: {fileID: 1212440876}
+  - component: {fileID: 1212440875}
   m_Layer: 0
   m_Name: States
   m_TagString: Untagged
@@ -3958,6 +3961,73 @@ Transform:
   - {fileID: 639710094}
   m_Father: {fileID: 1202136114}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1212440875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212440873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 292e609c491bf914f9c6b21d4287ae50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onStateEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  onStateExit:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1212440876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212440873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b03c87d271e56144a97ecb8ba555f09b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onStateEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  onStateExit:
+    m_PersistentCalls:
+      m_Calls: []
+  onUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  onLateUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  canDisableMovementInput: 0
+--- !u!114 &1212440877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212440873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 869666d761965634795317b0a03ab39d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onStateEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  onStateExit:
+    m_PersistentCalls:
+      m_Calls: []
+  onUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  onLateUpdate:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1472552846
 GameObject:
   m_ObjectHideFlags: 0
@@ -4907,10 +4977,7 @@ GameObject:
   - component: {fileID: 1856122267}
   - component: {fileID: 1856122273}
   - component: {fileID: 1856122272}
-  - component: {fileID: 1856122271}
-  - component: {fileID: 1856122270}
-  - component: {fileID: 1856122269}
-  - component: {fileID: 1856122268}
+  - component: {fileID: 1856122275}
   - component: {fileID: 1856122274}
   m_Layer: 0
   m_Name: Main
@@ -4940,93 +5007,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1856122268
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1856122266}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: debcb7a395018e7469957f66d59aaf55, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  navigator: {fileID: 1856122270}
-  modelsParent: {fileID: 836682518}
-  modelsDisplayer: {fileID: 1856122269}
-  constantUIUpdate: 1
-  modelFowardSpacing: 5
-  modelHorziontalSpacing: 5
-  modelVerticalSpacing: 5
-  modelPositionLerpSpeed: 5
---- !u!114 &1856122269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1856122266}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba1dd24924fb7d24c9f7185ed29971dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  navigator: {fileID: 1856122270}
---- !u!114 &1856122270
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1856122266}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4ecd151c5b0b7142bb38344f1d777fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inventory: {fileID: 1856122271}
-  onUpdate:
-    m_PersistentCalls:
-      m_Calls: []
-  onLateUpdate:
-    m_PersistentCalls:
-      m_Calls: []
-  onEnable:
-    m_PersistentCalls:
-      m_Calls: []
-  onDisable:
-    m_PersistentCalls:
-      m_Calls: []
-  onHorizontalIndexChanged:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &1856122271
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1856122266}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9d69a0d2227b5a4cbfdfb486d18dd0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  invetoryUIParent: {fileID: 1856122266}
-  allowDuplicateItems: 1
-  onOpenUI:
-    m_PersistentCalls:
-      m_Calls: []
-  onCloseUI:
-    m_PersistentCalls:
-      m_Calls: []
-  onItemAdded:
-    m_PersistentCalls:
-      m_Calls: []
-  onItemRemoved:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &1856122272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5076,12 +5056,58 @@ MonoBehaviour:
   m_GameObject: {fileID: 1856122266}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1b700411a499ae42bfdb4d9e2917202, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a4c5721dea7ee145bec2b94767f50e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  navigator: {fileID: 1856122270}
-  nullErrorMessage: No name :(
-  displayer: {fileID: 2006591921}
+  inventory: {fileID: 1856122275}
+  onUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  onLateUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  onEnable:
+    m_PersistentCalls:
+      m_Calls: []
+  onDisable:
+    m_PersistentCalls:
+      m_Calls: []
+  onHorizontalIndexChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  onVerticalIndexChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  maxHorizontalPageIndex: 4
+  maxVerticalPageIndex: 4
+  pageChangeDirection: 1
+  canWrapPageIndex: 1
+--- !u!114 &1856122275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1856122266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9d69a0d2227b5a4cbfdfb486d18dd0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invetoryUIParent: {fileID: 1856122266}
+  allowDuplicateItems: 0
+  onOpenUI:
+    m_PersistentCalls:
+      m_Calls: []
+  onCloseUI:
+    m_PersistentCalls:
+      m_Calls: []
+  onItemAdded:
+    m_PersistentCalls:
+      m_Calls: []
+  onItemRemoved:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1874025942
 GameObject:
   m_ObjectHideFlags: 0

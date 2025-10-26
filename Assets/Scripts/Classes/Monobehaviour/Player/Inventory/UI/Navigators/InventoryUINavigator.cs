@@ -41,7 +41,8 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         public const string PREVIOUS_HORIZONTAL_INPUT_NAME = "Previous Horizontal Navigator Input";
         protected virtual void Awake() 
         {
-            this.enabled = false;
+            this.enabled    = false;
+            horizontalIndex = 0;
 
             nextHorizontalPressInput     = GetNextHorizontalInput();
             previousHorizontalPressInput = GetPreviousHorizontalInput();
@@ -152,28 +153,30 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         private void IncrementHorizontalIndex() 
         {
-            if (inventory == null) return;
-                horizontalIndex++;
-
-            if (horizontalIndex >= GetMaxHorizontalIndex())
-                horizontalIndex = 0;
-
-           if(onHorizontalIndexChanged != null) onHorizontalIndexChanged.Invoke(horizontalIndex);
+           if (inventory == null) return;
+           horizontalIndex++;
+           ClampIncrementHorizontalIndex(ref horizontalIndex, GetMaxHorizontalIndex());
+           if (onHorizontalIndexChanged != null) onHorizontalIndexChanged.Invoke(horizontalIndex);
         }
 
         private void DecrementHorizontalIndex() 
         {
             if (inventory == null) return;
             horizontalIndex--;
-
-            if(horizontalIndex < 0)
-                horizontalIndex = GetMaxHorizontalIndex() - 1;
-
+            ClampDecrementHorizontalIndex(ref horizontalIndex, GetMaxHorizontalIndex());
             if (onHorizontalIndexChanged != null) onHorizontalIndexChanged.Invoke(horizontalIndex);
         }
 
+        protected virtual void ClampIncrementHorizontalIndex(ref int horizontalIndex, int maxValue) {
+            if (horizontalIndex >= maxValue) horizontalIndex = 0;
+        }
+
+        protected virtual void ClampDecrementHorizontalIndex(ref int horizontalIndex, int maxValue) {
+            if (horizontalIndex < 0) horizontalIndex = maxValue;
+        }
+
         public abstract void SetIndex(Item item);
-        protected abstract int GetMaxHorizontalIndex();
+        public abstract int GetMaxHorizontalIndex();
 
         public static void Disable() {
             if (current != null) current.enabled = false;

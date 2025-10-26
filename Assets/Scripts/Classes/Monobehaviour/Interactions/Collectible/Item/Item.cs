@@ -34,8 +34,7 @@ namespace RedSilver2.Framework.Interactions.Items
             Remove();
 
             inventory.AddItem(this, out bool isItemAdded);
-            Debug.LogWarning(isItemAdded);
-            
+
             if (isItemAdded) {
                 onAdded.Invoke(this);
                 owner = inventory;

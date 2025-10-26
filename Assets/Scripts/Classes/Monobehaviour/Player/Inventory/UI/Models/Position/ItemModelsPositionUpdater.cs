@@ -40,8 +40,8 @@ namespace RedSilver2.Framework.Player.Inventories.UI
                 UpdateModelsPosition(navigator as SimpleInventoryUINavigator, modelsDisplayer);
             else if (navigator is HorizontalInventoryUINavigator)
                 UpdateModelsPosition(navigator as HorizontalInventoryUINavigator, modelsDisplayer);
-            else if (navigator is ComplexInventoryUINavigator)
-                UpdateModelsPosition(navigator as ComplexInventoryUINavigator, modelsDisplayer);           
+            else if (navigator is VerticalInventoryUINavigator)
+                UpdateModelsPosition(navigator as VerticalInventoryUINavigator, modelsDisplayer);           
         }
 
         private void UpdateModelsPosition(SimpleInventoryUINavigator navigator, ItemModelsDisplayer modelsDisplayer) 
@@ -56,7 +56,7 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             UpdateModelsPosition(navigator.HorizontalIndex, modelsDisplayer.VisibleItemModels);
         }
 
-        private void UpdateModelsPosition(ComplexInventoryUINavigator navigator, ItemModelsDisplayer modelsDisplayer) 
+        private void UpdateModelsPosition(VerticalInventoryUINavigator navigator, ItemModelsDisplayer modelsDisplayer) 
         {
             if (navigator == null || modelsDisplayer == null) return;
             UpdateModelsPosition(navigator.HorizontalIndex, navigator.VerticalIndex, 

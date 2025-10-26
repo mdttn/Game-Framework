@@ -111,13 +111,13 @@ namespace RedSilver2.Framework.Player.Inventories
             }
         }
 
-        public virtual void AddItem(Item item, out bool isItemAdded) 
+        public virtual void AddItem(Item item, out bool isItemAdded)
         {
-            isItemAdded = Contains(item);
+            if (item != null) isItemAdded = Contains(item);
+            else isItemAdded = false;
 
-            if (item != null && onItemAdded != null) {
-                onItemAdded.Invoke(item);   
-            }
+            if (isItemAdded == true && onItemAdded != null)
+                onItemAdded.Invoke(item);
         }
         public virtual void RemoveItem(Item item, out bool isItemRemoved) 
         {
@@ -151,6 +151,9 @@ namespace RedSilver2.Framework.Player.Inventories
 
         public abstract bool ContainsDuplicate(Item item);
         public abstract bool ContainsDuplicate(string itemName);
+
+        public abstract int GetDuplicateCount(Item item);
+        public abstract int  GetDuplicateCount(string itemName);
 
         public abstract bool Contains(Item item);
         public abstract bool Contains(string itemName);

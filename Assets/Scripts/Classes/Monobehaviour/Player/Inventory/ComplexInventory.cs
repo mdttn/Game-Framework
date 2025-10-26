@@ -48,7 +48,7 @@ namespace RedSilver2.Framework.Player.Inventories
             return Contains(GetItem(itemName));
         }
 
-        public override bool ContainsDuplicate(Item item) {
+        public sealed override bool ContainsDuplicate(Item item) {
             if (items == null || item == null || items.Count == 0) return false;
 
             var results = items.Where(x => x != null).Where(x => x.GetType() == item.GetType());

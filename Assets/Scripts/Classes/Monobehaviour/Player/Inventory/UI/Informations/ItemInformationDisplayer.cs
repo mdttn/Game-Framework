@@ -20,8 +20,8 @@ namespace RedSilver2.Framework.Player.Inventories.UI
              SetInventoryEvents(navigator.Inventory);
              navigator.AddOnHorizontalIndexChangedListener(OnHorizontalIndexChanged);
 
-            if (navigator is ComplexInventoryUINavigator)
-            (navigator as ComplexInventoryUINavigator).AddOnVerticalIndexChangedListener(OnVerticalIndexChanged);
+            if (navigator is VerticalInventoryUINavigator)
+            (navigator as VerticalInventoryUINavigator).AddOnVerticalIndexChangedListener(OnVerticalIndexChanged);
         }
 
         private void SetInventoryEvents(Inventory inventory)
@@ -64,8 +64,8 @@ namespace RedSilver2.Framework.Player.Inventories.UI
                     DisplayItemInformation(navigator as SimpleInventoryUINavigator, inventory as SimpleInventory);
                 if (navigator is HorizontalInventoryUINavigator)
                     DisplayItemInformation(navigator as HorizontalInventoryUINavigator, inventory as ComplexInventory);
-                else if (navigator is ComplexInventoryUINavigator)
-                    DisplayItemInformation(navigator as ComplexInventoryUINavigator, inventory as ComplexInventory);
+                else if (navigator is VerticalInventoryUINavigator)
+                    DisplayItemInformation(navigator as VerticalInventoryUINavigator, inventory as ComplexInventory);
         }
 
         private void DisplayItemInformation(SimpleInventoryUINavigator navigator, SimpleInventory inventory) 
@@ -79,7 +79,7 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             DisplayItemInformation(inventory.GetItem(navigator.VerticalIndex, navigator.HorizontalIndex));
         }
 
-        private void DisplayItemInformation(ComplexInventoryUINavigator navigator, ComplexInventory inventory) {
+        private void DisplayItemInformation(VerticalInventoryUINavigator navigator, ComplexInventory inventory) {
             if (navigator == null || inventory == null) { DisplayItemInformation(nullErrorMessage); return; }
             DisplayItemInformation(inventory.GetItem(navigator.VerticalIndex, navigator.HorizontalIndex));
         }

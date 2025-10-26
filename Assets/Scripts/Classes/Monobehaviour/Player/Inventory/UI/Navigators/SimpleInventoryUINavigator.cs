@@ -12,7 +12,7 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             }
         }
 
-        protected override int GetMaxHorizontalIndex()
+        public override int GetMaxHorizontalIndex()
         {
             if (inventory is SimpleInventory)
                 return (inventory as SimpleInventory).GetMaxHorizontalIndex();

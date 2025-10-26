@@ -1,6 +1,7 @@
 using RedSilver2.Framework.Interactions.Items;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace RedSilver2.Framework.Player.Inventories
 {
@@ -24,15 +25,13 @@ namespace RedSilver2.Framework.Player.Inventories
 
         public sealed override void AddItem(Item item, out bool isItemAdded)
         {
-            if (items == null || item == null) {
-                isItemAdded = false;
-                return;
-            }
-
-            isItemAdded = false;
-
-            if ((ContainsDuplicate(item) && AllowDuplicateItems) || (!Contains(item) && !ContainsDuplicate(item))) {
-                items.Add(item);
+            if (items != null && item != null) {
+                if (AllowDuplicateItems) {
+                    if (items.Count == 0 || ContainsDuplicate(item)) items.Add(item);
+                }
+                else if (!Contains(item) && !ContainsDuplicate(item)){
+                    items.Add(item);
+                }
             }
 
             base.AddItem(item, out isItemAdded);
@@ -65,11 +64,23 @@ namespace RedSilver2.Framework.Player.Inventories
         public sealed override bool ContainsDuplicate(Item item)
         {
             if(items == null || item == null) return false;
-            return items.Where(x => x.GetType() == item.GetType()).Count() > 1;
+            return GetDuplicateCount(item) >= 1;
         }
 
         public sealed override bool ContainsDuplicate(string itemName) {
             return ContainsDuplicate(GetItem(itemName));
+        }
+
+
+        public sealed override int GetDuplicateCount(Item item) 
+        {
+            if (items == null || item == null) return 0;
+            return items.Where(x => x.GetType() == item.GetType()).Count();
+        }
+
+        public sealed override int GetDuplicateCount(string itemName)
+        {
+            return GetDuplicateCount(GetItem(itemName));
         }
 
         public sealed override bool Contains(Item item)
