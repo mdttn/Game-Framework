@@ -8,11 +8,11 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         private TextMeshProUGUI displayer;
         
-        protected sealed override void Awake() 
+        protected sealed override void Start() 
         {
             displayer = GetComponent<TextMeshProUGUI>();
             if (displayer != null) displayer.text = string.Empty;
-            base.Awake();
+            base.Start();
         }
 
         protected sealed override void DisplayItemInformation(string message)

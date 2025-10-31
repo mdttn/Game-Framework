@@ -9,9 +9,9 @@ namespace RedSilver2.Framework.Player.Inventories.UI
     {
         [SerializeField] private Text displayer;
 
-        protected sealed override void Awake() {
+        protected sealed override void Start() {
             displayer = GetComponent<Text>();   
-            base.Awake();
+            base.Start();
         }
 
         protected sealed override void DisplayItemInformation(string message)

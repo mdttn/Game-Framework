@@ -54,7 +54,7 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             borrowedModels.Remove(gameObject);
             if (!itemModelsInstances.ContainsKey(modelName)) itemModelsInstances.Add(modelName, new Queue<GameObject>());
 
-            gameObject.transform.parent = null;
+            gameObject.transform.SetParent(null);
             gameObject.SetActive(false);
 
             itemModelsInstances[modelName].Enqueue(gameObject);

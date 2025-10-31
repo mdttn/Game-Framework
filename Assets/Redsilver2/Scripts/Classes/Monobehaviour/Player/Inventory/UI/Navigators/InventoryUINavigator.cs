@@ -11,19 +11,15 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         [SerializeField] private Transform modelParentTransform;
 
         [Space]
-        [SerializeField] protected Inventory inventory;
-
-        [Space]
         [SerializeField] private bool canWrapHorizontalIndex = true;
 
 
-        [Space]
-        [SerializeField] private UnityEvent onUpdate, onLateUpdate, onEnable, onDisable;
-
-        [Space]
-        [SerializeField] private UnityEvent<int> onHorizontalIndexChanged;
+        private UnityEvent onUpdate, onLateUpdate, onEnable, onDisable;
+        private UnityEvent<int> onHorizontalIndexChanged;
+        private UnityEvent<Item> onItemSelected;
 
         protected int horizontalIndex;
+        protected Inventory inventory;
 
         private OverrideablePressInput nextHorizontalPressInput;
         private OverrideablePressInput previousHorizontalPressInput;
@@ -46,23 +42,40 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         public const string NEXT_HORIZONTAL_INPUT_NAME     = "Next Horizontal Navigator Input";
         public const string PREVIOUS_HORIZONTAL_INPUT_NAME = "Previous Horizontal Navigator Input";
 
-        protected virtual void Awake() 
+        protected virtual void Awake()
         {
-            this.enabled    = false;
             horizontalIndex = 0;
+            inventory = GetInventory();
 
-            nextHorizontalPressInput     = GetNextHorizontalInput();
+            onUpdate       = new UnityEvent();
+            onLateUpdate   = new UnityEvent();
+
+            onEnable       = new UnityEvent();
+            onDisable      = new UnityEvent();
+
+            onItemSelected = new UnityEvent<Item>();
+
+            nextHorizontalPressInput = GetNextHorizontalInput();
             previousHorizontalPressInput = GetPreviousHorizontalInput();
 
             nextHorizontalPressInput.Enable();
             previousHorizontalPressInput.Enable();
+        }
 
+        protected virtual void Start() 
+        {
+            Debug.LogWarning("Inventory: " + inventory);
 
-            inventory.AddOnItemAddedListener(OnItemAdded);
-            inventory.AddOnItemRemovedListener(OnItemRemoved);
+            if (inventory != null) {
+                inventory.AddOnItemAddedListener(OnItemAdded);
+                inventory.AddOnItemRemovedListener(OnItemRemoved);
 
-            inventory.AddOnOpenUIListener(OnOpenInventoryUI);
-            inventory.AddOnCloseUIListener(OnCloseInventoryUI);
+                inventory.AddOnOpenUIListener(OnOpenInventoryUI);
+                inventory.AddOnCloseUIListener(OnCloseInventoryUI);
+            }
+
+            AddOnHorizontalIndexChangedListener(OnIndexChanged);
+            AddOnLateUpdateListener(OnUpdateItemModel);
             AddOnUpdateListener(UpdateInput);
         }
 
@@ -74,17 +87,24 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             if (onLateUpdate != null) onLateUpdate.Invoke();
         }
 
-        private void OnDisable() 
-        {
-            if (current != this) return;
-            if (onDisable != null && didAwake) onDisable.Invoke();
+        private void OnDisable() {
+            if (didStart) {
+                if (current != this) return;
+                if (onDisable != null) onDisable.Invoke();
+            }
         }
 
         private void OnEnable() {
-            if (current != this) { enabled = false; return; }
-            if (onEnable != null && didAwake) onEnable.Invoke();
+
+            if (didStart) {
+                if (current != this) { enabled = false; return; }
+                if (onEnable != null) onEnable.Invoke();
+            }
         }
 
+        protected virtual void OnIndexChanged(int index) {
+            if(onItemSelected != null) onItemSelected.Invoke(GetSelectedItem());
+        }
 
         protected virtual void OnOpenInventoryUI()
         {
@@ -94,47 +114,46 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         protected virtual void OnCloseInventoryUI()
         {
-            UpdateModels();
             SetCurrent(null);
         }
 
-        public void AddOnInventoryOpenUIListener(UnityAction action)
-        {
+        public void AddOnOpenUIListener(UnityAction action) {
             if(inventory != null) inventory.AddOnOpenUIListener(action);
         }
-        public void RemoveOnInventoryOpenUIListener(UnityAction action)
-        {
+        public void RemoveOnOpenUIListener(UnityAction action){
             if (inventory != null) inventory.RemoveOnOpenUIListener(action);
         }
 
-
-        public void AddOnInventoryCloseUIListener(UnityAction action)
-        {
+        public void AddOnCloseUIListener(UnityAction action){
             if (inventory != null) inventory.AddOnCloseUIListener(action);
         }
-        public void RemoveOnInventoryCloseUIListener(UnityAction action)
-        {
+        public void RemoveOnCloseUIListener(UnityAction action){
             if (inventory != null) inventory.RemoveOnCloseUIListener(action);
         }
 
-        public void AddOnInventoryItemAddedListener(UnityAction<Item> action)
-        {
+        public void AddOnItemAddedListener(UnityAction<Item> action){
             if (inventory != null) inventory.AddOnItemAddedListener(action);
         }
-        public void RemoveOnInventoryItemAddedListener(UnityAction<Item> action)
-        {
+        public void RemoveOnItemAddedListener(UnityAction<Item> action){
             if (inventory != null) inventory.RemoveOnItemAddedListener(action);
         }
 
-        public void AddOnInventoryItemRemovedListener(UnityAction<Item> action)
-        {
+        public void AddOnItemRemovedListener(UnityAction<Item> action) {
             if (inventory != null) inventory.AddOnItemRemovedListener(action);
         }
-        public void RemoveOnInventoryItemRemovedListener(UnityAction<Item> action)
-        {
+        public void RemoveOnItemRemovedListener(UnityAction<Item> action) {
             if (inventory != null) inventory.RemoveOnItemRemovedListener(action);
         }
 
+        public void AddOnItemSelectedListener(UnityAction<Item> action){
+            if(onItemSelected != null && action != null) 
+                onItemSelected.AddListener(action);
+        }
+        public void RemoveOnItemSelectedListener(UnityAction<Item> action)
+        {
+            if (onItemSelected != null && action != null)
+                onItemSelected.RemoveListener(action);
+        }
 
         public void AddOnEnableListener(UnityAction action) {
             if (onEnable != null && action != null)
@@ -181,11 +200,9 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         public void AddOnHorizontalIndexChangedListener(UnityAction<int> action)
         {
-            Debug.LogWarning(action);
             if (onHorizontalIndexChanged != null && action != null)
                onHorizontalIndexChanged.AddListener(action);
         }
-
         public void RemoveOnHorizontalIndexChangedListener(UnityAction<int> action)
         {
             if (onHorizontalIndexChanged != null && action != null)
@@ -194,24 +211,22 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         protected virtual void OnItemAdded(Item item)
         {
-            if (item != null && inventory != null)
-            {
-                Debug.LogWarning("We added item...");
+            if (item != null) {
                 UpdateItems();
 
-                if (inventory.IsUIOpened) 
-                    UpdateModels();
+                if (inventory != null)
+                    if (inventory.IsUIOpened) 
+                        UpdateModels();
             }
         }
-
         protected virtual void OnItemRemoved(Item item)
         {
-            if (item != null)
-            {
+            if (item != null) {
                 UpdateItems();
 
-                if (inventory.IsUIOpened)
-                    UpdateModels();
+                if (inventory != null)
+                   if (inventory.IsUIOpened)
+                        UpdateModels();
             }
         }
 
@@ -235,7 +250,6 @@ namespace RedSilver2.Framework.Player.Inventories.UI
            ClampIncrementHorizontalIndex(ref horizontalIndex, canWrapHorizontalIndex);
            if (onHorizontalIndexChanged != null) onHorizontalIndexChanged.Invoke(horizontalIndex);
         }
-
         private void DecrementHorizontalIndex() 
         {
             if (inventory == null) return;
@@ -253,7 +267,6 @@ namespace RedSilver2.Framework.Player.Inventories.UI
                 else                       horizontalIndex = maxHorizontalIndex - 1;
             }
         }
-
         protected virtual void ClampDecrementHorizontalIndex(ref int horizontalIndex, bool canWarpHorizontalIndex) 
         {
             if (horizontalIndex < 0) {
@@ -262,12 +275,39 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             }
         }
 
+        protected void SetModelParent(GameObject gameObject) {
+            if(gameObject == null || modelParentTransform == null) return;
+            gameObject.transform.SetParent(modelParentTransform);
+            gameObject.SetActive(true);
+        }
+
+        private Inventory GetInventory()
+        {
+            Inventory inventory = GetComponent<Inventory>();
+            if(inventory == null) return GetInventory(transform.parent);  
+            return inventory;
+        }
+
+        private Inventory GetInventory(Transform parent)
+        {
+            Inventory inventory;
+            if (parent == null) return gameObject.AddComponent<Inventory>();
+
+            inventory = parent.GetComponent<Inventory>();
+            if(inventory == null) return GetInventory(parent.parent);
+
+            return inventory;
+        }
+
         public abstract void Select(Item item);
         public abstract int GetMaxHorizontalIndex();
+
+        protected abstract void OnUpdateItemModel();
 
         protected abstract void UpdateItems();
         protected abstract void UpdateModels();
 
+        public abstract int GetHorizontalIndex(Item item);
         public abstract Item GetSelectedItem();
 
         public static void Disable() {
@@ -285,6 +325,8 @@ namespace RedSilver2.Framework.Player.Inventories.UI
                 current = navigator;
                 Enable();
             }
+
+            Debug.LogWarning("Current Navigator: " + current);
         }
 
         public static bool IsCurrent(InventoryUINavigator navigator)

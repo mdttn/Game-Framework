@@ -8,53 +8,34 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         [Space]
         [SerializeField] protected string nullErrorMessage;
 
-        protected override void Awake()
+        protected override void Start()
         {
-            base.Awake();
-            SetNavigatorEvents();
+            if (navigator != null) {
+                navigator.AddOnOpenUIListener(OnOpenUI);
+                navigator.AddOnCloseUIListener(OnCloseUI);
+                navigator.AddOnItemSelectedListener(DisplayItemInformation);
+            }
+
+            DisplayNullMessage();
         }
 
-        private void SetNavigatorEvents()
+        protected override void OnDestroy() 
         {
-            if (navigator == null) return;
-             navigator.AddOnHorizontalIndexChangedListener(OnHorizontalIndexChanged);
-             navigator.AddOnInventoryCloseUIListener(OnInventoryUIClose);
-             navigator.AddOnInventoryOpenUIListener(OnInventoryUIOpen);
-
-            if (navigator is VerticalInventoryUINavigator)
-               (navigator as VerticalInventoryUINavigator).AddOnVerticalIndexChangedListener(OnVerticalIndexChanged);
+            if (navigator != null) {
+                navigator.RemoveOnOpenUIListener(OnOpenUI);
+                navigator.RemoveOnCloseUIListener(OnCloseUI);
+                navigator.RemoveOnItemSelectedListener(DisplayItemInformation);
+            }
         }
 
-        private void SetInventoryEvents(Inventory inventory)
-        {
-            if(inventory == null) return;
-        }
-
-        private void OnInventoryUIClose()
+        private void OnCloseUI()
         {
             DisplayItemInformation(string.Empty);
         }
-
-        private void OnInventoryUIOpen() {
-            DisplayItemInformation();
-        }
-
-
-        private void OnHorizontalIndexChanged(int horizontalIndex) {
-            Debug.LogWarning(horizontalIndex);
-            DisplayItemInformation();
-        }
-
-        private void OnVerticalIndexChanged(int verticalIndex) {
-            DisplayItemInformation();
-        }
-
-        private void DisplayItemInformation() 
-        {
+        private void OnOpenUI() {
             if (navigator == null) return;
             DisplayItemInformation(navigator.GetSelectedItem());
         }
-
         private void DisplayItemInformation(Item item) 
         {
             if (item != null)
@@ -66,7 +47,6 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         protected void DisplayNullMessage() {
             DisplayItemInformation(nullErrorMessage);
         }
-
         protected abstract void DisplayItemInformation(ItemData data);
         protected abstract void DisplayItemInformation(string message);
     }

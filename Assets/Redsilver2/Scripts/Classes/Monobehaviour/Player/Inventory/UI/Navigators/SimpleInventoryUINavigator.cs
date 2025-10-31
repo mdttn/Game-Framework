@@ -1,12 +1,17 @@
 using RedSilver2.Framework.Interactions.Items;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace RedSilver2.Framework.Player.Inventories.UI
 {
     public class SimpleInventoryUINavigator : InventoryUINavigator
     {
-        private List<Item>   items;
+        private UnityEvent<GameObject[]> onModelsChanged;
+        private UnityEvent<int, GameObject, SimpleInventoryUINavigator> onUpdateModel;
+
+        private Item[]   items;
         private GameObject[] models;
 
         public Item[] Items
@@ -14,7 +19,7 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             get
             {
                 if (items == null) return new Item[0];
-                return items.ToArray();
+                return items;
             }
         }
 
@@ -23,50 +28,91 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         protected override void Awake()
         {
             base.Awake();
-            items = new List<Item>();
+            items = new Item[0];
+
+            onModelsChanged = new UnityEvent<GameObject[]>();
+            onUpdateModel   = new UnityEvent<int, GameObject, SimpleInventoryUINavigator>();
         }
 
-        public override void Select(Item item)
+        protected override void Start()
+        {
+            AddOnModelsChangedListener(OnModelsChanged);
+            base.Start();
+        }
+
+        public void AddOnUpdateModelListener(UnityAction<int, GameObject, SimpleInventoryUINavigator> action)
+        {
+            if (onUpdateModel != null && action != null)
+                onUpdateModel.AddListener(action);
+        }
+        public void RemoveOnUpdateModelListener(UnityAction<int, GameObject, SimpleInventoryUINavigator> action)
+        {
+            if (onUpdateModel != null && action != null)
+                onUpdateModel.RemoveListener(action);
+        }
+
+        public void AddOnModelsChangedListener(UnityAction<GameObject[]> action)
+        {
+            if (onModelsChanged != null && action != null)
+                onModelsChanged.AddListener(action);
+        }
+        public void RemoveOnModelsChangedListener(UnityAction<GameObject[]> action)
+        {
+            if (onModelsChanged != null && action != null)
+                onModelsChanged.RemoveListener(action);
+        }
+
+        private void OnModelsChanged(GameObject[] models) {
+            if (models == null) return;
+
+            foreach (GameObject model in models.Where(x => x != null))
+                     SetModelParent(model);
+        }
+
+        protected sealed override void UpdateItems()
+        {
+            items = inventory.GetItems();
+        }
+
+        public sealed override void Select(Item item)
         {
             if (inventory == null || item == null) return;
-            if (inventory.Contains(item)) horizontalIndex = inventory.GetHorizontalIndex(item);
+            if (inventory.Contains(item)) horizontalIndex = GetHorizontalIndex(item);
         }
 
-        public override int GetMaxHorizontalIndex()
+
+        public sealed override int GetMaxHorizontalIndex()
         {
             if(inventory != null) return inventory.GetMaxHorizontalIndex();
             return -1;
         }
 
-        protected override void OnCloseInventoryUI()
+        protected sealed override void OnCloseInventoryUI()
         {
+            base.OnCloseInventoryUI();
             ItemModel.ReturnBorrowedModels(models);
+            if (models != null) models = new GameObject[0];
         }
 
-        protected override void OnItemAdded(Item item)
+        protected sealed override void OnItemAdded(Item item)
         {
             if (items != null && item != null){
-                items.Add(item);
-                UpdateModels();
+                UpdateItems();
             }
         }
 
-        protected override void OnItemRemoved(Item item) 
+        protected sealed override void OnItemRemoved(Item item) 
         {
             if (items != null && item != null) {
-                items.Remove(item);
-                UpdateModels();
+                UpdateItems();
             }
         }
 
-        protected override void UpdateItems() {
-
-        }
-
-        protected override void UpdateModels()
+        protected sealed override void UpdateModels()
         {
             ItemModel.ReturnBorrowedModels(models);
             models = ItemModel.GetModels(items.ToArray());
+            if(onModelsChanged != null && models != null) onModelsChanged.Invoke(models);
         }
 
         public Item[] GetItems()
@@ -77,8 +123,27 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         public override Item GetSelectedItem()
         {
-            if(items == null || horizontalIndex <= 0 || horizontalIndex >= items.Count) return null;
+            if(items == null || horizontalIndex <= 0 || horizontalIndex >= items.Length) return null;
             return items[horizontalIndex];
+        }
+
+        protected  override void OnUpdateItemModel()
+        {
+            if (models == null) return;
+
+            for (int i = 0; i < models.Length; i++)
+                if (onUpdateModel != null && models[i] != null)
+                    onUpdateModel.Invoke(i, models[i], this);
+        }
+
+        public override int GetHorizontalIndex(Item item)
+        {
+            if (item == null) return -1;
+
+            for(int i = 0; i < items.Length; i++)
+                if(items[i] == item) return i;
+
+            return -1;
         }
     }
 }

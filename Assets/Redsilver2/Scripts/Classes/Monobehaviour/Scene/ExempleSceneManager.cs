@@ -14,7 +14,6 @@ namespace RedSilver2.Framework.Scenes
             AddSceneData(new SceneData[]
             {
                 new TestScene01(0, true),
-                new TestScene01(1, true)
             });
         }
 

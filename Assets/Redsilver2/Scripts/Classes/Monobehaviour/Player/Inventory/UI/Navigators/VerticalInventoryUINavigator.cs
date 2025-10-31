@@ -3,6 +3,7 @@ using RedSilver2.Framework.Interactions.Items;
 using UnityEngine;
 using UnityEngine.Events;
 
+
 namespace RedSilver2.Framework.Player.Inventories.UI
 {
     public abstract class VerticalInventoryUINavigator : InventoryUINavigator
@@ -10,8 +11,9 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         [Space]
         [SerializeField] private bool canWarpVerticalIndex = true;
 
-        [Space]
-        [SerializeField] private UnityEvent<int> onVerticalIndexChanged;
+        private UnityEvent<int> onVerticalIndexChanged;
+        private UnityEvent<GameObject[,]> onModelsChanged;
+        private UnityEvent<int, int, GameObject, VerticalInventoryUINavigator> onUpdateModel;
 
         private OverrideablePressInput nextVerticalPressInput;
         private OverrideablePressInput previousVerticalPressInput;
@@ -25,45 +27,113 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         private Item      [,] items;
         private GameObject[,] models;
 
-        public Item[,] Items        => items;
+        public Item      [,] Items  => items;
         public GameObject[,] Models => models;
-
 
         protected override void Awake()
         {
             base.Awake();
-            verticalIndex = 0;
 
-            nextVerticalPressInput     = GetNextVerticalInput();
+            verticalIndex = 0;
+            items = new Item[0, 0];
+
+            onVerticalIndexChanged = new UnityEvent<int>();
+            onModelsChanged = new UnityEvent<GameObject[,]>();
+            onUpdateModel = new UnityEvent<int, int, GameObject, VerticalInventoryUINavigator>();
+
+           nextVerticalPressInput = GetNextVerticalInput();
             previousVerticalPressInput = GetPreviousVerticalInput();
 
             nextVerticalPressInput.Enable();
             previousVerticalPressInput.Enable();
-
-            items = new Item[0, 0];
         }
 
 
-        protected override void UpdateItems() {
-            items = GetItems();
+        protected override void Start()
+        {
+            AddOnVerticalIndexChangedListener(OnIndexChanged);
+            AddOnModelsChangedListener(OnModelsChanged);
+            base.Start();
         }
 
-        protected override void UpdateModels() {
-            ItemModel.ReturnBorrowedModels(models);
-            models = ItemModel.GetModels(items);
+        public void AddOnUpdateModelListener     (UnityAction<int, int, GameObject, VerticalInventoryUINavigator> action)
+        {
+            if(onUpdateModel != null && action != null)
+                onUpdateModel.AddListener(action);
+        }
+        public void RemoveOnUpdateModelListener  (UnityAction<int, int, GameObject, VerticalInventoryUINavigator> action)
+        {
+            if (onUpdateModel != null && action != null)
+                onUpdateModel.RemoveListener(action);
         }
 
-        public void AddOnVerticalIndexChangedListener(UnityAction<int> action) 
+        public void AddOnModelsChangedListener   (UnityAction<GameObject[,]> action)
+        {
+            if (onModelsChanged != null && action != null)
+                onModelsChanged.AddListener(action);
+        }
+        public void RemoveOnModelsChangedListener(UnityAction<GameObject[,]> action)
+        {
+            if (onModelsChanged != null && action != null)
+                onModelsChanged.RemoveListener(action);
+        }
+
+        public void AddOnVerticalIndexChangedListener(UnityAction<int> action)
         {
             if (onVerticalIndexChanged != null && action != null)
                 onVerticalIndexChanged.AddListener(action);
         }
 
-        public void RemoveOnVerticalIndexChangedListener(UnityAction<int> action) 
+        public void RemoveOnVerticalIndexChangedListener(UnityAction<int> action)
         {
-              if(onVerticalIndexChanged != null && action != null)
-                  onVerticalIndexChanged.RemoveListener(action);
+            if (onVerticalIndexChanged != null && action != null)
+                onVerticalIndexChanged.RemoveListener(action);
         }
+
+
+        private void OnModelsChanged(GameObject[,] models)
+        {
+            if (models == null) return;
+
+            for (int i = 0; i < models.GetLength(0); i++)
+                for (int j = 0; j < models.GetLength(1); j++)
+                    if (models[i, j] != null) SetModelParent(models[i, j]);
+        }
+
+        protected sealed override void OnUpdateItemModel()
+        {
+            if (models == null) return;
+
+            for (int i = 0; i < models.GetLength(0); i++)
+                for (int j = 0; j < models.GetLength(1); j++)
+                    if (models[i, j] != null && onUpdateModel != null)
+                        onUpdateModel.Invoke(i, j, models[i, j], this);
+        }
+
+
+        protected sealed override void OnCloseInventoryUI()
+        {
+            base.OnCloseInventoryUI();
+            ItemModel.ReturnBorrowedModels(models);
+            models= new GameObject[0, 0];
+        }
+
+        protected override void OnOpenInventoryUI()
+        {
+            base.OnOpenInventoryUI();
+            UpdateModels();
+        }
+
+        protected sealed override void UpdateItems() {
+            items = GetItems();
+        }
+
+        protected sealed override void UpdateModels() {
+            ItemModel.ReturnBorrowedModels(models);
+            models = ItemModel.GetModels(this);
+            if(onModelsChanged != null && models != null) { onModelsChanged.Invoke(models); }
+        }
+
         protected sealed override void UpdateInput() 
         {
             base.UpdateInput();
@@ -75,6 +145,25 @@ namespace RedSilver2.Framework.Player.Inventories.UI
                 if      (nextVerticalPressInput.Value)     IncrementVerticalIndex();
                 else if (previousVerticalPressInput.Value) DecrementVerticalIndex();
             }
+        }
+
+        public override int GetHorizontalIndex(Item item) {
+            return GetItemIndex(item, false);
+        }
+
+        public virtual int GetVerticalIndex(Item item) {
+            return GetItemIndex(item, true);
+        }
+
+        private int GetItemIndex(Item item, bool getVerticalIndex)
+        {
+            if (items == null || item == null) return -1;
+
+            for(int i = 0; i < items.GetLength(0); i++)
+                for(int j = 0; i < items.GetLength(1); j++)
+                    if (items[i, j] == item) return getVerticalIndex ? i : j; 
+
+            return -1;
         }
 
         private void DecrementVerticalIndex()  

@@ -6,20 +6,16 @@ namespace RedSilver2.Framework.Interactions.Collectibles
     {
         private InteractionModule interactionModule;
 
-        private void Awake() {
+        protected virtual void Awake() {
             interactionModule = GetComponent<InteractionModule>();
             CollectibleModelViewer.AddCollectibleModel(GetData());
         }
 
-        private void Start() {
+        protected virtual void Start() {
             SetInteractionModuleEvents(true);
         }
 
-        private void OnEnable() {
-            SetInteractionModuleEvents(true);
-        }
-
-        private void OnDisable() {
+        private void OnDestroy() {
             SetInteractionModuleEvents(false);
         }
 

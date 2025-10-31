@@ -14,50 +14,22 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         [Space]
         [SerializeField] private float offsetSpeed;
 
-        private IEnumerator updateParent;
-
-        protected override void Awake()
+        protected override void Start()
         {
-            base.Awake();
-
-            if(navigator != null) {
-                navigator.AddOnEnableListener(OnNavigatorEnable);
-                navigator.AddOnDisableListener(OnNavigatorDisable);
-            }
+            if(navigator != null)
+                navigator.AddOnLateUpdateListener(UpdateParentPosition);
         }
 
-        private void OnDestroy() {
-            OnNavigatorDisable();
-        }
-
-        private void OnDisable() {
-            OnNavigatorDisable();
-        }
-
-        private void OnEnable()
+        protected override void OnDestroy() 
         {
-            if (InventoryUINavigator.IsCurrent(navigator)) { OnNavigatorEnable(); }
+            if (navigator != null)
+                navigator.RemoveOnLateUpdateListener(UpdateParentPosition);
         }
 
-        private void OnNavigatorEnable()
+        private void UpdateParentPosition()
         {
-            OnNavigatorDisable();
-            updateParent = UpdateParent();
-            StartCoroutine(updateParent);   
-        }
-
-        private void OnNavigatorDisable()
-        {
-            if(updateParent != null) StopCoroutine(updateParent);
-            updateParent = null;
-        }
-
-        private IEnumerator UpdateParent() 
-        {
-            while (navigator != null) {
+            if (navigator != null && enabled)
                 UpdateParentPosition(navigator.ModelParentTransform);
-                yield return null;
-            }
         }
 
         private void UpdateParentPosition(Transform transform)

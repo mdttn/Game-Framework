@@ -17,29 +17,44 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         [Space]
         [SerializeField] private PageChangeDirection pageChangeDirection;
 
-        [Space]
-        [SerializeField] private UnityEvent<int, bool> onPageIndexChanged;
+         private UnityEvent<int> onPageIndexChanged;
 
         private int pageIndex;
         private List<Item[,]> pages;
 
         public int PageIndex => pageIndex;
+        public int MaxPages {
+            get {
+                return GetMaxPages();
+            }  
+        }
 
         protected sealed override void Awake()
         {
             base.Awake();
 
             pageIndex = 0;
-            pages     = new List<Item[,]>();
+            pages = new List<Item[,]>();
+            onPageIndexChanged = new UnityEvent<int>();
+        }
 
-            AddPage();
+        public void AddOnPageIndexChangedListener(UnityAction<int> action)
+        {
+            if (onPageIndexChanged != null && action != null)
+                onPageIndexChanged.AddListener(action);
+        }
+
+        public void RemoveOnPageIndexChangedListener(UnityAction<int> action)
+        {
+            if (onPageIndexChanged != null && action != null)
+                onPageIndexChanged.RemoveListener(action);
         }
 
         protected override void OnItemAdded(Item item) 
         {
             if(pages != null && item != null) { 
                 AddPageItem(item);
-                DebugPages();
+               // DebugPages();
             }
 
             base.OnItemAdded(item);
@@ -56,13 +71,16 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         public sealed override void Select(Item item)
         {
-            int pageIndex       = GetItemPageIndex(item);
-            int verticalIndex   = GetItemVerticalIndex(item);
-            int horizontalIndex = GetItemHorizontalIndex(item);
+            int pageIndex       = GetPageIndex(item);
+            int verticalIndex   = GetVerticalIndex(item);
+            int horizontalIndex = GetHorizontalIndex(item);
 
-            if (pageIndex       >= 0) this.pageIndex       = pageIndex;
-            if (verticalIndex   >= 0) this.verticalIndex   = verticalIndex;
-            if (horizontalIndex >= 0) this.horizontalIndex = horizontalIndex;
+            if (pageIndex >= 0 && verticalIndex >= 0 && horizontalIndex >= 0) 
+            {
+                this.pageIndex       = pageIndex;
+                this.verticalIndex   = verticalIndex;
+                this.horizontalIndex = horizontalIndex;
+            }   
         }
 
         protected sealed override void ClampDecrementHorizontalIndex(ref int horizontalIndex, bool canWarpHorizontalIndex)
@@ -70,7 +88,7 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             if (horizontalIndex < 0){
 
                 if(pageChangeDirection == PageChangeDirection.Horizontal) DecrementPageIndex();
-                base.ClampDecrementVerticalIndex(ref horizontalIndex, canWarpHorizontalIndex);
+                base.ClampDecrementHorizontalIndex(ref horizontalIndex, canWarpHorizontalIndex);
                
                 if (pageChangeDirection == PageChangeDirection.Horizontal) {
                     UpdateItems();
@@ -114,8 +132,7 @@ namespace RedSilver2.Framework.Player.Inventories.UI
                 if (pageChangeDirection == PageChangeDirection.Vertical) DecrementPageIndex();
                 base.ClampDecrementVerticalIndex(ref verticalIndex, canWarpVerticalIndex);
 
-                if (pageChangeDirection == PageChangeDirection.Vertical)
-                {
+                if (pageChangeDirection == PageChangeDirection.Vertical) {
                     UpdateItems();
                     UpdateModels();
                 }
@@ -124,12 +141,19 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         private void DecrementPageIndex()
         {
+            int max = GetMaxPages() - 1;
+
+            if (!canWrapPageIndex && pageIndex >= max)
+                return;
+
             pageIndex--;
 
             if (pageIndex < 0) {
-                if (canWrapPageIndex) pageIndex = GetMaxPages() - 1;
+                if (canWrapPageIndex) pageIndex = max;
                 else pageIndex = 0;
             }
+
+            onPageIndexChanged.Invoke(pageIndex);
         }
 
         private void IncrementPageIndex()
@@ -145,6 +169,8 @@ namespace RedSilver2.Framework.Player.Inventories.UI
                 if (canWrapPageIndex) pageIndex = 0;
                 else                  pageIndex = maxPageIndex - 1;
             }
+
+            onPageIndexChanged.Invoke(pageIndex);
         }
 
         private void AddPage()
@@ -153,6 +179,15 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
             if (pages != null) {
                 pages.Add(new Item[maxVerticalPageIndex, maxHorizontalPageIndex]);
+            }
+        }
+
+        private void AddPage(Item item)
+        {
+            AddPage();
+
+            if (item != null) {
+                pages[pages.Count - 1][0, 0] = item;
             }
         }
 
@@ -171,15 +206,15 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         {
             CleanPages();
             Debug.Log("Max Pages: " + GetMaxPages());
-            if (pages == null || item == null || pages.Count == 0) return;
+            if (pages == null || pages.Count == 0) { AddPage(); }
+            if (item == null) return;
 
             for (int i = 0; i < pages.Count; i++) {
                 AddPageItem(item, pages[i], i, out bool wasItemAdded);
                 if (wasItemAdded) return;
             }
 
-            AddPage();
-            pages[pages.Count - 1][0,0] = item;
+            AddPage(item);
         }
 
         private void AddPageItem(Item item, Item[,] items, int pageIndex, out bool wasItemAdded)
@@ -209,9 +244,9 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         private void RemovePageItem(Item item)
         {
-            int pageIndex       = GetItemPageIndex(item);
-            int verticalIndex   = GetItemVerticalIndex(item);
-            int horizontalIndex = GetItemHorizontalIndex(item);
+            int pageIndex       = GetPageIndex(item);
+            int verticalIndex   = GetVerticalIndex(item);
+            int horizontalIndex = GetHorizontalIndex(item);
 
             CleanPages();
             if (pages == null || pages.Count == 0) return;
@@ -284,13 +319,13 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             return count == items.GetLength(0) * items.GetLength(1);
         }
 
-        public int GetMaxPages()
+        private int GetMaxPages()
         {
             if (pages == null) return -1;
             return pages.Count;
         }
 
-        public int GetItemPageIndex(Item item)
+        public int GetPageIndex(Item item)
         {
             if(pages == null || item == null || pages.Count == 0) return -1;
 
@@ -302,7 +337,7 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             return -1;
         }
 
-        public  int GetItemVerticalIndex(Item item) 
+        public sealed override int GetVerticalIndex(Item item) 
         {         
             if(pages == null || item == null || pages.Count == 0) return -1;
             
@@ -314,7 +349,7 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             return -1;
         }
 
-        public  int GetItemHorizontalIndex(Item item)
+        public sealed override int GetHorizontalIndex(Item item)
         {
             if (pages == null || item == null || pages.Count == 0) return -1;
 
@@ -342,6 +377,7 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         public sealed override int GetMaxHorizontalIndex() {
             return GetMaxHorizontalIndex(pageIndex);
         }
+
         public int GetMaxHorizontalIndex(int pageIndex)
         {
             Item[,] items = GetItems(pageIndex);

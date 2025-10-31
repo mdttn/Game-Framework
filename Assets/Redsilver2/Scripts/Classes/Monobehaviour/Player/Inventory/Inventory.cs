@@ -7,28 +7,20 @@ using UnityEngine.Events;
 
 namespace RedSilver2.Framework.Player.Inventories
 {
-    public abstract class Inventory : MonoBehaviour 
+    public class Inventory : MonoBehaviour 
     {
-        [SerializeField] private GameObject invetoryUIParent;
 
         [Space]
         [SerializeField] private bool allowDuplicateItems;
 
 
-        [Space]
-        [SerializeField] private UnityEvent onOpenUI;
-        [SerializeField] private UnityEvent onCloseUI;
-
-        [Space]
-        [SerializeField] private UnityEvent<Item> onItemAdded;
-        [SerializeField] private UnityEvent<Item> onItemRemoved;
+        private UnityEvent       onOpenUI, onCloseUI;
+        private UnityEvent<Item> onItemAdded, onItemRemoved;
 
         private bool isUIOpened;
+        private List<Item> items;
 
         private static List<Inventory> instances = new List<Inventory>();
-
-        protected bool AllowDuplicateItems => allowDuplicateItems;
-
         public bool IsUIOpened => isUIOpened;
 
         public static Inventory[] Instances
@@ -45,14 +37,22 @@ namespace RedSilver2.Framework.Player.Inventories
         {
             instances.Add(this);
 
-            AddOnOpenUIListener(OnOpenUI);
-            AddOnCloseUIListener(OnCloseUI);
+            items = new List<Item>();
+           
+            onCloseUI     = new UnityEvent();
+            onOpenUI      = new UnityEvent();
+
+            onItemAdded   = new UnityEvent<Item>();
+            onItemRemoved = new UnityEvent<Item>();
+
             isUIOpened = false;
         }
 
         protected virtual void Start()
         {
-            if (invetoryUIParent != null) invetoryUIParent.SetActive(false);
+            AddOnOpenUIListener(OnOpenUI);
+            AddOnCloseUIListener(OnCloseUI);
+            gameObject.SetActive(false);
         }
 
         public void OpenUI() {
@@ -116,18 +116,27 @@ namespace RedSilver2.Framework.Player.Inventories
 
         public virtual void AddItem(Item item, out bool isItemAdded)
         {
-            if (item != null) isItemAdded = Contains(item);
-            else isItemAdded = false;
+            isItemAdded = false;
+            if (items == null || item == null) return;
 
-            if (isItemAdded == true && onItemAdded != null)
-                onItemAdded.Invoke(item);
+            if (allowDuplicateItems){
+                if (items.Count == 0 || ContainsDuplicate(item)) items.Add(item);
+            }
+            else if (!Contains(item) && !ContainsDuplicate(item))
+                items.Add(item);
+
+            isItemAdded = Contains(item);
+            if (isItemAdded == true && onItemAdded != null) onItemAdded.Invoke(item);
         }
         public virtual void RemoveItem(Item item, out bool isItemRemoved) 
-        {
-            isItemRemoved = !Contains(item);
+        {      
+            isItemRemoved = false;
+            if (items == null || item == null) return;
 
-            if (item != null && onItemRemoved != null && isItemRemoved) {
-                onItemRemoved.Invoke(item);
+            if (items.Contains(item)) {
+                items.Remove(item);
+                isItemRemoved = !Contains(item);
+                if (isItemRemoved == false && onItemRemoved != null) onItemRemoved.Invoke(item);
             }
         }
 
@@ -137,13 +146,14 @@ namespace RedSilver2.Framework.Player.Inventories
 
             PlayerController.Disable();
             CameraControllerModule.Disable();
-            if (invetoryUIParent != null) invetoryUIParent.SetActive(true);
+
+            gameObject.SetActive(true);
             isUIOpened = true;
         }
         protected virtual void OnCloseUI()
         {
             Debug.Log("Close Inventory UI");
-            if (invetoryUIParent != null) invetoryUIParent.SetActive(false);
+            gameObject.SetActive(false);
 
             PlayerController.Enable();
             CameraControllerModule.Enable();
@@ -152,21 +162,83 @@ namespace RedSilver2.Framework.Player.Inventories
         }
 
 
-        public abstract bool ContainsDuplicate(Item item);
-        public abstract bool ContainsDuplicate(string itemName);
 
-        public abstract int GetDuplicateCount(Item item);
-        public abstract int  GetDuplicateCount(string itemName);
+        public int GetMaxHorizontalIndex()
+        {
+            if (items == null) return 0;
+            return items.Count;
+        }
 
-        public abstract bool Contains(Item item);
-        public abstract bool Contains(string itemName);
+        public bool ContainsDuplicate(Item item)
+        {
+            if (items == null || item == null) return false;
+            return GetDuplicateCount(item) >= 1;
+        }
 
-        public abstract int  GetHorizontalIndex(Item item);
-        public abstract int  GetHorizontalIndex(string itemName);
+        public bool ContainsDuplicate(string itemName)
+        {
+            return ContainsDuplicate(GetItem(itemName));
+        }
 
 
-        public abstract int GetMaxHorizontalIndex();
-        public abstract Item GetItem(string itemName);
+        public int GetDuplicateCount(Item item)
+        {
+            if (items == null || item == null) return 0;
+            return items.Where(x => x.GetType() == item.GetType()).Count();
+        }
+
+        public int GetDuplicateCount(string itemName)
+        {
+            return GetDuplicateCount(GetItem(itemName));
+        }
+
+        public bool Contains(Item item)
+        {
+            if (items == null || item == null) return false;
+            return items.Contains(item);
+        }
+
+        public bool Contains(string itemName)
+        {
+            return Contains(GetItem(itemName));
+        }
+
+        public int GetHorizontalIndex(Item item)
+        {
+            if (items == null || item == null) return -1;
+
+            for (int i = 0; i < items.Count; i++)
+                if (items[i] == item) return i;
+
+            return -1;
+        }
+
+        public int GetHorizontalIndex(string itemName)
+        {
+            return GetHorizontalIndex(GetItem(itemName));
+        }
+
+        public Item[] GetItems()
+        {
+            if (items == null) return new Item[0];
+            return items.ToArray();
+        }
+
+        public Item GetItem(int index)
+        {
+            if (items == null || index < 0 || index >= items.Count) return null;
+            return items[index];
+        }
+
+        public Item GetItem(string itemName)
+        {
+            if (items == null) return null;
+
+            var results = items.Where(x => x != null).Where(x => x.name.ToLower() == itemName.ToLower());
+            if (results.Count() > 0) return results.First();
+
+            return null;
+        }
 
         public static Inventory GetInventory(string inventoryName)
         {

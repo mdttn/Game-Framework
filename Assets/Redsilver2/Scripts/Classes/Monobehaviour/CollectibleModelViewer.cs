@@ -1,22 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 namespace RedSilver2.Framework.Interactions.Collectibles
 {
-    public abstract class CollectibleModelViewer : MonoBehaviour
+    public class CollectibleModelViewer : MonoBehaviour
     {
         [SerializeField] private Camera parent;
 
         private IEnumerator showModelCoroutine;
+        private UnityEvent<GameObject> onUpdateModel;
         private static Dictionary<string, GameObject> collectibleModels = new Dictionary<string, GameObject>();
 
-        private void OnDisable()
-        {
+        protected virtual void Awake(){
+            onUpdateModel = new UnityEvent<GameObject>();
+        }
+
+        private void OnDisable() {
             HideModel();
         }
+
+        public void AddOnUpdateModelListener(UnityAction<GameObject> action)
+        {
+            if (onUpdateModel != null && action != null)
+                onUpdateModel.AddListener(action);
+        }
+        public void RemoveOnUpdateModelListener(UnityAction<GameObject> action)
+        {
+            if (onUpdateModel != null && action != null)
+                onUpdateModel.RemoveListener(action);
+        }
+
+
 
         public void ShowModel(string modelName)
         {
@@ -39,9 +58,28 @@ namespace RedSilver2.Framework.Interactions.Collectibles
            showModelCoroutine = null;
         }
 
-        public abstract IEnumerator UpdateModelShown(GameObject model, Camera parent);
+        private IEnumerator UpdateModelShown(GameObject model, Camera parent)
+        {
+            if (model != null && parent != null)
+            {
+                model.SetActive(true);
+                model.transform.SetParent(parent.transform);
 
-        public  static void AddCollectibleModel(CollectibleData data)
+                yield return StartCoroutine(UpdateModelShown(model));
+                model.SetActive(false);
+            }
+        }
+
+        private IEnumerator UpdateModelShown(GameObject model)
+        {
+            while (model != null)
+            {
+                onUpdateModel.Invoke(model);
+                yield return null;
+            }
+        }
+
+        public static void AddCollectibleModel(CollectibleData data)
         {
             if (data != null) AddCollectibleModel(data.Model);
         }

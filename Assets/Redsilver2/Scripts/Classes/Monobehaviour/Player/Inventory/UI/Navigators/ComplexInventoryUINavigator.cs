@@ -1,10 +1,8 @@
 using RedSilver2.Framework.Interactions.Items;
-using System;
 using UnityEngine;
 
 namespace RedSilver2.Framework.Player.Inventories.UI
 {
-    [RequireComponent(typeof(ComplexInventory))]
     public sealed class ComplexInventoryUINavigator : VerticalInventoryUINavigator
     {
         [Space]
@@ -12,13 +10,13 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         public sealed override void Select(Item item)
         {
-            if (inventory is ComplexInventory && item != null) 
-            {
-                ComplexInventory inventory = (this.inventory as ComplexInventory);
+           int horizontalIndex = GetHorizontalIndex(item);
+           int verticalIndex   = GetVerticalIndex(item);
 
-                if (inventory.Contains(item))
-                    inventory.GetItemIndexes(item, out verticalIndex, out horizontalIndex);
-            }
+           if(verticalIndex >= 0 && horizontalIndex >= 0) {
+                this.horizontalIndex = horizontalIndex;
+                this.verticalIndex = verticalIndex;
+           }
         }
 
         public sealed override int GetMaxHorizontalIndex()
@@ -37,8 +35,12 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         protected override void OnItemAdded(Item item)
         {
+            base.OnItemAdded(item); 
+
             Item[,] items = GetItems();
             string results = "";
+
+            if (items == null) return;
 
             for (int i = 0; i < items.GetLength(0); i++)
             {
@@ -54,36 +56,30 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             Debug.LogWarning(results);
         }
 
-        protected override void OnItemRemoved(Item item)
-        {
-
-        }
-
         public sealed override Item[,] GetItems()
         {
             if (inventory == null) return new Item[0, 0];
-            if (inventory is SimpleInventory) return GetItems(inventory as SimpleInventory);
-            return GetItems(inventory as ComplexInventory);
+            return GetItems(inventory);
         }
 
-        private Item[,] GetItems(SimpleInventory inventory)
+        private Item[,] GetItems(Inventory inventory)
         {
-            if (inventory == null || maxHorizontalIndex == 0) return null;
-            return GetItems(inventory, inventory.GetMaxHorizontalIndex() / maxHorizontalIndex);
+            if (inventory == null || maxHorizontalIndex == 0) return new Item[0, 0];
+            return GetItems(inventory, (inventory.GetMaxHorizontalIndex() + 1) / maxHorizontalIndex);
         }
 
-        private Item[,] GetItems(SimpleInventory inventory, int maxVerticalIndex)
+        private Item[,] GetItems(Inventory inventory, int maxVerticalIndex)
         {
             Item[,] results;
-            if (inventory == null || maxVerticalIndex <= 0) return new Item[0, 0];
+            if (inventory == null) return new Item[0, 0];
 
-            results = new Item[maxVerticalIndex % 2 == 0 ? maxVerticalIndex : maxVerticalIndex + 1, maxHorizontalIndex];
+            results = new Item[maxVerticalIndex == 0 ? 1 : maxVerticalIndex + 1, maxHorizontalIndex];
 
             GetItems(inventory, ref results);
             return results == null ? new Item[0, 0] : results;
         }
 
-        private void GetItems(SimpleInventory inventory, ref Item[,] results)
+        private void GetItems(Inventory inventory, ref Item[,] results)
         {
             if (inventory == null || results == null || results.GetLength(0) == 0 || results.GetLength(1) == 0 ) return;
 
@@ -91,40 +87,6 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             GetItems(inventory.GetItems(), ref verticalIndex, ref horizontalIndex, ref results);
         }
 
-
-        private Item[,] GetItems(ComplexInventory inventory)
-        {
-            if (inventory == null || maxHorizontalIndex <= 0) return new Item[0, 0];
-            return GetItems(inventory, inventory.GetItemsCount() / maxHorizontalIndex);
-        }
-
-        private Item[,] GetItems(ComplexInventory inventory, int maxVerticalIndex)
-        {
-            if (inventory == null || maxVerticalIndex <= 0) return new Item[0, 0];
-
-            Item[,] results = new Item[maxVerticalIndex % 2 == 0 ? maxVerticalIndex : maxVerticalIndex + 1, maxHorizontalIndex];
-            GetItems(inventory.GetItems(), ref results);
-            return results;
-        }
-
-        public sealed override Item GetSelectedItem()
-        {
-            Item[,] items = GetItems();
-            if (items == null || items.GetLength(0) == 0 || items.GetLength(1) == 0)  return null; 
-            return items[verticalIndex, horizontalIndex];
-        }
-
-        private void GetItems(Item[][] items, ref Item[,] results)
-        {
-            int verticalIndex, horizontalIndex;
-            if (items == null || results == null || results.GetLength(0) == 0 || results.GetLength(1) == 0) return;
-
-            verticalIndex = 0;
-            horizontalIndex = 0;
-
-            for (int i = 0; i < items.Length; i++) 
-                GetItems(items[i], ref verticalIndex, ref horizontalIndex, ref results);
-        }
 
         private void GetItems(Item[] items, ref int verticalIndex, ref int horizontalIndex, ref Item[,] results) 
         {
@@ -136,15 +98,22 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         private void GetItem(Item item, ref int verticalIndex, ref int horizontalIndex, ref Item[,] results)
         {
-            if(item == null || results == null) return;
+            if(results == null) return;
 
-            if (horizontalIndex >= results.GetLength(1)) {
+            results[verticalIndex, horizontalIndex] = item;
+            horizontalIndex++;
+
+            if (horizontalIndex >= results.GetLength(1)){
                 horizontalIndex = 0;
                 verticalIndex++;
             }
+        }
 
-            results[base.verticalIndex, horizontalIndex] = item;
-            horizontalIndex++;
+        public sealed override Item GetSelectedItem()
+        {
+            Item[,] items = GetItems();
+            if (items == null || items.GetLength(0) == 0 || items.GetLength(1) == 0) return null;
+            return items[verticalIndex, horizontalIndex];
         }
     }
 }

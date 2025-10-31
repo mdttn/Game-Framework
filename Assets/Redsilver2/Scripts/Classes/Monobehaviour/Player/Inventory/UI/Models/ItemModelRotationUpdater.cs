@@ -8,37 +8,17 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         [Space]
         [SerializeField] private float rotationSpeed;
 
-        protected sealed override void UpdateModels(SimpleInventoryUINavigator navigator)
-        {
-            if (navigator != null) UpdateModelsRotation(navigator.Models);
+        protected sealed override void UpdateModels(int horizontalIndex, GameObject model, SimpleInventoryUINavigator navigator) {
+            UpdateModelRotation(model);
         }
 
-        protected sealed override void UpdateModels(VerticalInventoryUINavigator navigator)
-        {
-            if(navigator != null) UpdateModelsRotation(navigator.Models);
+        protected sealed override void UpdateModels(int verticalIndex, int horizontalIndex, GameObject model, VerticalInventoryUINavigator navigator) {
+            UpdateModelRotation(model);
         }
 
-        protected virtual void UpdateModelsRotation(GameObject[] models)
+        protected virtual void UpdateModelRotation(GameObject model)
         {
-            if(navigator == null || models == null || models.Length == 0) return;
-
-            foreach(GameObject model in models.Where(x => x != null)) {
-                 UpdateModelRotation(model);
-            }
-        }
-
-        protected virtual void UpdateModelsRotation(GameObject[,] models)
-        {
-            if (navigator == null ||  models == null || models.GetLength(0) == 0 || models.GetLength(1) == 0) return;
-
-            for (int i = 0; i < models.GetLength(0); i++)
-                for (int j = 0; j < models.GetLength(1); j++)
-                    UpdateModelRotation(models[i, j]);
-        }
-
-        protected void UpdateModelRotation(GameObject model)
-        {
-            if(model == null) return;
+            if(model == null || !enabled) return;
             Transform transform = model.transform;
             transform.localEulerAngles += Time.deltaTime * Vector3.up * rotationSpeed;
         }
