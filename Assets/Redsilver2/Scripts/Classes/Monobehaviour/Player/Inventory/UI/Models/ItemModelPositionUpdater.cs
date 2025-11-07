@@ -13,12 +13,10 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         [SerializeField] protected float modelPositionLerpSpeed;
 
         protected sealed override void UpdateModels(int horizontalIndex, GameObject model, SimpleInventoryUINavigator navigator) {
-            Debug.LogWarning("Updating Item Position..");
             UpdateModelPosition(horizontalIndex, model);
         }
 
         protected sealed override void UpdateModels(int verticalIndex, int horizontalIndex, GameObject model, VerticalInventoryUINavigator navigator) {
-            Debug.LogWarning("Updating Item Position..");
             UpdateModelPosition(verticalIndex, horizontalIndex, model);
         }
 

@@ -1,6 +1,7 @@
 using RedSilver2.Framework.Interactions.Items;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -62,6 +63,12 @@ namespace RedSilver2.Framework.Player.Inventories.UI
                 onModelsChanged.RemoveListener(action);
         }
 
+        public bool DoesModelExist(int index)
+        {
+            if (models == null || models.Length == 0 || index < 0 || index >= models.Length) return false;
+            return models[index] != null;
+        }
+
         private void OnModelsChanged(GameObject[] models) {
             if (models == null) return;
 
@@ -69,7 +76,7 @@ namespace RedSilver2.Framework.Player.Inventories.UI
                      SetModelParent(model);
         }
 
-        protected sealed override void UpdateItems()
+        public sealed override void UpdateItems()
         {
             items = inventory.GetItems();
         }
@@ -87,11 +94,10 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             return -1;
         }
 
-        protected sealed override void OnCloseInventoryUI()
+        public sealed override void ClearModels()
         {
-            base.OnCloseInventoryUI();
             ItemModel.ReturnBorrowedModels(models);
-            if (models != null) models = new GameObject[0];
+            models = new GameObject[0];
         }
 
         protected sealed override void OnItemAdded(Item item)
@@ -108,11 +114,19 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             }
         }
 
-        protected sealed override void UpdateModels()
+        public sealed override void UpdateModels()
         {
             ItemModel.ReturnBorrowedModels(models);
             models = ItemModel.GetModels(items.ToArray());
             if(onModelsChanged != null && models != null) onModelsChanged.Invoke(models);
+        }
+
+        public GameObject GetModel(int horizontalIndex)
+        {
+            if(models == null || models.Length == 0 || horizontalIndex < 0 || horizontalIndex >= models.Length)
+                return null;
+
+            return models[horizontalIndex];
         }
 
         public Item[] GetItems()

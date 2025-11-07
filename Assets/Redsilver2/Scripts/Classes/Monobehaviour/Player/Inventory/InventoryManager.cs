@@ -1,5 +1,6 @@
 using RedSilver2.Framework.Inputs;
 using RedSilver2.Framework.Interactions.Items;
+using RedSilver2.Framework.Player.Inventories.UI;
 using UnityEngine;
 
 namespace RedSilver2.Framework.Player.Inventories
@@ -21,15 +22,14 @@ namespace RedSilver2.Framework.Player.Inventories
             if(uiInput != null) uiInput.Update();
         }
 
-        private void OnInputInteract() 
+        protected virtual void OnInputInteract()
         {
-            if(mainInventory != null)
-            {
-                if (mainInventory.IsUIOpened)
-                    mainInventory.CloseUI();
-                else
-                    mainInventory.OpenUI();
-            }
+            if (mainInventory == null) return;
+
+            if (mainInventory.IsUIOpened)
+                mainInventory.Close();
+            else
+                mainInventory.Open();
         }
 
         public virtual void AddItem(Item item)

@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 namespace RedSilver2.Framework.Player.Inventories.UI
 {
+    [RequireComponent(typeof(InventoryUINavigatorTransitionsHandler))]
     public partial class PageInventoryUINavigator : VerticalInventoryUINavigator
     {
         [Space]
@@ -17,7 +18,7 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         [Space]
         [SerializeField] private PageChangeDirection pageChangeDirection;
 
-         private UnityEvent<int> onPageIndexChanged;
+        private UnityEvent<int> onPageIndexChanged;
 
         private int pageIndex;
         private List<Item[,]> pages;
@@ -86,42 +87,25 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         protected sealed override void ClampDecrementHorizontalIndex(ref int horizontalIndex, bool canWarpHorizontalIndex)
         {
             if (horizontalIndex < 0){
-
                 if(pageChangeDirection == PageChangeDirection.Horizontal) DecrementPageIndex();
                 base.ClampDecrementHorizontalIndex(ref horizontalIndex, canWarpHorizontalIndex);
-               
-                if (pageChangeDirection == PageChangeDirection.Horizontal) {
-                    UpdateItems();
-                    UpdateModels();
-                }
             }
         }
 
         protected sealed override void ClampIncrementHorizontalIndex(ref int horizontalIndex, bool canWarpHorizontalIndex)
         {
             if (horizontalIndex >= GetMaxHorizontalIndex(pageIndex)) {
-
                 if(pageChangeDirection == PageChangeDirection.Horizontal) IncrementPageIndex();
-                base.ClampIncrementHorizontalIndex(ref horizontalIndex, canWarpHorizontalIndex);
-
-                if (pageChangeDirection == PageChangeDirection.Horizontal) {
-                    UpdateItems();
-                    UpdateModels();
-                }
+                base.ClampIncrementHorizontalIndex(ref horizontalIndex, canWarpHorizontalIndex);;
             }
         }
 
         protected sealed override void ClampIncrementVerticalIndex(ref int verticalIndex, bool canWarpVerticalIndex)
         {
-            if (verticalIndex >= GetMaxVerticalIndex(pageIndex)) {
-
+            if (verticalIndex >= GetMaxVerticalIndex(pageIndex))
+            {
                 if (pageChangeDirection == PageChangeDirection.Vertical) IncrementPageIndex();
                 base.ClampIncrementVerticalIndex(ref verticalIndex, canWarpVerticalIndex);
-
-                if (pageChangeDirection == PageChangeDirection.Vertical) {
-                    UpdateItems();
-                    UpdateModels();
-                }
             }
         }
 
@@ -131,29 +115,32 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             {
                 if (pageChangeDirection == PageChangeDirection.Vertical) DecrementPageIndex();
                 base.ClampDecrementVerticalIndex(ref verticalIndex, canWarpVerticalIndex);
-
-                if (pageChangeDirection == PageChangeDirection.Vertical) {
-                    UpdateItems();
-                    UpdateModels();
-                }
             }
+        }
+
+        private void UpdateItemsAndModels()
+        {
+            UpdateItems();
+            if (transitionsHandler == null) UpdateModels();
         }
 
         private void DecrementPageIndex()
         {
-            int max = GetMaxPages() - 1;
+            int maxPageIndex = GetMaxPages();
 
-            if (!canWrapPageIndex && pageIndex >= max)
+            if (!canWrapPageIndex && pageIndex >= maxPageIndex - 1)
                 return;
 
             pageIndex--;
 
             if (pageIndex < 0) {
-                if (canWrapPageIndex) pageIndex = max;
+                if (canWrapPageIndex) pageIndex = maxPageIndex - 1;
                 else pageIndex = 0;
             }
 
-            onPageIndexChanged.Invoke(pageIndex);
+
+            if (maxPageIndex > 1)
+                onPageIndexChanged.Invoke(pageIndex);
         }
 
         private void IncrementPageIndex()
@@ -167,10 +154,11 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             if (pageIndex >= maxPageIndex)
             {
                 if (canWrapPageIndex) pageIndex = 0;
-                else                  pageIndex = maxPageIndex - 1;
+                else pageIndex = maxPageIndex - 1;
             }
 
-            onPageIndexChanged.Invoke(pageIndex);
+            if (maxPageIndex > 1) 
+                onPageIndexChanged.Invoke(pageIndex);
         }
 
         private void AddPage()

@@ -4902,6 +4902,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e921f491ae3bab4396d434223a27220, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.Player.Inventories.UI.InventoryUINavigatorTransitionsHandler
+  allowInventoryCloseTransition: 1
 --- !u!1 &8699785243644590235
 GameObject:
   m_ObjectHideFlags: 0

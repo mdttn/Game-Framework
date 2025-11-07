@@ -15,7 +15,19 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         private void SetNavigatorEvents(bool addEvents)
         {
-            if(navigator is SimpleInventoryUINavigator)
+            if (navigator == null) return;
+
+            if (addEvents) {
+                navigator.AddOnTransitionsStartedListener(OnTransitionsStarted);
+                navigator.AddOnTransitionsFinishedListener(OnTransitionsFinished);
+            }
+            else {
+                navigator.RemoveOnTransitionsStartedListener(OnTransitionsStarted);
+                navigator.RemoveOnTransitionsFinishedListener(OnTransitionsFinished);
+            }
+
+
+            if (navigator is SimpleInventoryUINavigator)
                 SetNavigatorEvents(navigator as SimpleInventoryUINavigator, addEvents);
             else if (navigator is VerticalInventoryUINavigator)
                 SetNavigatorEvents(navigator as VerticalInventoryUINavigator, addEvents);
@@ -38,6 +50,16 @@ namespace RedSilver2.Framework.Player.Inventories.UI
                 navigator.RemoveOnUpdateModelListener(UpdateModels);
             else 
                 navigator.AddOnUpdateModelListener(UpdateModels);
+        }
+
+        private void OnTransitionsStarted()
+        {
+            enabled = false;
+        }
+
+        private void OnTransitionsFinished()
+        {
+            enabled = true;
         }
 
         protected abstract void UpdateModels(int horizontalIndex, GameObject model, SimpleInventoryUINavigator navigator);

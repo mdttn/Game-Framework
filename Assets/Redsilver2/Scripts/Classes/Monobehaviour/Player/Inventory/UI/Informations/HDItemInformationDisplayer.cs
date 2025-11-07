@@ -21,5 +21,15 @@ namespace RedSilver2.Framework.Player.Inventories.UI
                 displayer.text = message;
             }
         }
+
+        protected override void OnTransitionsFinished()
+        {
+            if (displayer != null) displayer.enabled = true;
+        }
+
+        protected sealed override void OnTransitionsStarted()
+        {
+            if (displayer != null) displayer.enabled = false;
+        }
     }
 }

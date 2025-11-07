@@ -10,20 +10,34 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         protected override void Start()
         {
-            if (navigator != null) {
-                navigator.AddOnOpenUIListener(OnOpenUI);
-                navigator.AddOnCloseUIListener(OnCloseUI);
-                navigator.AddOnItemSelectedListener(DisplayItemInformation);
-            }
-
+            SetNavigatorEvents(true);
             DisplayNullMessage();
         }
 
         protected override void OnDestroy() 
         {
-            if (navigator != null) {
+            SetNavigatorEvents(false);
+        }
+
+        private void SetNavigatorEvents(bool addEvents)
+        {
+            if (navigator == null) return;
+
+            if (addEvents) {
+                navigator.AddOnTransitionsFinishedListener(OnTransitionsFinished);
+                navigator.AddOnTransitionsStartedListener(OnTransitionsStarted);
+
+                navigator.AddOnOpenUIListener(OnOpenUI);
+                navigator.AddOnCloseUIListener(OnCloseUI);
+                navigator.AddOnItemSelectedListener(DisplayItemInformation);
+            }
+            else {
+                navigator.RemoveOnTransitionsFinishedListener(OnTransitionsFinished);
+                navigator.RemoveOnTransitionsStartedListener(OnTransitionsStarted);
+
                 navigator.RemoveOnOpenUIListener(OnOpenUI);
                 navigator.RemoveOnCloseUIListener(OnCloseUI);
+
                 navigator.RemoveOnItemSelectedListener(DisplayItemInformation);
             }
         }
@@ -49,5 +63,8 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         }
         protected abstract void DisplayItemInformation(ItemData data);
         protected abstract void DisplayItemInformation(string message);
+
+        protected abstract void OnTransitionsStarted();
+        protected abstract void OnTransitionsFinished();
     }
 }

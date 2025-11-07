@@ -1,6 +1,8 @@
 using RedSilver2.Framework.Inputs;
 using RedSilver2.Framework.Interactions.Items;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -13,12 +15,12 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         [Space]
         [SerializeField] private bool canWrapHorizontalIndex = true;
 
+        protected int  horizontalIndex;
 
-        private UnityEvent onUpdate, onLateUpdate, onEnable, onDisable;
-        private UnityEvent<int> onHorizontalIndexChanged;
+        private UnityEvent       onUpdate, onLateUpdate, onEnable, onDisable;
+        private UnityEvent<int>  onHorizontalIndexChanged;
         private UnityEvent<Item> onItemSelected;
 
-        protected int horizontalIndex;
         protected Inventory inventory;
 
         private OverrideablePressInput nextHorizontalPressInput;
@@ -27,8 +29,12 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         private static List<InventoryUINavigator> navigators;
         private static InventoryUINavigator current;
 
+        protected InventoryUINavigatorTransitionsHandler transitionsHandler;
+
         public int HorizontalIndex      => horizontalIndex;
         public Transform ModelParentTransform => modelParentTransform;
+
+        public static InventoryUINavigator Current => current;
 
         public InventoryUINavigator[] Navigators
         {
@@ -53,30 +59,23 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             onEnable       = new UnityEvent();
             onDisable      = new UnityEvent();
 
-            onItemSelected = new UnityEvent<Item>();
+            onItemSelected     = new UnityEvent<Item>();
+            transitionsHandler = GetComponentInChildren<InventoryUINavigatorTransitionsHandler>();
 
             nextHorizontalPressInput = GetNextHorizontalInput();
             previousHorizontalPressInput = GetPreviousHorizontalInput();
-
-            nextHorizontalPressInput.Enable();
-            previousHorizontalPressInput.Enable();
         }
 
         protected virtual void Start() 
         {
             Debug.LogWarning("Inventory: " + inventory);
 
-            if (inventory != null) {
-                inventory.AddOnItemAddedListener(OnItemAdded);
-                inventory.AddOnItemRemovedListener(OnItemRemoved);
+            nextHorizontalPressInput.Enable();
+            previousHorizontalPressInput.Enable();
 
-                inventory.AddOnOpenUIListener(OnOpenInventoryUI);
-                inventory.AddOnCloseUIListener(OnCloseInventoryUI);
-            }
-
-            AddOnHorizontalIndexChangedListener(OnIndexChanged);
-            AddOnLateUpdateListener(OnUpdateItemModel);
-            AddOnUpdateListener(UpdateInput);
+            SetInventoryEvents(true);
+            SetTransitionsEvents(true);
+            SetDefaultEvents(true);
         }
 
         private void Update() {
@@ -102,6 +101,57 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             }
         }
 
+        private void OnDestroy()
+        {
+            SetInventoryEvents(false);
+            SetTransitionsEvents(false);
+            SetDefaultEvents(false);
+        }
+
+        private void SetInventoryEvents(bool addEvents)
+        {
+            if (addEvents)
+            {
+                AddOnItemAddedListener(OnItemAdded);
+                AddOnItemRemovedListener(OnItemRemoved);
+                AddOnOpenUIListener(OnOpenInventoryUI);
+                AddOnCloseUIListener(OnCloseInventoryUI);
+            }
+            else
+            {
+                RemoveOnItemAddedListener(OnItemAdded);
+                RemoveOnItemRemovedListener(OnItemRemoved);
+                RemoveOnOpenUIListener(OnOpenInventoryUI);
+                RemoveOnCloseUIListener(OnCloseInventoryUI);
+            }
+        }
+        private void SetTransitionsEvents(bool addEvents)
+        {
+            if (addEvents) {
+                AddOnTransitionsStartedListener(DisableInputs);
+                AddOnTransitionsFinishedListener(EnableInputs);
+            }
+            else {
+                RemoveOnTransitionsStartedListener(DisableInputs);
+                RemoveOnTransitionsFinishedListener(EnableInputs);
+            }
+        }
+        private void SetDefaultEvents(bool addEvents)
+        {
+            if (addEvents)
+            {
+                AddOnHorizontalIndexChangedListener(OnIndexChanged);
+                AddOnLateUpdateListener(OnUpdateItemModel);
+                AddOnUpdateListener(UpdateInput);
+            }
+            else
+            {
+                RemoveOnHorizontalIndexChangedListener(OnIndexChanged);
+                RemoveOnLateUpdateListener(OnUpdateItemModel);
+                RemoveOnUpdateListener(UpdateInput);
+            }
+        }
+
         protected virtual void OnIndexChanged(int index) {
             if(onItemSelected != null) onItemSelected.Invoke(GetSelectedItem());
         }
@@ -109,13 +159,34 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         protected virtual void OnOpenInventoryUI()
         {
             UpdateModels();
+
+
+
             SetCurrent(this);
         }
 
-        protected virtual void OnCloseInventoryUI()
+        private void OnCloseInventoryUI()
         {
             SetCurrent(null);
         }
+
+        public abstract void ClearModels();
+
+        public void AddOnTransitionsStartedListener(UnityAction action) {
+            if (transitionsHandler != null) transitionsHandler.AddOnTransitionStartedListener(action);
+        }
+        public void RemoveOnTransitionsStartedListener(UnityAction action) {
+            if (transitionsHandler != null) transitionsHandler.RemoveOnTransitionStartedListener(action);
+        }
+
+        public void AddOnTransitionsFinishedListener(UnityAction action) {
+            if (transitionsHandler != null) transitionsHandler.AddOnTransitionFinishedListener(action);
+        }
+
+        public void RemoveOnTransitionsFinishedListener(UnityAction action) {
+            if (transitionsHandler != null) transitionsHandler.RemoveOnTransitionFinishedListener(action); 
+        }
+
 
         public void AddOnOpenUIListener(UnityAction action) {
             if(inventory != null) inventory.AddOnOpenUIListener(action);
@@ -125,6 +196,7 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         }
 
         public void AddOnCloseUIListener(UnityAction action){
+            Debug.Log(action.Method.Name);
             if (inventory != null) inventory.AddOnCloseUIListener(action);
         }
         public void RemoveOnCloseUIListener(UnityAction action){
@@ -211,23 +283,19 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         protected virtual void OnItemAdded(Item item)
         {
-            if (item != null) {
-                UpdateItems();
+            if (item == null) return;
+            UpdateItems();
 
-                if (inventory != null)
-                    if (inventory.IsUIOpened) 
-                        UpdateModels();
-            }
+            if (inventory == null || !inventory.IsUIOpened) return;
+            UpdateModels();
         }
         protected virtual void OnItemRemoved(Item item)
         {
-            if (item != null) {
-                UpdateItems();
+            if (item == null) return;
+            UpdateItems();
 
-                if (inventory != null)
-                   if (inventory.IsUIOpened)
-                        UpdateModels();
-            }
+            if (inventory == null || !inventory.IsUIOpened) return;
+            UpdateModels();
         }
 
         protected virtual void UpdateInput()
@@ -275,6 +343,15 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             }
         }
 
+        protected virtual void EnableInputs() {
+            if (nextHorizontalPressInput != null) nextHorizontalPressInput.Enable();
+            if (previousHorizontalPressInput != null) previousHorizontalPressInput.Enable();
+        }
+        protected virtual void DisableInputs() {
+            if (nextHorizontalPressInput != null) nextHorizontalPressInput.Disable();
+            if (previousHorizontalPressInput != null) previousHorizontalPressInput.Disable();
+        }
+
         protected void SetModelParent(GameObject gameObject) {
             if(gameObject == null || modelParentTransform == null) return;
             gameObject.transform.SetParent(modelParentTransform);
@@ -299,13 +376,26 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             return inventory;
         }
 
+
+        public async Awaitable AsyncTransition(bool isShowingModels)
+        {
+            if (transitionsHandler != null)
+                await transitionsHandler.AsyncTransition(isShowingModels);  
+        }
+
+        public async Awaitable AwaitTransition()
+        {
+            if (transitionsHandler != null)
+                await transitionsHandler.AwaitTransition();
+        }
+
         public abstract void Select(Item item);
         public abstract int GetMaxHorizontalIndex();
 
         protected abstract void OnUpdateItemModel();
 
-        protected abstract void UpdateItems();
-        protected abstract void UpdateModels();
+        public  abstract void UpdateItems();
+        public  abstract void UpdateModels();
 
         public abstract int GetHorizontalIndex(Item item);
         public abstract Item GetSelectedItem();
@@ -333,6 +423,22 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         {
             if (navigator == null) return false;
             return current == navigator;
+        }
+
+        public static InventoryUINavigator GetOwned(Inventory inventory) 
+        {
+            if(inventory == null || navigators == null) return null;
+            
+            var results = navigators.Where(x => x != null).Where(x => x.inventory == inventory).ToArray();
+            if (results.Count() > 0) return results.First();
+
+            return null;
+        }
+
+        public static Inventory GetInventory(InventoryUINavigator navigator)
+        {
+            if (navigator == null) return null;
+            return navigator.inventory;
         }
 
         public static OverrideablePressInput GetNextHorizontalInput() {

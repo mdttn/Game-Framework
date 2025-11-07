@@ -1,5 +1,6 @@
 
 using RedSilver2.Framework.Interactions.Items;
+using RedSilver2.Framework.Player.Inventories.UI;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -46,20 +47,21 @@ namespace RedSilver2.Framework.Player.Inventories
             onItemRemoved = new UnityEvent<Item>();
 
             isUIOpened = false;
+
+            AddOnOpenUIListener(OnOpenUI);
+            AddOnCloseUIListener(OnCloseUI);
         }
 
         protected virtual void Start()
         {
-            AddOnOpenUIListener(OnOpenUI);
-            AddOnCloseUIListener(OnCloseUI);
             gameObject.SetActive(false);
         }
 
-        public void OpenUI() {
+        public void Open() {
             if(onOpenUI != null) onOpenUI.Invoke(); 
         }
 
-        public void CloseUI() {
+        public void Close() {
             if(onCloseUI != null) onCloseUI.Invoke(); 
         }
 
@@ -140,28 +142,33 @@ namespace RedSilver2.Framework.Player.Inventories
             }
         }
 
-        protected virtual void OnOpenUI()
+        public void EnableUI()
         {
-            Debug.Log("Open Inventory UI");
-
             PlayerController.Disable();
             CameraControllerModule.Disable();
 
             gameObject.SetActive(true);
             isUIOpened = true;
         }
-        protected virtual void OnCloseUI()
+
+        public void DisableUI()
         {
-            Debug.Log("Close Inventory UI");
             gameObject.SetActive(false);
+            isUIOpened = false;
 
             PlayerController.Enable();
             CameraControllerModule.Enable();
-
-            isUIOpened = false;
         }
 
+        protected virtual void OnOpenUI()
+        {
+            Debug.Log("Open Inventory UI");
+            EnableUI();
+        }
 
+        protected virtual void OnCloseUI() {
+            Debug.Log("Close Inventory UI");
+        }
 
         public int GetMaxHorizontalIndex()
         {

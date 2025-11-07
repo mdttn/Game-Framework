@@ -8,14 +8,20 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         [SerializeField] private string messageToDisplay;
         [SerializeField] private string nullMessage;
 
-        protected sealed override void Start()
-        {
+        protected sealed override void Start() {
             SetNavigatorEvents(true);
         }
 
-        protected sealed override void OnDestroy()
-        {
+        protected sealed override void OnDestroy() {
             SetNavigatorEvents(false);
+        }
+
+        private void OnDisable(){
+            DisplayMessage(string.Empty);
+        }
+
+        private void OnEnable() {
+            DisplayMessage(navigator as PageInventoryUINavigator);
         }
 
         private void SetNavigatorEvents(bool addEvents)
@@ -65,17 +71,11 @@ namespace RedSilver2.Framework.Player.Inventories.UI
 
         private void DisplayMessage(PageInventoryUINavigator navigator)
         {
-            Debug.LogWarning(GetMessage(navigator.PageIndex, navigator.MaxPages));
-
-            if(navigator != null)
-                DisplayMessage(GetMessage(navigator.PageIndex, navigator.MaxPages));
-            else 
-                DisplayNullMessage();
+            if (!enabled)               DisplayMessage(string.Empty);
+            else if (navigator != null) DisplayMessage(GetMessage(navigator.PageIndex, navigator.MaxPages));
+            else                        DisplayMessage(nullMessage);
         }
 
-        protected void DisplayNullMessage() {
-            DisplayMessage(nullMessage);
-        }
 
         private string GetMessage(int pageIndex, int maxPageIndex)
         {
@@ -84,8 +84,5 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         }
 
         protected abstract void DisplayMessage(string message);
-
-
-
     }
 }

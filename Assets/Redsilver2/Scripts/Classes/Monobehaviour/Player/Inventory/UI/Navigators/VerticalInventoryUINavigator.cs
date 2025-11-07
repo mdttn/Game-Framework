@@ -1,5 +1,6 @@
 using RedSilver2.Framework.Inputs;
 using RedSilver2.Framework.Interactions.Items;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -54,6 +55,19 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             AddOnVerticalIndexChangedListener(OnIndexChanged);
             AddOnModelsChangedListener(OnModelsChanged);
             base.Start();
+        }
+
+        protected sealed override void DisableInputs()
+        {
+            base.DisableInputs();
+            if (nextVerticalPressInput != null)  nextVerticalPressInput.Disable(); 
+            if (previousVerticalPressInput != null) previousVerticalPressInput.Disable();
+        }
+        protected sealed override void EnableInputs()
+        {
+            base.EnableInputs();
+            if (nextVerticalPressInput != null) nextVerticalPressInput.Enable();
+            if (previousVerticalPressInput != null) previousVerticalPressInput.Enable();
         }
 
         public void AddOnUpdateModelListener     (UnityAction<int, int, GameObject, VerticalInventoryUINavigator> action)
@@ -111,9 +125,8 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         }
 
 
-        protected sealed override void OnCloseInventoryUI()
+        public sealed override void ClearModels()
         {
-            base.OnCloseInventoryUI();
             ItemModel.ReturnBorrowedModels(models);
             models= new GameObject[0, 0];
         }
@@ -124,11 +137,12 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             UpdateModels();
         }
 
-        protected sealed override void UpdateItems() {
+        public sealed override void UpdateItems() {
             items = GetItems();
         }
 
-        protected sealed override void UpdateModels() {
+        public sealed override void UpdateModels() 
+        {
             ItemModel.ReturnBorrowedModels(models);
             models = ItemModel.GetModels(this);
             if(onModelsChanged != null && models != null) { onModelsChanged.Invoke(models); }
@@ -200,6 +214,16 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             }
         }
 
+        public bool DoesModelExist(int verticalIndex, int horizontalIndex) {
+            return GetModel(verticalIndex, horizontalIndex) != null;
+        }
+
+        public GameObject GetModel(int verticalIndex, int horizontalIndex)
+        {
+            if (models == null || models.GetLength(0) == 0 || models.GetLength(1) == 0) return null;
+            if (verticalIndex < 0 || horizontalIndex < 0 || verticalIndex >= models.GetLength(0) || horizontalIndex >= models.GetLength(1)) return null;
+            return models[verticalIndex, horizontalIndex];
+        }
 
         public abstract int GetMaxVerticalIndex();
         public abstract Item[,] GetItems();
