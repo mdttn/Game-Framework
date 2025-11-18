@@ -448,5 +448,16 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         public static OverrideablePressInput GetPreviousHorizontalInput() {
             return InputManager.GetOrCreateOverrideablePressInput(PREVIOUS_HORIZONTAL_INPUT_NAME, KeyboardKey.A, GamepadButton.DpadLeft); ;
         }
+
+        public static InventoryUINavigator GetComponent(Transform parent)
+        {
+            InventoryUINavigator navigator;
+            if (parent == null) return null;
+
+            navigator = parent.GetComponent<InventoryUINavigator>();
+            if (navigator == null) return GetComponent(parent.parent);
+
+            return navigator;
+        }
     }
 }

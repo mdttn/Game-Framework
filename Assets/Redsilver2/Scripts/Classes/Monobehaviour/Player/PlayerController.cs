@@ -15,8 +15,7 @@ namespace RedSilver2.Framework.Player
 
         public static PlayerController[] Instances
         {
-            get
-            {
+            get {
                 if (instances == null) return new PlayerController[0];
                 return instances.ToArray();
             }

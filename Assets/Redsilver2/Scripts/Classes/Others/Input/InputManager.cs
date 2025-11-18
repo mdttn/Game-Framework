@@ -12,7 +12,7 @@ namespace RedSilver2.Framework.Inputs
         private static readonly Dictionary<string, InputHandler>                    inputHandlerInstances = new Dictionary<string, InputHandler>();
         private static readonly Dictionary<KeyboardKey  , InputButtonControl>       keyboardKeysDatas     = GetKeyboardKeysDatas();
         private static readonly Dictionary<GamepadButton, InputButtonControl>       gamepadKeysDatas      = GetGamepadKeysDatas();
-        private static readonly Dictionary<GamepadStick, InputGamepadStickControl>  gamepadSticksDatas    = GetGamepadStickDatas();
+        private static readonly Dictionary<GamepadStick , InputGamepadStickControl> gamepadSticksDatas    = GetGamepadStickDatas();
 
         public static bool AnyKeyboardKey {
 

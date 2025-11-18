@@ -1,6 +1,5 @@
 
 using RedSilver2.Framework.Interactions.Items;
-using RedSilver2.Framework.Player.Inventories.UI;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,14 +7,13 @@ using UnityEngine.Events;
 
 namespace RedSilver2.Framework.Player.Inventories
 {
-    public class Inventory : MonoBehaviour 
+    public class Inventory : MonoBehaviour
     {
 
         [Space]
         [SerializeField] private bool allowDuplicateItems;
 
-
-        private UnityEvent       onOpenUI, onCloseUI;
+        private UnityEvent onOpenUI, onCloseUI;
         private UnityEvent<Item> onItemAdded, onItemRemoved;
 
         private bool isUIOpened;
@@ -28,22 +26,22 @@ namespace RedSilver2.Framework.Player.Inventories
         {
             get
             {
-                if(instances == null) return new Inventory[0];
+                if (instances == null) return new Inventory[0];
                 return instances.ToArray();
             }
         }
 
 
-        protected virtual void Awake() 
+        protected virtual void Awake()
         {
             instances.Add(this);
 
             items = new List<Item>();
-           
-            onCloseUI     = new UnityEvent();
-            onOpenUI      = new UnityEvent();
 
-            onItemAdded   = new UnityEvent<Item>();
+            onCloseUI = new UnityEvent();
+            onOpenUI = new UnityEvent();
+
+            onItemAdded = new UnityEvent<Item>();
             onItemRemoved = new UnityEvent<Item>();
 
             isUIOpened = false;
@@ -58,19 +56,19 @@ namespace RedSilver2.Framework.Player.Inventories
         }
 
         public void Open() {
-            if(onOpenUI != null) onOpenUI.Invoke(); 
+            if (onOpenUI != null) onOpenUI.Invoke();
         }
 
         public void Close() {
-            if(onCloseUI != null) onCloseUI.Invoke(); 
+            if (onCloseUI != null) onCloseUI.Invoke();
         }
 
         public void AddOnOpenUIListener(UnityAction action)
         {
-            Debug.Log("On Open UI: " + onOpenUI  + " | Action: " + action);
+            Debug.Log("On Open UI: " + onOpenUI + " | Action: " + action);
 
-            if(onOpenUI != null && action != null)
-                onOpenUI.AddListener(action); 
+            if (onOpenUI != null && action != null)
+                onOpenUI.AddListener(action);
         }
         public void RemoveOnOpenUIListener(UnityAction action)
         {
@@ -91,7 +89,7 @@ namespace RedSilver2.Framework.Player.Inventories
 
         public void AddOnItemAddedListener(UnityAction<Item> action)
         {
-            if(onItemAdded != null && action != null) {
+            if (onItemAdded != null && action != null) {
                 onItemAdded.AddListener(action);
             }
         }
@@ -121,7 +119,7 @@ namespace RedSilver2.Framework.Player.Inventories
             isItemAdded = false;
             if (items == null || item == null) return;
 
-            if (allowDuplicateItems){
+            if (allowDuplicateItems) {
                 if (items.Count == 0 || ContainsDuplicate(item)) items.Add(item);
             }
             else if (!Contains(item) && !ContainsDuplicate(item))
@@ -130,8 +128,8 @@ namespace RedSilver2.Framework.Player.Inventories
             isItemAdded = Contains(item);
             if (isItemAdded == true && onItemAdded != null) onItemAdded.Invoke(item);
         }
-        public virtual void RemoveItem(Item item, out bool isItemRemoved) 
-        {      
+        public virtual void RemoveItem(Item item, out bool isItemRemoved)
+        {
             isItemRemoved = false;
             if (items == null || item == null) return;
 
@@ -247,11 +245,22 @@ namespace RedSilver2.Framework.Player.Inventories
             return null;
         }
 
+        public static Inventory GetComponent(Transform root)
+        {
+            Inventory result;
+            if(root == null) return null;
+
+            result = root.GetComponent<Inventory>();
+            if(result == null) return GetComponent(root.parent); 
+
+            return result;
+        }
+
         public static Inventory GetInventory(string inventoryName)
         {
             if (instances == null) return null;
 
-            var results = instances.Where(x => x != null).Where(x => x.name.ToLower() ==  inventoryName.ToLower()).ToList();
+            var results = instances.Where(x => x != null).Where(x => x.name.ToLower() == inventoryName.ToLower()).ToList();
             if (results.Count > 0) return results.First();
 
             return null;
@@ -260,6 +269,13 @@ namespace RedSilver2.Framework.Player.Inventories
         {
             if (instances == null) return null;
             return instances[index];
+        }
+
+        public static Inventory GetInventoryWithItem(Item item)
+        {
+            if (instances == null) return null;
+            var results = instances.Where(x => x != null).Where(x => x.Contains(item));
+            return results.Count() > 0 ? results.First() : null;
         }
     }
 }

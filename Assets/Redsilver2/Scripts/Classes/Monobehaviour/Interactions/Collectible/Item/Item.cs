@@ -1,21 +1,23 @@
 using RedSilver2.Framework.Interactions.Collectibles;
 using RedSilver2.Framework.Player.Inventories;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace RedSilver2.Framework.Interactions.Items
 {
-    public class Item : Collectible 
+    [RequireComponent(typeof(MeshRenderer))]
+    [RequireComponent(typeof(AudioSource))]
+    public abstract class Item : Collectible 
     {
-        [SerializeField] private ItemData data;
+        private UnityEvent onAdded, onRemoved;
 
-        private UnityEvent<Item> onAdded;
-        private UnityEvent<Item> onRemoved;
+        private Inventory     owner;
+        private Collider     _collider;
+        
+        private MeshRenderer _renderer;
+        private AudioSource  _source;
 
-        private Inventory owner;
-        private Collider  _collider;
 
         private readonly static UnityEvent<Item> onInstanceAdded   = new UnityEvent<Item>();
         private readonly static UnityEvent<Item> onInstanceRemoved = new UnityEvent<Item>();
@@ -28,12 +30,17 @@ namespace RedSilver2.Framework.Interactions.Items
             }
         }
 
-        protected override void Awake() {
+        protected override void Awake() 
+        {
             base.Awake();
-            onAdded   = new UnityEvent<Item>();
-            onRemoved = new UnityEvent<Item>();
+
+            onAdded   = new UnityEvent();
+            onRemoved = new UnityEvent();
 
             _collider = GetComponent<Collider>();
+            _renderer = GetComponent<MeshRenderer>();
+            _source   = GetComponent<AudioSource>();
+
             onInstanceAdded.Invoke(this);
         }
 
@@ -48,20 +55,28 @@ namespace RedSilver2.Framework.Interactions.Items
             onInstanceRemoved.Invoke(this);
         }
 
-        protected virtual void OnAdded(Item item)
+        protected virtual void OnAdded()
         {
-            if(item == this && _collider != null) {
-                _collider.enabled = false;
-            }
+            SetVisiblity(false, false);
+        }
+        protected virtual void OnRemoved()
+        {
+            SetVisiblity(true, true);
         }
 
-        protected virtual void OnRemoved(Item item)
+        protected void SetVisiblity(bool isColliderVisible, bool isMeshRendererVisible)
         {
-            if (item == this && _collider != null) {
-                _collider.enabled = true;
-            }
+            SetColliderVisibility(isColliderVisible);
+            SetMeshRendererVisibility(isMeshRendererVisible);
         }
 
+        private void SetColliderVisibility(bool isVisible) {
+            if (_collider != null) _collider.enabled = isVisible;
+        }
+
+        private void SetMeshRendererVisibility(bool isVisible) {
+            if(_renderer != null) _renderer.enabled = isVisible;
+        }
         protected sealed override void OnInteract()
         {
             Inventory inventory = Inventory.GetInventory(0);
@@ -82,7 +97,7 @@ namespace RedSilver2.Framework.Interactions.Items
             inventory.AddItem(this, out bool isItemAdded);
 
             if (isItemAdded) {
-                onAdded.Invoke(this);
+                onAdded.Invoke();
                 owner = inventory;
             }
         }
@@ -93,43 +108,36 @@ namespace RedSilver2.Framework.Interactions.Items
 
             if (owner.Contains(this)) {
                 owner.RemoveItem(this, out bool isItemRemoved);
-                if (isItemRemoved) onRemoved.Invoke(this);
+                if (isItemRemoved) onRemoved.Invoke();
             }
 
             owner = null;
         }
 
-        public void AddOnAddedListener(UnityAction<Item> action)
+        public void AddOnAddedListener(UnityAction action)
         {
             if(onAdded != null && action != null)
                 onAdded.AddListener(action);
         }
 
-        public void RemoveOnAddedListener(UnityAction<Item> action)
+        public void RemoveOnAddedListener(UnityAction action)
         {
             if (onAdded != null && action != null)
                 onAdded.RemoveListener(action);
         }
 
 
-        public void AddOnRemovedListener(UnityAction<Item> action)
+        public void AddOnRemovedListener(UnityAction action)
         {
             if (onRemoved != null && action != null)
                 onRemoved.AddListener(action);
         }
 
-        public void RemoveOnRemovedListener(UnityAction<Item> action)
+        public void RemoveOnRemovedListener(UnityAction action)
         {
             if (onRemoved != null && action != null)
                 onRemoved.RemoveListener(action);
         }
-
-
-        public sealed override CollectibleData GetData()
-        {
-            return data;
-        }
-
         public static void AddOnInstanceAddedListener(UnityAction<Item> action)
         {
             if(onInstanceAdded != null && action != null)
@@ -149,6 +157,8 @@ namespace RedSilver2.Framework.Interactions.Items
             if (onInstanceRemoved != null && action != null)
                 onInstanceRemoved.RemoveListener(action);
         }
+
+        public abstract void Drop();
     }
 
 }
