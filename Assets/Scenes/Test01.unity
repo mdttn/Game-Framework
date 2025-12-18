@@ -7144,6 +7144,7 @@ GameObject:
   - component: {fileID: 1909473223618405172}
   - component: {fileID: 2053699308701918942}
   - component: {fileID: 7866516064637972815}
+  - component: {fileID: 7866516064637972816}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -8893,6 +8894,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef4bffeda13d7a748973ff9204401c07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7866516064637972816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716793013699845968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c24379bebf9bf64da302b2fa9b31021, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.Settings.SettingManager
 --- !u!114 &7968107003172395208
 MonoBehaviour:
   m_ObjectHideFlags: 0
