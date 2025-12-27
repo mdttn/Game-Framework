@@ -267,7 +267,7 @@ namespace RedSilver2.Framework.Player.Inventories
         }
         public static Inventory GetInventory(int index)
         {
-            if (instances == null) return null;
+            if (instances == null || instances.Count == 0) return null;
             return instances[index];
         }
 

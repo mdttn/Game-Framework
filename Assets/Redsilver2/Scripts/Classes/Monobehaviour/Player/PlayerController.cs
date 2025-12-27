@@ -1,3 +1,4 @@
+using RedSilver2.Framework.Dev;
 using RedSilver2.Framework.Inputs;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,9 @@ namespace RedSilver2.Framework.Player
 
         protected virtual void Update() {
             if (stateMachine != null) stateMachine.Update();
+            DevConsole.Log("The player is logging this message");
+            DevConsole.LogWarning("The player is logging this message");
+            DevConsole.LogError("The player is logging this message");
         }
 
         protected virtual void LateUpdate() {
