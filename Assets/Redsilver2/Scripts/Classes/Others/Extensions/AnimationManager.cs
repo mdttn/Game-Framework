@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Events;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public static class AnimationManager {
     private static readonly Dictionary<Animator, string> currentAnimations = new Dictionary<Animator, string>();
@@ -177,13 +174,7 @@ public static class AnimationManager {
     {
         if (animator == null || clip == null || animator.layerCount < 0) return default;
 
-        AnimatorController controller = animator.runtimeAnimatorController as AnimatorController;
-        if (controller == null) return -1;
-
-        for (int i = 0; i < animator.layerCount; i++)
-          if(controller.layers[i].stateMachine.states.Where(x => x.state.motion as AnimationClip == clip).Count() > 0)
-                return i;
-
+        // something;
         return -1;
     }
 
@@ -227,21 +218,12 @@ public static class AnimationManager {
     public static string[] GetAnimationNames(this Animator animator, int layer)
     {
         List<string> results = new List<string>();
-        AnimatorController controller = animator == null ? null : animator.runtimeAnimatorController as AnimatorController;
-        if (animator == null || controller == null || layer < 0 || layer >= animator.layerCount) results.ToArray();
-
-        foreach (ChildAnimatorState state in controller.layers[layer].stateMachine.states)
-            if     (state.state.motion is AnimationClip) AddAnimationName  (state.state.motion as AnimationClip, ref results);
-            else if(state.state.motion is BlendTree)     AddAnimationNames (state.state.motion as BlendTree    , ref results);             
-        
         return results.ToArray();
     }
 
-    private static void AddAnimationNames(BlendTree tree, ref List<string> results) {
-        if (tree == null) return;
+    private static void AddAnimationNames(ref List<string> results) {
 
-        foreach(ChildMotion motion in tree.children) 
-            AddAnimationName(motion.motion as AnimationClip, ref results);
+
     }
 
     private static void AddAnimationName(AnimationClip clip, ref List<string> results)
@@ -267,11 +249,10 @@ public static class AnimationManager {
     }
     public static bool HasAnimationClip(this Animator animator, AnimationClip clip, int layer) {
 
-        AnimatorController controller = animator == null ? null : animator.runtimeAnimatorController as AnimatorController;
-        if (animator == null || controller == null || layer < 0 || layer >= animator.layerCount) return false;
+    
+        if (animator == null ||  layer < 0 || layer >= animator.layerCount) return false;
 
-        return controller.layers[layer].stateMachine.states.Where(x => x.state.motion as AnimationClip == clip)
-                                                            .Count() > 0;
+        return false;
     }
 
     public static bool HasAnimationClip(this RuntimeAnimatorController controller, AnimationClip clip)

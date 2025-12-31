@@ -54,8 +54,13 @@ namespace RedSilver2.Framework.Subtitles
 
             if (!string.IsNullOrEmpty(context)) {
                 while (timeElapsed < duration && !token.IsCancellationRequested)  {
-                    UpdateDisplayers(await GetText($"{characterName}:", Mathf.Clamp01(timeElapsed / 0.5f), SubtitleDisplayMode.Progressif),
-                                     await GetText(context, Mathf.Clamp01(timeElapsed / duration), SubtitleDisplayMode.Progressif));
+
+                    await Awaitable.BackgroundThreadAsync();
+                    string characterNameResult = await GetText($"{characterName}:", Mathf.Clamp01(timeElapsed / 0.5f), SubtitleDisplayMode.Progressif);
+                    string contextResult       = await GetText(context, Mathf.Clamp01(timeElapsed / duration), SubtitleDisplayMode.Progressif);
+                    await Awaitable.MainThreadAsync();
+
+                    UpdateDisplayers(characterNameResult, contextResult);
 
                     timeElapsed = Mathf.Clamp(Time.deltaTime + timeElapsed, 0f, duration);
                     await Awaitable.NextFrameAsync();
