@@ -9,13 +9,9 @@ namespace RedSilver2.Framework.StateMachines.States
 
         }
 
-        public sealed override bool IsValidTransition() {
-            if(MovementHandler == null) return false;
-            return !MovementHandler.IsGrounded;
-        }
-
         protected sealed override void AddRequiredTransitionStates(MovementStateMachine stateMachine) {
             if (stateMachine == null) return;
+
 
             Debug.LogWarning("Create Land State | Contains: " + !stateMachine.ContainsState(MovementStateType.Land) +  " | Is Valid Transition: " + IsValidTransitionState(MovementStateType.Land));
 
@@ -27,10 +23,6 @@ namespace RedSilver2.Framework.StateMachines.States
 
         protected sealed override void SetIncompatibleStateTransitions(ref MovementStateType[] results) {
            results = GetExcludedStateTypes(new MovementStateType[] { MovementStateType.Land });
-        }
-
-        protected sealed override void SetPlayerInputsEvents(PlayerMovementHandler handler) {
-
         }
 
         protected sealed override void SetPlayerStateType(ref MovementStateType type) {

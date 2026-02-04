@@ -4,13 +4,18 @@ using UnityEngine.Events;
 
 namespace RedSilver2.Framework.StateMachines.States
 {
+    [RequireComponent(typeof(IdolStateInitializer))]
     public sealed class WalkStateInitializer : MovementStateInitializer
     {
         [SerializeField] private float walkSpeed;
 
-        protected sealed override State GetInitializerState(StateMachineController controller) {
-            if(controller == null || !CanAddOrRemoveState(controller))  return null;
-            return new WalkState(controller.StateMachine as MovementStateMachine);
+        protected sealed override MovementState GetDefaultState(MovementStateMachine stateMachine) {
+            if(stateMachine == null)  return null;
+            
+            if (stateMachine.ContainsState(MovementStateType.Walk)) 
+                return stateMachine.GetState(MovementStateType.Walk) as WalkState;
+
+            return new WalkState(stateMachine);
         }
 
         private UnityAction OnUpdateWalkState(MovementState state)
@@ -33,7 +38,7 @@ namespace RedSilver2.Framework.StateMachines.States
             state?.AddOnUpdateListener(OnUpdateWalkState(state));
         }
 
-        protected override MovementStateType[] GetIncludedStates()
+        protected override MovementStateType[] GetInclusiveStates()
         {
             return new MovementStateType[] { MovementStateType.Walk };
         }

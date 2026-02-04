@@ -19,9 +19,8 @@ namespace RedSilver2.Framework.StateMachines.States
             if (MovementHandler == null) return;
 
             Transform transform = MovementHandler.GetTransform();
-            float groundCheckRange = MovementHandler.GetGroundCheckRange();
 
-            if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hitInfo, groundCheckRange, ~transform.gameObject.layer))
+            if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hitInfo, 5f, ~transform.gameObject.layer))
                 onLanded?.Invoke(hitInfo);
         }
 
@@ -31,11 +30,6 @@ namespace RedSilver2.Framework.StateMachines.States
 
         public void RemoveOnLandedListener(UnityAction<RaycastHit> action) {
             if (action != null) onLanded?.RemoveListener(action);
-        }
-
-        public sealed override bool IsValidTransition() {
-            if(MovementHandler == null) return false;
-            return MovementHandler.IsGrounded;
         }
 
         protected sealed override void AddRequiredTransitionStates(MovementStateMachine stateMachine) {
@@ -53,10 +47,6 @@ namespace RedSilver2.Framework.StateMachines.States
 
         protected sealed override void SetPlayerStateType(ref MovementStateType type) {
             type = MovementStateType.Land;
-        }
-
-        protected sealed override void SetPlayerInputsEvents(PlayerMovementHandler handler) {
-
         }
     }
 }

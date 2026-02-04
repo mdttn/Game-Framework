@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace RedSilver2.Framework.StateMachines
 {
-    [RequireComponent(typeof(LandState))]
+    [RequireComponent(typeof(LandStateInitializer))]
     public class FallStateInitializer : MovementStateInitializer
     {
 
@@ -23,11 +23,16 @@ namespace RedSilver2.Framework.StateMachines
             fallMoveSpeed    = Mathf.Clamp(fallMoveSpeed   , Mathf.Epsilon, float.MaxValue);
         }
 
-        #endif
+#endif
 
-        protected sealed override State GetInitializerState(StateMachineController controller) {
-            if (controller == null || !CanAddOrRemoveState(controller)) return null;
-            return new FallState(controller.StateMachine as MovementStateMachine);
+        protected sealed override MovementState GetDefaultState(MovementStateMachine stateMachine)
+        {
+            if (stateMachine == null) return null;
+
+            if (stateMachine.ContainsState(MovementStateType.Fall)) 
+                return stateMachine.GetState(MovementStateType.Fall) as FallState;
+
+            return new FallState(stateMachine);
         }
 
         private UnityAction OnEnterLandState(MovementState state) {
@@ -73,7 +78,7 @@ namespace RedSilver2.Framework.StateMachines
             }
         }
 
-        protected override MovementStateType[] GetIncludedStates()
+        protected override MovementStateType[] GetInclusiveStates()
         {
             return new MovementStateType[] {
                 MovementStateType.Land, MovementStateType.Fall

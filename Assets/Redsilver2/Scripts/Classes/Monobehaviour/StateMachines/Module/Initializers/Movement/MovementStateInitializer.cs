@@ -1,6 +1,5 @@
 using RedSilver2.Framework.StateMachines.Controllers;
 using System.Linq;
-using UnityEngine;
 using UnityEngine.Events;
 
 namespace RedSilver2.Framework.StateMachines.States
@@ -10,10 +9,16 @@ namespace RedSilver2.Framework.StateMachines.States
         private MovementStateType[] inclusiveStates;
 
         protected override void Start() {
-            inclusiveStates = GetIncludedStates();
+            inclusiveStates = GetInclusiveStates();
             if (inclusiveStates != null) inclusiveStates = inclusiveStates.Distinct().ToArray();
 
             base.Start();
+        }
+
+        protected sealed override State GetDefaultState(StateMachine stateMachine)
+        {
+            if (!CanAddOrRemoveState(stateMachine)) return null;
+            return GetDefaultState(stateMachine as MovementStateMachine);
         }
 
         protected sealed override void OnStateAdded(State state) {
@@ -32,8 +37,16 @@ namespace RedSilver2.Framework.StateMachines.States
             return state => { OnStateRemoved(state as MovementState); };
         }
 
-        protected sealed override bool CanAddOrRemoveState(StateMachineController controller) {
-            return controller is MovementStateMachineController;
+        protected sealed override bool CanAddOrRemoveState(StateMachine controller) {
+            return controller is MovementStateMachine;
+        }
+
+
+        protected sealed override void SetStateMachine(ref StateMachine stateMachine) {
+            if(transform.root.gameObject.TryGetComponent(out StateMachineController controller)) {
+                if (controller is MovementStateMachineController)
+                    stateMachine = controller.StateMachine;
+            }
         }
 
         public bool IsInclusiveState(MovementState state)
@@ -44,6 +57,8 @@ namespace RedSilver2.Framework.StateMachines.States
 
         protected abstract void OnStateAdded(MovementState state);
         protected abstract void OnStateRemoved(MovementState state);
-        protected abstract MovementStateType[] GetIncludedStates();
+
+        protected abstract MovementState GetDefaultState(MovementStateMachine stateMachine);
+        protected abstract MovementStateType[] GetInclusiveStates();
     }
 }

@@ -14,11 +14,16 @@ namespace RedSilver2.Framework.StateMachines.States
         {
             runSpeed = Mathf.Clamp(runSpeed, 1f, float.MaxValue);
         }
-        #endif
+#endif
 
-        protected sealed override State GetInitializerState(StateMachineController controller) {
-            if(controller == null || !CanAddOrRemoveState(controller)) return null;
-            return new RunState(controller.StateMachine as MovementStateMachine);
+        protected sealed override MovementState GetDefaultState(MovementStateMachine stateMachine)
+        {
+            if (stateMachine == null) return null;
+
+            if (stateMachine.ContainsState(MovementStateType.Run)) 
+                return stateMachine.GetState(MovementStateType.Run) as RunState;
+
+            return new RunState(stateMachine);
         }
 
         private UnityAction OnUpdateRunState(MovementState state) {
@@ -38,7 +43,7 @@ namespace RedSilver2.Framework.StateMachines.States
             state?.RemoveOnUpdateListener(OnUpdateRunState(state));
         }
 
-        protected sealed override MovementStateType[] GetIncludedStates() {
+        protected sealed override MovementStateType[] GetInclusiveStates() {
             return new MovementStateType[] { MovementStateType.Run };
         }
 

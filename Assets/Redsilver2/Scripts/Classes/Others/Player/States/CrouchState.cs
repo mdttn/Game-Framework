@@ -1,24 +1,16 @@
-using RedSilver2.Framework.StateMachines.Controllers;
-using RedSilver2.Framework.StateMachines.States.Movement;
+using RedSilver2.Framework.Inputs;
 using UnityEngine;
 
 namespace RedSilver2.Framework.StateMachines.States
 {
     public class CrouchState : MovementState
     {
+        private const string HOLD_CROUCH_INPUT     = "Hold Crouch Input";
+        private const string PRESS_CROUCH_INPUT    = "Press Crouch Input";
+        private const string CROUCH_INPUT_SETTING  = "Crouch Input Setting";
+
         public CrouchState(MovementStateMachine owner) : base(owner) {
 
-        }
-
-        private bool CanResetCrouch(Transform transform, StateMachineController controller)
-        {
-            if(transform == null || controller == null) return false;
-            return !Physics.Raycast(transform.position, transform.up, 2f, ~transform.gameObject.layer);
-        }
-
-        public sealed override bool IsValidTransition() {
-            if (MovementHandler == null) return false;
-            return MovementHandler.IsGrounded && MovementHandler.IsCrouching;
         }
 
         protected sealed override void AddRequiredTransitionStates(MovementStateMachine stateMachine) {
@@ -33,24 +25,21 @@ namespace RedSilver2.Framework.StateMachines.States
             type = MovementStateType.Crouch;
         }
 
-        protected sealed override void SetPlayerInputsEvents(PlayerMovementHandler handler)
+        public static OverrideableHoldInput GetHoldInput()
         {
-            if(handler == null) return;
-            handler?.EnableCrouchInputUpdate();
+            return InputManager.GetOrCreateOverrideableHoldInput(HOLD_CROUCH_INPUT, KeyboardKey.C, GamepadButton.ButtonEast);
+        }
 
-            AddOnStateRemovedListener(() => { handler?.DisableCrouchInputUpdate(); });
-            AddOnStateEnteredListener(() => { handler?.SetCanResetCrouch(false); });
-            AddOnStateExitedListener (() => { handler?.SetCanResetCrouch(true); });
+        public static OverrideablePressInput GetPressInput()
+        {
+            return InputManager.GetOrCreateOverrideablePressInput(PRESS_CROUCH_INPUT, KeyboardKey.C, GamepadButton.ButtonEast);
+        }
 
-            AddOnUpdateListener(() => {
-                if (handler == null || owner == null) return;
+        public static bool HasToHoldInput() {
+            if (!PlayerPrefs.HasKey(CROUCH_INPUT_SETTING))
+                return true;
 
-                Transform transform = handler.GetTransform();
-                StateMachineController stateMachine = owner.Controller;
-                handler?.SetCanResetCrouch(CanResetCrouch(transform, stateMachine));
-
-                Debug.DrawRay(transform.position, transform.up, Color.red);
-            });
+            return PlayerPrefs.GetString(CROUCH_INPUT_SETTING).Equals("hold");
         }
     }
 }

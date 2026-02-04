@@ -1,4 +1,3 @@
-using RedSilver2.Framework.StateMachines.Controllers;
 using RedSilver2.Framework.StateMachines.States;
 using UnityEngine;
 using UnityEngine.Events;
@@ -18,9 +17,14 @@ namespace RedSilver2.Framework.StateMachines
         }
         #endif
 
-        protected sealed override State GetInitializerState(StateMachineController controller) {
-            if (controller == null || !CanAddOrRemoveState(controller)) return null;
-            return new JumpState(controller.StateMachine as MovementStateMachine);
+        protected sealed override MovementState GetDefaultState(MovementStateMachine stateMachine)
+        {
+            if (stateMachine == null) return null;
+
+            if (stateMachine.ContainsState(MovementStateType.Jump)) 
+                return stateMachine.GetState(MovementStateType.Jump) as JumpState;
+
+            return new JumpState(stateMachine);
         }
 
         private UnityAction OnJumpStateEnter(MovementState state)
@@ -42,7 +46,7 @@ namespace RedSilver2.Framework.StateMachines
             state?.RemoveOnStateEnteredListener(OnJumpStateEnter(state));
         }
 
-        protected sealed override MovementStateType[] GetIncludedStates()
+        protected sealed override MovementStateType[] GetInclusiveStates()
         {
             return new MovementStateType[] {
                 MovementStateType.Jump

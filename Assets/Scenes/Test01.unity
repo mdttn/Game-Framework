@@ -9632,7 +9632,7 @@ Transform:
   m_GameObject: {fileID: 1806546179}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.65, z: 0}
   m_LocalScale: {x: 1000, y: 1, z: 1000}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10950,7 +10950,7 @@ Transform:
   m_GameObject: {fileID: 2317743111649580041}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.503, z: 0}
+  m_LocalPosition: {x: 0, y: 0.55, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11004,7 +11004,7 @@ Transform:
   m_GameObject: {fileID: 8650058561087978749}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.98649, y: 2.1, z: 13.3524}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12112,7 +12112,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6870779048625147583}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -13135,6 +13135,13 @@ GameObject:
   - component: {fileID: 8650058561087978752}
   - component: {fileID: 8650058561087978751}
   - component: {fileID: 8650058561087978755}
+  - component: {fileID: 8650058561087978756}
+  - component: {fileID: 8650058561087978757}
+  - component: {fileID: 8650058561087978760}
+  - component: {fileID: 8650058561087978758}
+  - component: {fileID: 8650058561087978762}
+  - component: {fileID: 8650058561087978761}
+  - component: {fileID: 8650058561087978763}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -13154,13 +13161,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 848cc657753e2854b8be185a3572225b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.StateMachines.Controllers.PlayerCharacterController
-  walkSpeed: 5
-  runSpeed: 10
-  standHeight: 2
-  jumpForce: 100
-  defaultGravitySpeed: -10
-  fallSpeed: -25
-  groundCheckRange: 1.2
   use2DMovement: 0
 --- !u!114 &8650058561087978751
 MonoBehaviour:
@@ -13176,7 +13176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.StateMachines.CrouchStateIntializer
   standingHeight: 2
   crouchHeight: 1
-  crouchMoveSpeed: 1
+  crouchMoveSpeed: 2.5
 --- !u!114 &8650058561087978752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13189,7 +13189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a589a07e9542e84d9c61e34526b03f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.StateMachines.States.RunStateInitializer
-  runSpeed: 5
+  runSpeed: 10
 --- !u!114 &8650058561087978753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13230,6 +13230,95 @@ MonoBehaviour:
   defaultFallSpeed: -15
   fallSpeed: -20
   fallMoveSpeed: 2.5
+--- !u!114 &8650058561087978756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8650058561087978749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1179df2c98bd384b942c8df5868b246, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.StateMachines.States.LandStateInitializer
+--- !u!114 &8650058561087978757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8650058561087978749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e400de25741445b459964685c9568635, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.StateMachines.JumpStateInitializer
+  jumpForce: 10
+--- !u!114 &8650058561087978758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8650058561087978749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 567b4f6b31526e44ea086e32dc5965af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.StateMachines.States.MovementStateMoveCheckExtension
+--- !u!114 &8650058561087978760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8650058561087978749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 230bc379435a2134293c8ef9ebbe9e6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.StateMachines.States.MovementStateGroundCheckExtension
+  groundCheckRange: 1.2
+--- !u!114 &8650058561087978761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8650058561087978749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f68495f614af0a468c301d969a95abd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.StateMachines.States.PlayerCrouchCheckExtension
+  ignoreGroundedCondition: 0
+--- !u!114 &8650058561087978762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8650058561087978749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2578185586673c49a502235d1b43936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.StateMachines.States.PlayerJumpCheckExtension
+  ignoreGroundedCondition: 0
+--- !u!114 &8650058561087978763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8650058561087978749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 115050c21cf388c438d0cbc11e646e9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.StateMachines.States.PlayerRunCheckExtension
+  ignoreGroundedCondition: 0
 --- !u!223 &8665155085325908703
 Canvas:
   m_ObjectHideFlags: 0
@@ -13624,7 +13713,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5604336305811123535}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

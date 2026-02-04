@@ -1,18 +1,14 @@
+using RedSilver2.Framework.Inputs;
 using RedSilver2.Framework.StateMachines.States.Movement;
 
 namespace RedSilver2.Framework.StateMachines.States
 {
     public sealed class JumpState : MovementState
     {
-        public JumpState(MovementStateMachine owner) : base(owner) {
-            AddOnStateEnteredListener(() => {
-                MovementHandler?.SetJumpHeight(50f);
-            });
-        }
+        private const string PRESS_JUMP_INPUT = "Press Jump";
 
-        public sealed override bool IsValidTransition() {
-            if (MovementHandler == null) return false;
-            return MovementHandler.IsGrounded && MovementHandler.IsJumping;
+        public JumpState(MovementStateMachine owner) : base(owner) {
+
         }
 
         protected sealed override void AddRequiredTransitionStates(MovementStateMachine stateMachine) {
@@ -27,18 +23,13 @@ namespace RedSilver2.Framework.StateMachines.States
             results = GetExcludedStateTypes(new MovementStateType[] { MovementStateType.Fall });
         }
 
-        protected sealed override void SetPlayerInputsEvents(PlayerMovementHandler handler)
-        {
-            if (handler == null) return;
-            handler?.EnableJumpInputUpdate();
-
-            AddOnStateRemovedListener(() => {
-                handler?.DisableJumpInputUpdate();
-            });
-        }
-
         protected sealed override void SetPlayerStateType(ref MovementStateType type) {
             type = MovementStateType.Jump;
+        }
+
+        public static OverrideablePressInput GetPressInput()
+        {
+            return InputManager.GetOrCreateOverrideablePressInput(PRESS_JUMP_INPUT, KeyboardKey.Space, GamepadButton.ButtonSouth);
         }
     }
 }

@@ -11,13 +11,6 @@ namespace RedSilver2.Framework.StateMachines.States
 
         }
 
-        public sealed override bool IsValidTransition() {
-            if (MovementHandler == null) return false;
-
-            return MovementHandler.IsGrounded && !MovementHandler.IsCrouching
-                   && !MovementHandler.IsRunning  && MovementHandler.GetMoveMagnitude() > 0f;
-        }
-
         protected sealed override void AddRequiredTransitionStates(MovementStateMachine stateMachine) {
             if (stateMachine == null) return;
 
@@ -29,11 +22,6 @@ namespace RedSilver2.Framework.StateMachines.States
 
         protected sealed override void SetIncompatibleStateTransitions(ref MovementStateType[] results) {
             results = GetExcludedStateTypes(new MovementStateType[] { MovementStateType.Fall, MovementStateType.Idol, MovementStateType.Run, MovementStateType.Crouch, MovementStateType.Jump });
-        }
-
-        protected sealed override void SetPlayerInputsEvents(PlayerMovementHandler handler)
-        {
-
         }
 
         protected sealed override void SetPlayerStateType(ref MovementStateType type)  {

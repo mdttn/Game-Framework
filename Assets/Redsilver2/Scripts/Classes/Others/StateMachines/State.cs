@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine.Events;
 
 namespace RedSilver2.Framework.StateMachines.States
@@ -14,7 +15,9 @@ namespace RedSilver2.Framework.StateMachines.States
         private   readonly UnityEvent<State> onTransitionStateAdded;
         private   readonly UnityEvent<State> onTransitionStateRemoved;
 
-        private   readonly List<State> transitionStates;
+        private readonly List<State>                         transitionStates;
+        private readonly Dictionary<string, StateTransition> transitionChecks;
+        
         protected readonly StateMachine owner;
 
         protected State[] TransitionStates {
@@ -35,6 +38,8 @@ namespace RedSilver2.Framework.StateMachines.States
             onTransitionStateRemoved = new UnityEvent<State>();
 
             transitionStates = new List<State>();
+            transitionChecks = new Dictionary<string, StateTransition>();
+
             this.owner = owner;
 
             owner?.AddOnStateAddedListener  (GetOnStateAddedListener());
@@ -43,9 +48,9 @@ namespace RedSilver2.Framework.StateMachines.States
             owner?.AddOnStateEnteredListener(GetOnStateEnteredListener());
             owner?.AddOnStateExitedListener (GetOnStateExitedListener());
 
-            if (this is not UpdateableState) {
+            if (this is not UpdateableState) 
                 AddOnStateEnteredListener(() => { UpdateStateTransition(TransitionStates); });
-            }
+
 
             AddRequiredTransitionStates(owner);
         }
@@ -94,7 +99,7 @@ namespace RedSilver2.Framework.StateMachines.States
             if (action != null) onTransitionStateRemoved?.RemoveListener(action);
         }
 
-        public void AddTransitionState(State state) {
+        public virtual void AddTransitionState(State state) {
             if (state == null || state == this) return;
 
             if (transitionStates != null) {
@@ -115,6 +120,34 @@ namespace RedSilver2.Framework.StateMachines.States
             }
         }
 
+
+        public virtual void AddTransitionCheck(string transitionName, IStateTransition transition, bool showOppositeResult)
+        {
+            if (transition == null || string.IsNullOrEmpty(transitionName))
+                return;
+           
+            AddTransitionCheck(transitionName, new StateTransition(showOppositeResult, transition));
+        }
+
+        protected virtual void AddTransitionCheck(string transitionName, StateTransition transition) {
+            if (transitionChecks == null || string.IsNullOrEmpty(transitionName))
+                return;
+
+            transitionName = transitionName.ToLower();
+
+            if(!transitionChecks.ContainsKey(transitionName))
+                transitionChecks?.Add(transitionName, transition);
+        }
+
+        public void RemoveTransitionCheck(string transitionName) {
+            if(transitionChecks == null || string.IsNullOrEmpty(transitionName)) return;
+
+            transitionName = transitionName.ToLower();
+
+            if (transitionChecks.ContainsKey(transitionName))
+                transitionChecks?.Remove(transitionName);
+        }
+
         private UnityAction<State> GetOnStateEnteredListener() {
             return state => {
                 if (state == this) onStateEntered?.Invoke();
@@ -129,7 +162,6 @@ namespace RedSilver2.Framework.StateMachines.States
 
         private UnityAction<State> GetOnStateAddedListener() {
             return state => {
-                AddTransitionState(state);
                 if (state == this) onStateAdded?.Invoke();
             };
         }
@@ -178,7 +210,12 @@ namespace RedSilver2.Framework.StateMachines.States
         protected abstract void AddRequiredTransitionStates(StateMachine stateMachine);
         protected abstract bool IsValidTransitionState(State state);
 
-        public abstract bool IsValidTransition();
+        public bool IsValidTransition() {
+           if (transitionChecks == null) return false;
+           var results = transitionChecks.Values.Where(x => x.GetTransitionResult());
+           return results.Count() == transitionChecks.Values.Count;
+        }
+
         public abstract string GetStateName();
     }
 }

@@ -1,5 +1,6 @@
 using RedSilver2.Framework.StateMachines.Controllers;
 using RedSilver2.Framework.StateMachines.States;
+using RedSilver2.Framework.StateMachines.States.Extensions;
 using RedSilver2.Framework.StateMachines.States.Movement;
 using UnityEngine;
 
@@ -14,10 +15,6 @@ namespace RedSilver2.Framework.StateMachines {
             MovementHandler = movementHandler;
             movementHandler?.SetStateMachine(this);
 
-            AddOnUpdateListener(() => {
-                Debug.Log(" Is Crouching: " + MovementHandler.IsCrouching);
-            });
-
             AddOnStateEnteredListener(state => {
                 if(state != null)
                 Debug.LogWarning("Current State: " + state.GetStateName());
@@ -27,10 +24,30 @@ namespace RedSilver2.Framework.StateMachines {
                 if (state != null)
                     Debug.LogWarning("Previous State: " + state.GetStateName());
             });
+
+            AddOnStateAddedListener(state =>
+            {
+                if (state == null) return;
+
+                if(state is FallState || state is LandState || state is JumpState)
+                {
+                    string message = $"State Name:{state.GetStateName()}  \nState Transitions:\n"; 
+
+                    foreach(string name in state.GetTransitionStateNames()) 
+                        message += name + "\n";
+
+                    Debug.Log(message);
+                }
+
+            });
         }
 
         public sealed override void AddStateInitializer(StateInitializer stateInitializer) {
            if(stateInitializer is MovementStateInitializer) base.AddStateInitializer(stateInitializer);
+        }
+
+        public sealed override void AddStateExtension(StateExtension stateExtension) {
+            base.AddStateExtension(stateExtension);
         }
 
         public void ChangeState(MovementStateType stateType) {

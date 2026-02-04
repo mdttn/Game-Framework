@@ -34,12 +34,6 @@ namespace RedSilver2.Framework.StateMachines.States.Movement
                                                                  Time.deltaTime * DEFAULT_CROUCH_SPEED);
             }
         }
-
-        public sealed override float GetGroundCheckRange()  {
-            if (Controller == null) return 0f;
-            return Controller.GroundCheckRange;
-        }
-
         public sealed override Transform GetTransform() {
             if (Controller == null) return null;
             return Controller.transform;
