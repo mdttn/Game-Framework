@@ -1,39 +1,63 @@
 using RedSilver2.Framework.StateMachines.Controllers;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace RedSilver2.Framework.StateMachines.States
 {
     [RequireComponent(typeof(AudioSource))]
-    public sealed class MovementSoundModule : MovementStateModule {
+    public abstract class MovementSoundModule : MovementStateModule {
         private AudioSource source;
         private float currentMinPitch , currentMaxPitch; 
         private float currentMinVolume, currentMaxVolume;
 
-        protected override void Awake() {
+        protected override void Awake()
+        {
             base.Awake();
             source = GetComponent<AudioSource>();
         }
+
 
         public void SetPitch(float pitch) {
             if(source != null) source.pitch = pitch;
         }
 
         public void SetMinPitch(float pitch) {
-            if (source != null) currentMinPitch = pitch;
+            currentMinPitch = pitch;
         }
 
         public void SetMaxPitch(float pitch) {
-            if (source != null) currentMaxPitch = pitch;
+            currentMaxPitch = pitch;
         }
+
+        public void SetMinVolume(float volumr)
+        {
+            currentMinVolume = volumr;
+        }
+
+        public void SetMaxVolume(float volume)
+        {
+            currentMaxVolume = volume;
+        }
+
+        
 
         public void UpdateMinPitch(float minPitch, float updateSpeed) {
             currentMinPitch = Mathf.Lerp(currentMinPitch, minPitch, Time.deltaTime * updateSpeed);
         }
 
         public void UpdateMaxPitch(float maxPitch, float updateSpeed) {
-            currentMaxPitch = Mathf.Lerp(currentMinPitch, maxPitch, Time.deltaTime * updateSpeed);
+            currentMaxPitch = Mathf.Lerp(currentMaxPitch, maxPitch, Time.deltaTime * updateSpeed);
         }
+
+        public void UpdateMinVolume(float minVolume, float updateSpeed)
+        {
+            currentMinVolume = Mathf.Lerp(currentMinVolume, minVolume, Time.deltaTime * updateSpeed);
+        }
+
+        public void UpdateMaxVolume(float maxVolume, float updateSpeed)
+        {
+            currentMaxVolume = Mathf.Lerp(currentMaxVolume, maxVolume, Time.deltaTime * updateSpeed);
+        }
+
 
         public void RandomizePitch() {
             RandomizePitch(currentMinPitch, currentMaxPitch);
@@ -51,18 +75,16 @@ namespace RedSilver2.Framework.StateMachines.States
             if (source != null) source.volume = Random.Range(minVolume, maxVolume);
         }
 
-        public void PlayAudio(AudioClip clip) {
+        protected void Play(AudioClip[] clips)
+        {
+            if (clips == null || clips.Length == 0) return;
+            Play(clips[Random.Range(0, clips.Length)]);
+        }
+
+        private void Play(AudioClip clip) {
             if(source == null) return;
             source.clip = clip;
             source.Play();
-        }
-
-        protected sealed override UnityAction<State> GetOnStateAddedAction() {
-            return null;
-        }
-
-        protected sealed override UnityAction<State> GetOnStateRemovedAction() {
-            return null;
         }
 
         protected override string GetModuleName()  {

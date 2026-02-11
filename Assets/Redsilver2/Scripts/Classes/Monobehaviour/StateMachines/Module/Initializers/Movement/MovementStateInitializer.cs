@@ -47,8 +47,15 @@ namespace RedSilver2.Framework.StateMachines.States
             RemoveTransitionState(state);   
         }
 
-        protected sealed override UnityAction<State> GetOnStateAddedAction() { return null; }
-        protected sealed override UnityAction<State> GetOnStateRemovedAction() { return null; }
+        protected sealed override void OnStateAdded(MovementState state)
+        {
+            return;
+        }
+
+        protected sealed override void OnStateRemoved(MovementState state)
+        {
+            return;
+        }
 
         private bool CanAddOrRemoveState(StateMachine controller) {
             return controller is MovementStateMachine;
@@ -83,6 +90,7 @@ namespace RedSilver2.Framework.StateMachines.States
             if (state == null || transitionStates == null) return false;
             return transitionStates.Contains(state.Type);
         }
+
 
         protected abstract MovementState GetDefaultState(MovementStateMachine stateMachine);
     }

@@ -1,9 +1,10 @@
 
+using RedSilver2.Framework.StateMachines.Controllers;
 using System.Linq;
 
 namespace RedSilver2.Framework.StateMachines.States
 {
-    public abstract class MovementStateTransitionExtension : MovementStateExtension, ICheckableStateTransition
+    public abstract class MovementStateTransitionExtension : MovementStateModule, ICheckableStateTransition
     {
         private MovementStateType[] validResultStateTypes;
 

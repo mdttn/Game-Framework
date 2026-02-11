@@ -1,7 +1,4 @@
 using RedSilver2.Framework.Inputs;
-using RedSilver2.Framework.StateMachines.States.Movement;
-using System.Linq;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 namespace RedSilver2.Framework.StateMachines.States

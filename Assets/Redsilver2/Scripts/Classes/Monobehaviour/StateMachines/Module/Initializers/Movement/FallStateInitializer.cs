@@ -5,7 +5,7 @@ using UnityEngine;
 namespace RedSilver2.Framework.StateMachines
 {
     [RequireComponent(typeof(LandStateInitializer))]
-    public class FallStateInitializer : MovementStateInitializer
+    public sealed class FallStateInitializer : MovementStateInitializer
     {
         [Space]
         [SerializeField] private float defaultFallSpeed;

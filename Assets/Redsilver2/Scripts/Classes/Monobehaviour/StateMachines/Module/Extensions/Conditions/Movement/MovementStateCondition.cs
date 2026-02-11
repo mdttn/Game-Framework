@@ -1,7 +1,6 @@
 using RedSilver2.Framework.StateMachines.Controllers;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace RedSilver2.Framework.StateMachines.States
 {
@@ -62,31 +61,21 @@ namespace RedSilver2.Framework.StateMachines.States
             foreach(State state in stateMachine.GetStates()) OnStateRemoved(state);
         }
 
-        private void OnStateAdded(MovementState state)
+
+        protected sealed override void OnStateAdded(MovementState state)
         {
             if (state == null) return;
 
-            if(TryGetCheckStateResult(state.Type, out bool returnOppositeResult)) {
+            if (TryGetCheckStateResult(state.Type, out bool returnOppositeResult))
+            {
                 state?.RemoveTransitionCheck(ModuleName);
                 state?.AddTransitionCheck(ModuleName, this, returnOppositeResult);
             }
         }
 
-        private void OnStateRemoved(MovementState state) { state?.RemoveTransitionCheck(ModuleName); }
-
-        protected sealed override UnityAction<State> GetOnStateAddedAction() 
-        { 
-           return state => 
-           {
-               OnStateAdded(state as MovementState);
-           }; 
-        }
-        protected sealed override UnityAction<State> GetOnStateRemovedAction()
+        protected sealed override void OnStateRemoved(MovementState state)
         {
-            return state =>
-            {
-                OnStateRemoved(state as MovementState);
-            };
+            state?.RemoveTransitionCheck(ModuleName);
         }
 
         public bool Check() {

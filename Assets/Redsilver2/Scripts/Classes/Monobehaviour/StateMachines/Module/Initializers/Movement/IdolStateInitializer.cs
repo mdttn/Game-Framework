@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace RedSilver2.Framework.StateMachines.States
 {
-    public class IdolStateInitializer : MovementStateInitializer
+    public sealed class IdolStateInitializer : MovementStateInitializer
     {
         protected sealed override MovementState GetDefaultState(MovementStateMachine stateMachine)
         {
