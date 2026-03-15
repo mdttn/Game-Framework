@@ -9,44 +9,24 @@ namespace RedSilver2.Framework.StateMachines.States.Movement
     public abstract class PlayerMovementHandler : MovementHandler
     {
         private OverrideableKeyboardVector2Input moveInput;
-        private readonly UnityEvent onUpdate;
-
+        public KeyboardVector2Input MoveInput => moveInput;
         private const string MOVE_INPUT = "Move Input";
 
-        protected PlayerMovementHandler(PlayerController controller) : base(controller) {
-            onUpdate = new UnityEvent();
-            onUpdate.AddListener(() => { UpdateMoveInput(); });
-           
+        protected PlayerMovementHandler(PlayerController controller) : base(controller) {       
             moveInput = GetMoveInput();
             moveInput?.Enable();
         }
 
         protected PlayerMovementHandler(PlayerController controller, bool use2DMovement) : base(controller, use2DMovement) {
-            onUpdate  = new UnityEvent();
-            onUpdate.AddListener(() => { UpdateMoveInput();  });
-
             moveInput = GetMoveInput();
             moveInput?.Enable();
         }
 
-        public void AddOnMoveInputUpdateListener(UnityAction<Vector2> action) {
-            if (action != null) moveInput?.AddOnUpdateListener(action);
-        }
-
-        public void RemoveOnMoveInputUpdateListener(UnityAction<Vector2> action) {
-            if (action != null) moveInput?.AddOnUpdateListener(action);
-        }
 
         public bool IsMoveInputEnabled() {
             if (moveInput == null) return false;
             return moveInput.IsEnabled;
         }
-
-        protected override void Update() {
-            onUpdate?.Invoke();
-            base.Update();
-        }
-
 
         protected sealed override void Disable() {
             base.Disable();
@@ -57,9 +37,6 @@ namespace RedSilver2.Framework.StateMachines.States.Movement
             moveInput?.Enable();
         }
 
-        private void UpdateMoveInput() {
-            moveInput?.Update();
-        }
 
         protected override Vector3 GetNextPosition(Transform transform, float moveSpeed, float fallSpeed, bool use2DMovement) {
             if(transform == null || moveInput == null) return Vector3.zero;

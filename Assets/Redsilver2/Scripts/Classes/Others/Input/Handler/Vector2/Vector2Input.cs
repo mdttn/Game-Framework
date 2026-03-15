@@ -6,44 +6,30 @@ namespace RedSilver2.Framework.Inputs
     public abstract class Vector2Input : InputHandler
     {
         protected GamepadStick gamepadStick;
-        private UnityEvent<Vector2> onUpdate;
        
-
-        public Vector2 Value { get; private set; }
+        public Vector2 Value { 
+            get {
+                if (!IsEnabled) return Vector2.zero;
+                return GetInputVector2();
+            } 
+        }
 
         public const GamepadStick DEFAULT_GAMEPAD_STICK = GamepadStick.LeftStick;
 
 
         protected Vector2Input(string name) : base(name)
         {
-            onUpdate = new UnityEvent<Vector2>();
             this.gamepadStick = GamepadStick.LeftStick;
         }
 
         protected Vector2Input(string name, GamepadStick gamepadStick) : base(name)
         {
-            onUpdate = new UnityEvent<Vector2>();
             this.gamepadStick = gamepadStick;
         }
 
-        public sealed override void Update()
-        {
-            Value = GetInputVector2();
-            if(IsEnabled) { onUpdate.Invoke(Value); }
-        }
-
-        public void AddOnUpdateListener(UnityAction<Vector2> action)
-        {
-            if(onUpdate != null && action != null) onUpdate.AddListener(action);
-        }
-
-        public void RemoveOnUpdateListener(UnityAction<Vector2> action)
-        {
-            if (onUpdate != null && action != null) onUpdate.RemoveListener(action);
-        }
 
         // Fix this stupid bug (for future reference)
-        public string GetGamepadStickPath() => InputManager.GetPath(KeyboardKey.A);
+        public string GetGamepadStickPath() => $"{gamepadStick.ToString()} (There is no path)";
 
         public string GetGamepadStickInfos()
         {
@@ -70,6 +56,7 @@ namespace RedSilver2.Framework.Inputs
         {
             Vector2 result;
             if (TryGetGamepadVector2(out result)) { return result; }
+            // Add XR Controls...
             return result;
         }
     }

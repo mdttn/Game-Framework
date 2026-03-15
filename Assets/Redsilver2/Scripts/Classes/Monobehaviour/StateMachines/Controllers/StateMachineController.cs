@@ -12,7 +12,8 @@ namespace RedSilver2.Framework.StateMachines.Controllers
             InitializeStateMachine(ref stateMachine);
         }
 
-        protected virtual void Update() {
+        protected async virtual void Update() {
+
             if (InputManager.GetKey(GamepadButton.RightStickLeft))
                 Debug.Log("Pushing the right stick left");
              if (InputManager.GetKeyUp(GamepadButton.RightStickLeft))

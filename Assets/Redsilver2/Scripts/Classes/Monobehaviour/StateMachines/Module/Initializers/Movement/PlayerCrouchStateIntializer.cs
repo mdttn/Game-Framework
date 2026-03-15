@@ -62,7 +62,6 @@ namespace RedSilver2.Framework.StateMachines
                 return;
             }
 
-            holdInput?.Update();
             transitionState = holdInput.Value;
         }
 
@@ -74,7 +73,6 @@ namespace RedSilver2.Framework.StateMachines
                 return;
             }
 
-            pressInput?.Update();
             if(pressInput.Value) transitionState = !transitionState;
         }
     }

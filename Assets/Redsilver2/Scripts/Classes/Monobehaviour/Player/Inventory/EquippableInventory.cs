@@ -3,7 +3,6 @@ using RedSilver2.Framework.Interactions.Items;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,7 +16,7 @@ namespace RedSilver2.Framework.Player.Inventories
         [Space]
         [SerializeField] private Transform leftHand;
 
-        private int selectedSlotIndex;
+        private int  selectedSlotIndex;
         private bool canUpdateSlots;
 
         private List<ItemSlot> slots;
@@ -29,7 +28,7 @@ namespace RedSilver2.Framework.Player.Inventories
         private IEnumerator    leftHandCoroutine;
 
         private readonly GamepadButton previousShortcut = GamepadButton.DpadLeft;
-        private readonly GamepadButton nextShortcut = GamepadButton.DpadRight;
+        private readonly GamepadButton nextShortcut     = GamepadButton.DpadRight;
 
         public ItemSlot[] Slots {
             get

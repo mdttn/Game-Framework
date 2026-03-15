@@ -7,11 +7,15 @@ namespace RedSilver2.Framework.Player
 {
     public abstract class CameraControllerModule : MonoBehaviour
     {
+        private CameraController controller;
+        public CameraController Controller => controller;
+
+
         private static List<CameraControllerModule> modules;
 
         private static CameraControllerModule current;
-     
-        public  static CameraControllerModule  Current => current;
+
+        public static CameraControllerModule  Current => current;
         public  static CameraControllerModule[] Modules
         {
             get
@@ -26,16 +30,46 @@ namespace RedSilver2.Framework.Player
         }
 
         private void Start(){
-            current = this;
+            if (current == null)
+            {
+                current = this;
+                controller?.Enable();
+            }
         }
 
-        protected abstract void Update();
-        protected abstract void LateUpdate();
+        private void Update()
+        {
+            if (controller != null) controller.Update();
+        }
 
-        protected abstract void OnEnable();
-        protected abstract void OnDisable();
+        private void LateUpdate()
+        {
+            if (controller != null) controller.LateUpdate();
+        }
 
-        protected abstract void SetCameraController(CameraController cameraController);
+        private void OnEnable()
+        {
+            SetCursorVisibility(false);
+            controller?.Enable();
+        }
+
+        private void OnDisable()
+        {
+            SetCursorVisibility(true);
+            controller?.Disable();
+        }
+
+        private void SetCameraController(CameraController cameraController)
+        {
+            this.controller = cameraController;
+        }
+
+        private void SetCursorVisibility(bool isVisible)
+        {
+            Cursor.lockState = isVisible ? CursorLockMode.Confined : CursorLockMode.Locked;
+            Cursor.visible = isVisible;
+        }
+
         protected abstract CameraController GetCameraController();
 
         public static void SetCurrent(int index) {

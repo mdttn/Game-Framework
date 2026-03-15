@@ -699,8 +699,17 @@ namespace RedSilver2.Framework.Inputs
         public static float GetAxisX(bool readLeftStick) => GetAxisX(readLeftStick ? GamepadStick.LeftStick : GamepadStick.RightStick);
         public static float GetAxisY(bool readLeftStick) => GetAxisY(readLeftStick ? GamepadStick.LeftStick : GamepadStick.RightStick);
 
-        public static Vector2 GetKeyboardVector2(KeyboardKey Up, KeyboardKey Down, KeyboardKey Left, KeyboardKey Right) => Vector2.right * GetAxisX(Left, Right) + Vector2.up * GetAxisY(Up, Down);      
+        public static Vector2 GetKeyboardVector2(KeyboardKey up, KeyboardKey down, KeyboardKey left, KeyboardKey right) => Vector2.right * GetAxisX(left, right) + Vector2.up * GetAxisY(up, down);      
         public static Vector2 GetKeyboardVector2(KeyboardVector2Input.Vector2Keyboard keys) => GetKeyboardVector2(keys.Up, keys.Down, keys.Left, keys.Right);
+
+        public static Vector2 GetMouseVector2()
+        {
+            Mouse mouse = Mouse.current;
+            if (mouse == null) return Vector2.zero;
+            return mouse.delta.value;
+        }
+
+        public static Vector2 GetGamepadVector2(GamepadButton up, GamepadButton down, GamepadButton left, GamepadButton right) => Vector2.right * GetAxisX(left, right) + Vector2.up * GetAxisY(up, down);
 
         public static Vector2 GetGamepadVector2(GamepadStick stick) {
             return GetGamepadVector2(stick == GamepadStick.LeftStick ? true : false);
@@ -711,12 +720,6 @@ namespace RedSilver2.Framework.Inputs
             return readLeftStick ? gamepad.leftStick.value : gamepad.rightStick.value;
         }
 
-        public static Vector2 GetMouseVector2()
-        {
-           Mouse mouse = Mouse.current;
-           if(mouse == null) return Vector2.zero;
-           return mouse.delta.value;
-        }
         private static Vector2Control GetStickControl(GamepadStick stick) {
             return InputSystem.FindControl($"{GAMEPAD_ROOT_PATH}{GetFormattedKey(stick.ToString())}") as Vector2Control;
         }

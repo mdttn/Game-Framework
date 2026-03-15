@@ -57,6 +57,9 @@ namespace RedSilver2.Framework.Player
             if (onLateUpdate != null && action != null) onLateUpdate.AddListener(action);
         }
 
+        public abstract void Enable();
+        public abstract void Disable();
+
         public static float GetSensitivityX()
         {
             return 5f;

@@ -4,6 +4,7 @@ using RedSilver2.Framework.Items;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -29,9 +30,11 @@ namespace RedSilver2.Framework.Interactions.Items
         private Vector3 originalRotation;
 
         private Animator                   animator;
-        private UnityEvent                 onEquipped, onUnEquipped, onUpdated;
+        private UnityEvent                 onEquipped, onUnEquipped, onUpdate, onLateUpdate;
         private List<EquippableItemAction> actions;
 
+        public Vector3 ParentPosition => parentPosition;
+        public Vector3 ParentRotation => parentRotation;
 
         public bool  IsEquipped => isEquipped;
         public float AnimationLenght => animationLenght;
@@ -60,7 +63,7 @@ namespace RedSilver2.Framework.Interactions.Items
         {
             base.Awake();
 
-            animator                      = GetComponentInChildren<Animator>();
+            animator = GetAnimator();
             if(animator) animator.enabled = false;
            
             isEquipped       = false;
@@ -69,53 +72,26 @@ namespace RedSilver2.Framework.Interactions.Items
             onEquipped       = new UnityEvent();
             onUnEquipped     = new UnityEvent();
             
-            onUpdated         = new UnityEvent();
+            onUpdate        = new UnityEvent();
+            onLateUpdate    = new UnityEvent();
+
             actions          = new List<EquippableItemAction>();
 
-            AddOnRemovedListener   (() => {
-                if (animator != null) animator.enabled = true;
-                PlayAnimation(unequippedAnimationData);
-                isEquipped = false;
-            });
+            AddOnRemovedListener(OnRemove);
+            AddOnEquippedListener(OnEquipped);
 
-            AddOnEquippedListener  (() => {
-                if (animator != null) animator.enabled = true;
-             
-                SetMeshRenderersVisibility(true);     
-                PlayAnimation(equippedAnimationData);
-
-                foreach (var action in actions)
-                    action?.EnableActions();
-
-                enabled = true;
-                isEquipped = true;
-            });
-
-            AddOnUnEquippedListener(() => {
-                if (animator != null) animator.enabled = true;
-
-                foreach (var action in actions)
-                    action?.DisableActions();
-
-                PlayAnimation(unequippedAnimationData);
-                enabled = false;
-                isEquipped = false;
-            });
-
-            AddOnUpdatedListener(() =>
-            {
-                actionDelay = Mathf.Clamp(actionDelay -= Time.deltaTime, 0f, float.MaxValue);
-
-                if(actionDelay <= 0f) {
-                    ResetActions();
-                    UpdateActions();
-                }
-            });
+            AddOnUnEquippedListener(OnUnEquipped);
+            AddOnUpdateListener(OnUpdate);
         }
 
         private void Update()
         {
-            onUpdated?.Invoke();
+            onUpdate?.Invoke();
+        }
+
+        private void LateUpdate()
+        {
+            onLateUpdate?.Invoke();
         }
 
         public void Equip()
@@ -130,6 +106,48 @@ namespace RedSilver2.Framework.Interactions.Items
 
         public void Drop() {
             SetTransformParent(null);
+        }
+
+        protected virtual void OnRemove() {
+            if (animator != null) animator.enabled = true;
+            PlayAnimation(unequippedAnimationData);
+            isEquipped = false;
+        }
+
+        protected virtual void OnEquipped() {
+            if (animator != null) animator.enabled = true;
+
+            SetMeshRenderersVisibility(true);
+            PlayAnimation(equippedAnimationData);
+
+            foreach (var action in actions)
+                action?.EnableActions();
+
+            enabled = true;
+            isEquipped = true;
+        }
+
+        protected virtual void OnUnEquipped()
+        {
+            if (animator != null) animator.enabled = true;
+
+            foreach (var action in actions)
+                action?.DisableActions();
+
+            PlayAnimation(unequippedAnimationData);
+            enabled = false;
+            isEquipped = false;
+        }
+
+        protected virtual void OnUpdate()
+        {
+            actionDelay = Mathf.Clamp(actionDelay -= Time.deltaTime, 0f, float.MaxValue);
+
+            if (actionDelay <= 0f)
+            {
+                ResetActions();
+                UpdateActions();
+            }
         }
 
         private void UpdateActions()
@@ -161,6 +179,12 @@ namespace RedSilver2.Framework.Interactions.Items
 
                 yield return null;
             }
+        }
+
+        private Animator GetAnimator()
+        {
+            if (transform.root == null) return transform.GetComponentInChildren<Animator>();
+            return transform.root.GetComponentInChildren<Animator>();   
         }
 
         public void PlayAnimation(AnimationData data)
@@ -208,15 +232,25 @@ namespace RedSilver2.Framework.Interactions.Items
             if (action != null)  onUnEquipped?.RemoveListener(action); 
         }
 
-        public void AddOnUpdatedListener(UnityAction action)
+        public void AddOnUpdateListener(UnityAction action)
         {
-            if (action != null) onUpdated?.AddListener(action);
+            if (action != null) onUpdate?.AddListener(action);
         }
 
-        public void RemoveOnUpdatedListener(UnityAction action)
+        public void RemoveOnUpdateListener(UnityAction action)
         {
-            if (action != null) onUpdated?.RemoveListener(action);
+            if (action != null) onUpdate?.RemoveListener(action);
         }
+        public void AddOnLateUpdateListener(UnityAction action)
+        {
+            if (action != null) onLateUpdate?.AddListener(action);
+        }
+
+        public void RemoveOnLateUpdateListener(UnityAction action)
+        {
+            if (action != null) onLateUpdate?.RemoveListener(action);
+        }
+
 
         public virtual void AddAction(EquippableItemAction action) {
             if(action != null && actions != null) {

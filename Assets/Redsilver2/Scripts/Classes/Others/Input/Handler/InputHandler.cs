@@ -36,7 +36,6 @@ namespace RedSilver2.Framework.Inputs
             }
         }
 
-        public abstract void Update();
         public abstract string GetPaths();
     }
 }

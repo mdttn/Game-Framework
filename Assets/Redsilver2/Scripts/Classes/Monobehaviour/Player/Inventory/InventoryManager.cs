@@ -15,12 +15,12 @@ namespace RedSilver2.Framework.Player.Inventories
 
         private void Awake() {
             uiInput = GetUIInput();
-            uiInput.AddOnUpdateListener(OnInputInteract);
+           // uiInput.AddOnUpdateListener(OnInputInteract);
             uiInput.Enable();
         }
 
         protected virtual void Update() {
-            if(uiInput != null) uiInput.Update();
+
         }
 
         protected virtual void OnInputInteract()

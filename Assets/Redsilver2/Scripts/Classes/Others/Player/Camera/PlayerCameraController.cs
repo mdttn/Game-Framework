@@ -37,7 +37,7 @@ namespace RedSilver2.Framework.Player
 
         protected sealed override void OnUpdate()
         {
-            if(mouseInput != null) mouseInput.Update();
+            if (mouseInput != null) InputUpdate(mouseInput.Value);
         }
 
         protected override void OnLateUpdate()
@@ -46,24 +46,22 @@ namespace RedSilver2.Framework.Player
             if(head != null) head.localEulerAngles = Vector2.right * rotationClampX;
         }
 
-        protected virtual void OnInputUpdate(Vector2 input)
+        protected virtual void InputUpdate(Vector2 input)
         {
             rotationClampY += Time.deltaTime * GetSensitvityX() * input.x;
             rotationClampX -= Time.deltaTime * GetSensitvityY() * input.y;
         }
 
-        public void Enable()
+        public override void Enable()
         {
             if(mouseInput != null) {
-                mouseInput.AddOnUpdateListener(OnInputUpdate);
                 mouseInput.Enable();
             }
         }
 
-        public void Disable()
+        public override void Disable()
         {
             if (mouseInput != null) {
-                mouseInput.RemoveOnUpdateListener(OnInputUpdate);
                 mouseInput.Disable();
             }
         }
@@ -79,7 +77,7 @@ namespace RedSilver2.Framework.Player
         }
 
         public static MouseVector2Input GetMouseInput() {
-            return InputManager.GetOrCreateMouseVector2Input(MOUSE_INPUT_NAME, GamepadStick.LeftStick);
+            return InputManager.GetOrCreateMouseVector2Input(MOUSE_INPUT_NAME, GamepadStick.RightStick);
         }
     }
 }

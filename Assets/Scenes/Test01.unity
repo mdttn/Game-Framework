@@ -3538,7 +3538,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 468072658}
-  - component: {fileID: 468072657}
   - component: {fileID: 468072656}
   - component: {fileID: 468072655}
   - component: {fileID: 468072654}
@@ -3837,19 +3836,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.StateMachines.Controllers.PlayerCharacterController
   use2DMovement: 1
   dontDestroyOnLoad: 1
---- !u!114 &468072657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 468072641}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e0167fc076436c49b6d89fe4cb7b41d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainInventory: {fileID: 0}
 --- !u!4 &468072658
 Transform:
   m_ObjectHideFlags: 0
@@ -9917,10 +9903,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1519345039}
   - component: {fileID: 1519345037}
-  - component: {fileID: 1519345036}
   - component: {fileID: 1519345042}
   - component: {fileID: 1519345041}
   - component: {fileID: 1519345040}
+  - component: {fileID: 1519345043}
+  - component: {fileID: 1519345036}
   m_Layer: 0
   m_Name: Flashlight
   m_TagString: Untagged
@@ -9975,7 +9962,7 @@ Transform:
   m_GameObject: {fileID: 1519345035}
   serializedVersion: 2
   m_LocalRotation: {x: -0.010183737, y: 0.08014179, z: 0.012946101, w: -0.99664736}
-  m_LocalPosition: {x: 2.56, y: 0.85, z: -9.59}
+  m_LocalPosition: {x: 2.41, y: 0.85, z: -9.59}
   m_LocalScale: {x: 100.00007, y: 100.00005, z: 100.000015}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10041,6 +10028,25 @@ MonoBehaviour:
     timestampEvents: []
   parentRotation: {x: 0, y: 0, z: 0}
   parentPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &1519345043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1519345035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b30e2259f6a3dec46938c6e41c282a62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.Items.EquippableItemSwayUpdater
+  minPosition: {x: 0.02, y: -0.2}
+  maxPosition: {x: 0.02, y: 0.2}
+  minRotation: {x: -10, y: -10}
+  maxRotation: {x: 10, y: 10}
+  positionUpdateSpeed: 5
+  inputRotationStrenght: 5
+  rotationUpdateSpeed: 5
 --- !u!1 &1529588168
 GameObject:
   m_ObjectHideFlags: 0

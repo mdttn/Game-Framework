@@ -10,9 +10,10 @@ namespace RedSilver2.Framework.Inputs {
         private readonly UnityEvent onEnabled  , onDisabled, 
                                     onExecuted , onReseted;
         public  bool IsEnabled => isEnabled;
-        public bool  IsExecuted => isExecuted; 
+        public bool  IsExecuted => isExecuted;
 
-        protected InputAction(string actionName) {
+        protected InputAction(string actionName)
+        {
             this.Name = actionName;
 
             this.onEnabled  = new UnityEvent();
@@ -20,14 +21,14 @@ namespace RedSilver2.Framework.Inputs {
             this.onExecuted = new UnityEvent();
             this.onReseted  = new UnityEvent();
 
-            AddOnDisabledListener(() => { 
-                isEnabled  = false;
+            AddOnDisabledListener(() => {
+                isEnabled = false;
                 isExecuted = false;
             });
 
-            AddOnEnabledListener (() => { isEnabled  = true;  });
-            AddOnExecutedListener(() => { isExecuted = true;  });
-            AddOnResetedListener (() => { isExecuted = false; });
+            AddOnEnabledListener(()  => { isEnabled = true; });
+            AddOnExecutedListener(() => { isExecuted = true; });
+            AddOnResetedListener(()  => { isExecuted = false; });
         }
 
         public virtual void Update() 

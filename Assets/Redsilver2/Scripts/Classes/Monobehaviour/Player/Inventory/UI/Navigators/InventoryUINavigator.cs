@@ -302,13 +302,13 @@ namespace RedSilver2.Framework.Player.Inventories.UI
         protected virtual void UpdateInput()
         {
             if (nextHorizontalPressInput != null) {
-                nextHorizontalPressInput.Update();
-                if(nextHorizontalPressInput.Value) IncrementHorizontalIndex();
+                if(nextHorizontalPressInput.Value) 
+                    IncrementHorizontalIndex();
             }
 
             if(previousHorizontalPressInput != null){
-                previousHorizontalPressInput.Update();
-                if (previousHorizontalPressInput.Value) DecrementHorizontalIndex();
+                if (previousHorizontalPressInput.Value) 
+                    DecrementHorizontalIndex();
             }
         }
 

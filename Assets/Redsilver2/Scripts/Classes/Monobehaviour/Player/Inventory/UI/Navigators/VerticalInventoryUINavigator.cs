@@ -155,9 +155,6 @@ namespace RedSilver2.Framework.Player.Inventories.UI
             base.UpdateInput();
 
             if (nextVerticalPressInput != null && previousVerticalPressInput != null) {
-                nextVerticalPressInput.Update();
-                previousVerticalPressInput.Update();
-
                 if      (nextVerticalPressInput.Value)     IncrementVerticalIndex();
                 else if (previousVerticalPressInput.Value) DecrementVerticalIndex();
             }

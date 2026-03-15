@@ -187,12 +187,5 @@ namespace RedSilver2.Framework.Inputs
 
             onUpdated?.Invoke(Mathf.Clamp01(currentTriggerTime / triggerTime));
         }
-
-
-        protected sealed override bool CanExecute()
-        {
-            if (!IsEnabled) return false;
-            return currentTriggerTime >= triggerTime;
-        }
     }
 }

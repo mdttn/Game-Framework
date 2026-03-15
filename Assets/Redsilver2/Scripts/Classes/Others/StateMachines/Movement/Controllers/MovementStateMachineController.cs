@@ -6,11 +6,18 @@ namespace RedSilver2.Framework.StateMachines.Controllers
 {
     public abstract class MovementStateMachineController : StateMachineController {
         [SerializeField] private bool use2DMovement;
-        public bool Use2DMovement => use2DMovement;
 
+        private MovementHandler movementHandler;
+
+        public bool Use2DMovement => use2DMovement;
+        public MovementHandler MovementHandler => movementHandler;
         protected sealed override void InitializeStateMachine(ref StateMachine stateMachine)
         {
-            stateMachine = GetStateMachine(GetMovementHandler());
+            MovementStateMachine movementStateMachine = GetStateMachine(GetMovementHandler());
+
+            stateMachine    = movementStateMachine;
+            movementHandler = movementStateMachine != null ? movementStateMachine.MovementHandler : null;
+
             stateMachine?.Enable();
         }
 

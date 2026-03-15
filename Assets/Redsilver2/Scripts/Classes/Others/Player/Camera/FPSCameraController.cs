@@ -15,9 +15,9 @@ namespace RedSilver2.Framework.Player
             this.module = module;
         }
 
-        protected override void OnInputUpdate(Vector2 input)
+        protected override void InputUpdate(Vector2 input)
         {
-            base.OnInputUpdate(input);
+            base.InputUpdate(input);
             if(module != null) rotationClampX = Mathf.Clamp(rotationClampX, module.MinRotationX, module.MaxRotationX);
         }
     }

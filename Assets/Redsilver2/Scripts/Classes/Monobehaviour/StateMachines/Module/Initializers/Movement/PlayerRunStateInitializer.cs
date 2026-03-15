@@ -50,14 +50,12 @@ namespace RedSilver2.Framework.StateMachines.States
         private void OnUpdateHoldInput()
         {
             if (holdInput == null) return;
-            holdInput?.Update();
             transitionState = holdInput.Value;
         }
 
         private void OnUpdatePressInput()
         {
             if (pressInput == null) return;
-            pressInput?.Update();
             if (pressInput.Value) transitionState = !transitionState;
         }
 

@@ -40,16 +40,7 @@ namespace RedSilver2.Framework.StateMachines
 
         protected sealed override void OnUpdate()
         {
-            if (input != null)
-            {
-                input.Update();
-                transitionState = input.Value;
-            }
-            else
-            {
-                transitionState = false;
-            }
-
+            transitionState = input != null ? input.Value : false;
             base.OnUpdate();
         }
 
