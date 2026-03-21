@@ -1,16 +1,53 @@
+using RedSilver2.Framework.Inputs;
 using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public abstract class OrbCollectionUIHandler : MonoBehaviour
+public class OrbCollectionUIHandler : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI orbCountDisplayer;
-    private CustomGameManager gameManager;
+
+    [Space]
+    [SerializeField] private float maxPositionOffsetX;
+    [SerializeField] private float shakeUpdateSpeed;
+
+    [Space]
+    [SerializeField] private float shakeUpdateTime;
+
+
+    private Vector3 originalPosition;
 
     private IEnumerator updateOrbCountDisplayer;
+    private CustomGameManager gameManager;
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        shakeUpdateTime    = Mathf.Abs(shakeUpdateTime);
+        shakeUpdateSpeed   = Mathf.Abs(shakeUpdateSpeed);
+        maxPositionOffsetX = Mathf.Abs(maxPositionOffsetX);
+    }
+
+#endif
 
     private void Awake() {
         gameManager = CustomGameManager.GetInstance();
+        SetOrbCountDisplayerText(string.Empty);
+        if (orbCountDisplayer != null) originalPosition = orbCountDisplayer.transform.localPosition;
+    }
+
+    private void Start()
+    {
+        gameManager?.AddOnOrbCollectedListener(OnOrbCollected);
+        
+    }
+
+    private void Update()
+    {
+        if (InputManager.GetKeyDown(KeyboardKey.Space))
+        {
+            OnOrbCollected(Random.Range(0, 16));
+        }
     }
 
     private void OnEnable()
@@ -21,11 +58,15 @@ public abstract class OrbCollectionUIHandler : MonoBehaviour
     private void OnDisable()
     {
         gameManager?.RemoveOnOrbCollectedListener(OnOrbCollected);
-        StopCoroutine(updateOrbCountDisplayer);
+        if(updateOrbCountDisplayer != null) StopCoroutine(updateOrbCountDisplayer);
         SetOrbCountDisplayerVisibility(false);
     }
 
-
+    private void SetOrbCountDisplayerText(string text)
+    {
+       if(orbCountDisplayer != null)
+           orbCountDisplayer.text = text;
+    }
 
     private void OnOrbCollected(int orbsLeft)
     {
@@ -34,7 +75,7 @@ public abstract class OrbCollectionUIHandler : MonoBehaviour
         if(updateOrbCountDisplayer != null) 
             StopCoroutine(updateOrbCountDisplayer);
 
-        updateOrbCountDisplayer = UpdateOrbCountDisplayerCoroutine(orbsLeft);
+        updateOrbCountDisplayer = UpdateDisplayerCoroutine(orbsLeft);
         StartCoroutine(updateOrbCountDisplayer);
     }
 
@@ -44,18 +85,51 @@ public abstract class OrbCollectionUIHandler : MonoBehaviour
             orbCountDisplayer.enabled = isVisible;
     }
 
-    private IEnumerator UpdateOrbCountDisplayerCoroutine(int count)
+    private void UpdateDisplayerLocalPosition(Vector3 position)
+    {
+        if(orbCountDisplayer == null) return;
+        Transform transform     = orbCountDisplayer.transform;
+        transform.localPosition = position;
+    }
+
+    private IEnumerator UpdateDisplayerCoroutine(int count)
     {
         string message = GetDisplayMessage(count);
+       
+        SetOrbCountDisplayerText(message);
         SetOrbCountDisplayerVisibility(true);
 
-        while(orbCountDisplayer != null) {
-            orbCountDisplayer.text = message;
-            yield return null;
-        }
+        yield return StartCoroutine(UpdateDisplayerCoroutine());
 
+        SetOrbCountDisplayerText(string.Empty);
         SetOrbCountDisplayerVisibility(false);
     }
 
-    protected abstract string GetDisplayMessage(int count);
+    private IEnumerator UpdateDisplayerCoroutine()
+    {
+        float t = 0f;
+
+        while (t < shakeUpdateTime) {
+            UpdateDisplayerLocalPosition(GetUpdateDisplayPosition());
+            t += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    private Vector3 GetUpdateDisplayPosition()
+    {
+        float sin = Mathf.Abs(Mathf.Sin(Time.time * shakeUpdateSpeed));
+        float minPositionX = originalPosition.x - maxPositionOffsetX;
+        float maxPositionX = originalPosition.x + maxPositionOffsetX;
+
+        return Vector3.left  * Mathf.Lerp(minPositionX, maxPositionX, sin) +
+               Vector3.up    * originalPosition.y + 
+               Vector3.right * originalPosition.z;
+    }
+
+    protected virtual string GetDisplayMessage(int count)
+    {
+        if(count < 0) { return string.Empty;  }
+        return count.ToString();
+    }
 }

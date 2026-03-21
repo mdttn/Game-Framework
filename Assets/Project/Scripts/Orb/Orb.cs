@@ -1,6 +1,4 @@
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(AudioSource))]

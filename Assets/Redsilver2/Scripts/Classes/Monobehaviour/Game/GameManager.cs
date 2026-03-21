@@ -11,8 +11,6 @@ namespace RedSilver2.Framework
     [RequireComponent(typeof(SteamManager))]
     public class GameManager : MonoBehaviour
     {
-        public const string GROUND_LAYER_NAME = "Ground";
-
         [SerializeField] private CollectibleNotificationManager collectibleNotification;
         [SerializeField] private SceneLoaderManager sceneLoaderManager;
         [SerializeField] private SubtitleManager subtitleManager;

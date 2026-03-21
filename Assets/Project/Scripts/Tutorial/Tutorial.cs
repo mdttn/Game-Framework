@@ -5,10 +5,25 @@ using UnityEngine;
 public class Tutorial : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI displayer;
-    [SerializeField] private string[] messages;
 
+    [Space]
+    [SerializeField] private float messageDisplayTime;
+    [SerializeField] private string[] messages;
+    
     private IEnumerator showMessages;
-    private const float MESSAGE_SHOW_TIME = 1f;
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        messageDisplayTime = Mathf.Clamp(messageDisplayTime, 1f, float.MaxValue);
+    }
+
+#endif
+
+    private void Awake()
+    {
+        SetDisplayerText(string.Empty);
+    }
 
     private void Start()
     {
@@ -18,7 +33,8 @@ public class Tutorial : MonoBehaviour
 
     private void OnDisable()
     {
-        StopCoroutine(showMessages);
+        SetDisplayerText(string.Empty);
+        if(showMessages != null) StopCoroutine(showMessages);
     }
 
     private void SetDisplayerVisibility(bool isVisible)
@@ -33,7 +49,7 @@ public class Tutorial : MonoBehaviour
 
     private IEnumerator ShowMessages()
     {
-        WaitForSeconds wait = new WaitForSeconds(MESSAGE_SHOW_TIME);
+        WaitForSeconds wait = new WaitForSeconds(messageDisplayTime);
         SetDisplayerVisibility(true);
 
         for (int i = 0; i < messages.Length; i++)

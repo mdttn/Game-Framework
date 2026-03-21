@@ -2,6 +2,7 @@ using RedSilver2.Framework.Inputs;
 using RedSilver2.Framework.Player;
 using RedSilver2.Framework.StateMachines.Controllers;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -9,20 +10,39 @@ using UnityEngine.UI;
 public class Radar : MonoBehaviour {
 
     [SerializeField] private Camera _camera;
-    [SerializeField] private Image  radarBackground;
+
+    [Space]
+    [SerializeField] private Image  backgroundTop;
+    [SerializeField] private Image  backgroundBottom;
+
+    [Space]
+    [SerializeField] private float height;
+
+    private SingleInput  interactInput;
+    private Vector2Input lookInput;
 
     private uint radarUses;
     private bool isActivated;
-    private bool isWaitDelayFinished;
 
+    private bool        isWaitDelayFinished;
     private IEnumerator openCoroutine;
 
-    private const string CAMERA_MODULE_NAME = "RADAR_CAMERA";
+    private Camera[] cameras;
+
 
     private void Awake() {
         radarUses = 3;
-        openCoroutine = OpenCoroutine();
-        SetCameraState(false);
+        cameras = Camera.allCameras.Where(x => x != _camera).ToArray();
+
+        SetCameraVisibility(false);
+        SetBackgroundTopVisibility(false);
+        SetBackgroundBottomVisibility(false);
+
+        interactInput = InputManager.GetOrCreatePressInput("RADAR_INTERACT_INPUT", KeyboardKey.R, GamepadButton.ButtonNorth);
+        lookInput     = InputManager.GetOrCreateMouseVector2Input("RADAR_LOOK_INPUT", GamepadStick.RightStick);
+
+        interactInput?.Enable();
+        isWaitDelayFinished = true;
     }
 
     private void Update()
@@ -32,20 +52,18 @@ public class Radar : MonoBehaviour {
 
     private void UpdateRadarInput()
     {
-        if (InputManager.GetKeyDown(KeyboardKey.R)) {
+        if (interactInput.Value) {
             if ((radarUses == 0 && !isActivated) || !isWaitDelayFinished) {
                 return;
             }
 
-            SetIsActivated(!isActivated, 0f);
+            SetIsActivated(!isActivated, 0.5f);
             if (isActivated) radarUses--;
         }
     }
 
-    public void SetIsActivated(bool isActivated, float waitDelay)
-    {
-        this.isActivated = isActivated;
-       
+    private void SetIsActivated(bool isActivated, float waitDelay)
+    {    
         if (isActivated) {
             Enable();
         }
@@ -56,37 +74,108 @@ public class Radar : MonoBehaviour {
 
     private void Enable()
     {
+        if (!isWaitDelayFinished || isActivated) return;
+        isActivated = true;
+
         CameraControllerModule.Disable();
         PlayerController.Disable();
 
-        StartCoroutine(openCoroutine);  
+        PlayerController controller = PlayerController.Current;
+
+        SetCameraPosition(controller);
+        SetCameraRotation(controller);
+
+
+        openCoroutine = OpenCoroutine();
+        StartCoroutine(openCoroutine);
     }
 
     public void Disable(float waitDelay) {
-
+        if (!isWaitDelayFinished || !isActivated) return;
+        isActivated = false;
+       
+        lookInput?.Disable();
         StopCoroutine(openCoroutine);
+       
+        openCoroutine = null;
         StartCoroutine(WaitDelayCoroutine(waitDelay));
+       
+        SetBackgroundTopVisibility(false);
+        SetBackgroundBottomVisibility(false);
+        
+        SetCameraVisibility(false);
 
-        SetCameraState(false);
-
-        CameraControllerModule.SetCurrent("PLAYER_CAMERA");
+        CameraControllerModule.Enable();
         PlayerController.Enable();
     }
 
-    private void SetCameraState(bool isEnabled)
+    private void SetCameraPosition(PlayerController controller)
     {
-        if (_camera != null) _camera.enabled = isEnabled;
+        if (_camera == null || controller == null) return;
+        Vector3 playerPosition = controller.transform.position;
+
+        _camera.transform.position = Vector3.right   * playerPosition.x +
+                             Vector3.up      * (playerPosition.y + height) +
+                             Vector3.forward * playerPosition.z;
+    }
+
+    private void SetCameraRotation(PlayerController controller)
+    {
+        if (_camera == null || controller == null) return;
+        Transform transform = _camera.transform;
+
+        transform.eulerAngles = Vector3.right * 90f + Vector3.up * controller.transform.eulerAngles.y;
     }
 
     private void SetCameraFieldOfView(float fieldOfView)
     {
         if (_camera != null) _camera.fieldOfView = fieldOfView;
     }
-
-    private void SetRadarBackgroundFillValue(float value)
+    private void SetBackgroundFillValue(Image background, float value)
     {
         value = Mathf.Clamp01(value);
-        if (radarBackground != null) radarBackground.fillAmount = value;
+        if (background != null) background.fillAmount = value;
+    }
+
+
+    private void SetBackgroundTopFillValue(float value)
+    {
+        SetBackgroundFillValue(backgroundTop, value);
+    }
+
+    private void SetBackgroundBottomFillValue(float value)
+    {
+        SetBackgroundFillValue(backgroundBottom, value);
+    }
+
+    private void SetBackgroundVisibility(Image background, bool isVisible)
+    {
+        if (background != null)
+            background.gameObject.SetActive(isVisible);
+    }
+
+
+    private void SetBackgroundTopVisibility(bool isVisible)
+    {
+        SetBackgroundVisibility(backgroundTop, isVisible);
+    }
+
+    private void SetBackgroundBottomVisibility(bool isVisible)
+    {
+        SetBackgroundVisibility(backgroundBottom, isVisible);
+    }
+
+
+
+
+    private void SetCameraVisibility(bool isVisible)
+    {
+        if (_camera != null) _camera.enabled = isVisible;
+
+        foreach(Camera camera in cameras.Where(x => x != null)) {
+            if(camera == null) continue;
+            camera.enabled = !isVisible;
+        }
     }
 
     private IEnumerator WaitDelayCoroutine(float seconds)
@@ -101,12 +190,48 @@ public class Radar : MonoBehaviour {
 
     private IEnumerator OpenCoroutine()
     {
-        yield return StartCoroutine(ProgressiveCoroutine(2.5f, value => { SetRadarBackgroundFillValue(value); }));
+        yield return StartCoroutine(BackgroundCoroutine(() =>
+        {
+            SetCameraFieldOfView(10f);  
+            SetCameraVisibility(true);
+           
+            lookInput?.Enable();
+            StartCoroutine(UpdateInput());
+        }));
 
-        SetCameraState(true);
-        CameraControllerModule.SetCurrent(CAMERA_MODULE_NAME);
+        yield return new WaitForSeconds(2f);
+        yield return StartCoroutine(ProgressiveCoroutine(0.15f, value => { SetCameraFieldOfView(Mathf.Lerp(10f, 70f, value)); }));
+    }
 
-        yield return StartCoroutine(ProgressiveCoroutine(1f, value => { SetCameraFieldOfView(Mathf.Lerp(10f, 70f, value)); }));
+    private IEnumerator BackgroundCoroutine(UnityAction onFinished)
+    {
+        SetBackgroundTopFillValue(0f);
+        SetBackgroundBottomFillValue(0f);
+
+        SetBackgroundTopVisibility(true);
+        SetBackgroundBottomVisibility(true);
+
+        yield return StartCoroutine(ProgressiveCoroutine(0.1f, value => { 
+            SetBackgroundTopFillValue(value);
+            SetBackgroundBottomFillValue(value);
+        }));
+
+        yield return new WaitForSeconds(0.35f);
+        onFinished?.Invoke();
+
+        SetBackgroundTopVisibility(false);
+        SetBackgroundBottomVisibility(false);
+    }
+
+    private IEnumerator UpdateInput()
+    {
+        while (lookInput != null)
+        {
+            if (!lookInput.IsEnabled) break;
+            transform.localEulerAngles += (Time.deltaTime * lookInput.Value.x * 5f) *  Vector3.up;
+
+            yield return null;
+        }
     }
 
     private IEnumerator ProgressiveCoroutine(float transitionTime, UnityAction<float> action)
