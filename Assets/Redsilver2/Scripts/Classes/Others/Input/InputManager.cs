@@ -14,8 +14,8 @@ namespace RedSilver2.Framework.Inputs
     {
         private void Awake()
         {
-            if (IsActifInputManager()) {
-
+            if (!IsActifInputManager()) {
+               // return;
             }  
 
             keyboardKeysControls   = GetKeyboardKeysControls();
@@ -24,12 +24,12 @@ namespace RedSilver2.Framework.Inputs
         }
 
         private void Update() {
-           // if (!IsActifInputManager()) return;
+            if (!IsActifInputManager()) return;
             UpdateInputConfigurations();
         }
 
         private void LateUpdate() {
-           // if (!IsActifInputManager()) return;
+            if (!IsActifInputManager()) return;
             LateUpdateInputConfigurations();
         }
 

@@ -77,7 +77,7 @@ public class Radar : MonoBehaviour {
         if (!isWaitDelayFinished || isActivated) return;
         isActivated = true;
 
-        CameraControllerModule.Disable();
+        CameraController.Disable();
         PlayerController.Disable();
 
         PlayerController controller = PlayerController.Current;
@@ -101,7 +101,7 @@ public class Radar : MonoBehaviour {
         
         SetCameraVisibility(false);
 
-        CameraControllerModule.Enable();
+        CameraController.Enable();
         PlayerController.Enable();
     }
 

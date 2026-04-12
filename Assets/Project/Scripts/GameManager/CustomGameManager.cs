@@ -24,20 +24,34 @@ public sealed class CustomGameManager : GameManager
        
         onOrbCollected     = new UnityEvent<int>();
         onGamemodeSelected = new UnityEvent<Gamemode>();
+
     }
 
-    private void Start() {
+    private void Start() 
+    {
+        if (Application.isEditor)
+        {
+            PlayerPrefs.DeleteKey(FIRST_GAME_OPENING);
+            PlayerPrefs.DeleteKey(UNLOCKED_GAMEMODE);
+            PlayerPrefs.DeleteKey(SELECTED_GAMEMODE);
+        }
+
         SceneLoaderManager?.AddOnSingleSceneLoadStartedListener(sceneIndex => { orbs?.Clear(); });
         CheckSceneLoad();
     }
 
     private void CheckSceneLoad()
     {
-        if (WasFirstGameLaunch()) {
-            PlayerPrefs.SetInt(FIRST_GAME_OPENING, 1);
-            SetUnlockedGameMode(Gamemode.Classic);
+        Debug.Log("1");
 
-            SetGameMode(Gamemode.Classic);
+        if (WasFirstGameLaunch()) {
+
+            Debug.Log("1.5");
+
+            PlayerPrefs.SetInt(FIRST_GAME_OPENING, 1);
+            SetUnlockedGameMode(0);
+
+            SetGameMode(0);
             LoadGameMode();
         }
     }
@@ -91,7 +105,7 @@ public sealed class CustomGameManager : GameManager
     }
 
     public void LoadGameMode() {
-        SceneLoaderManager?.LoadSingleScene(((int)GetSelectedGameMode()) + 1);
+        SceneLoaderManager?.LoadSingleScene(((int)GetSelectedGameMode() + 1));
     }
 
     public void UnlockNextGameMode() {
@@ -143,7 +157,7 @@ public sealed class CustomGameManager : GameManager
     }
 
     public Gamemode GetSelectedGameMode() {
-        return (Gamemode)PlayerPrefs.GetInt(UNLOCKED_GAMEMODE, 0);
+        return (Gamemode)PlayerPrefs.GetInt(SELECTED_GAMEMODE, 0);
     }
 
     public static int GetMaxGameModeCount()

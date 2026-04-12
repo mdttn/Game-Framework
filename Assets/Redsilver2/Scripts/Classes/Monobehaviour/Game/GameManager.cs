@@ -21,7 +21,7 @@ namespace RedSilver2.Framework
         [SerializeField] private InputManager  inputManager;
         [SerializeField] private LightManager  lightManager;
 
-        protected static GameManager instance;
+        protected static GameManager instance = null;
 
 
         public static int GroundLayer
@@ -91,13 +91,22 @@ namespace RedSilver2.Framework
 
         protected virtual void Awake()
         {
-            if (instance != null) { Destroy(gameObject); return; }
+
+
+            if (instance != null) {
+                Debug.Log(instance);
+
+                if (!instance.Equals(this))
+                {
+                    Destroy(gameObject);
+                    return;
+                }           
+            }
+
             instance = this;
             inputManager = GetComponent<InputManager>();
 
             gameObject.name = "GameManager";
-
-            Debug.unityLogger.logEnabled = false;
             DontDestroyOnLoad(instance);
         }
 
@@ -105,10 +114,6 @@ namespace RedSilver2.Framework
         {
             if(gameObject == null) return false;
             return gameObject.layer.Equals(GroundLayer);
-        }
-
-        protected static GameManager GetInstance() {
-            return instance;
         }
     }
 }

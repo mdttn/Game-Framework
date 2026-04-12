@@ -51,11 +51,27 @@ namespace RedSilver2.Framework.Scenes
 
         private void Start()
         {
-            sceneDatas = Resources.FindObjectsOfTypeAll<SceneData>().Distinct()
-                                                        .OrderBy(x => x.SceneIndex)
-                                                        .ToArray();
 
-            foreach (SceneData sceneData in sceneDatas) sceneData.Load();
+        }
+
+        private void OnEnable()
+        {
+            LoadSceneDatas();
+        }
+
+        private void LoadSceneDatas() {
+
+            sceneDatas = Resources.FindObjectsOfTypeAll<SceneData>().Reverse()
+                                            .OrderBy(x => x.SceneIndex)
+                                            .ToArray();
+
+
+            foreach (SceneData sceneData in sceneDatas)
+            {
+                Debug.Log(sceneData);
+                sceneData.Load();
+            }
+
         }
 
         private void OnSingleSceneLoadStarted(int sceneIndex)
@@ -223,10 +239,10 @@ namespace RedSilver2.Framework.Scenes
             if (onSingleSceneLoadStarted != null && action != null)  onSingleSceneLoadProgressChanged.RemoveListener(action);
         }
 
-        public void LoadSingleScene(string sceneName)
+        public void LoadSingleScene(string scenePath)
         {
-            SceneAsset asset = GetSceneData(sceneName);
-            if (asset != null)  LoadSingleScene(asset.Data.SceneName); 
+            SceneAsset asset = GetSceneData(scenePath);
+            if (asset != null)  LoadSingleScene(asset.Data.ScenePath); 
         }
 
         public void LoadSingleScene(int sceneIndex) 
@@ -256,6 +272,8 @@ namespace RedSilver2.Framework.Scenes
 
         public bool CanLoadScene(int sceneIndex)
         {
+            Debug.Log(IsSceneUnlocked(sceneIndex));
+     
             if (!IsLoadingSingleScene && !sceneLoadingOperations.ContainsKey(sceneIndex) 
              && !IsSceneLoaded(sceneIndex) && IsSceneUnlocked(sceneIndex)) return true;
 
@@ -270,7 +288,10 @@ namespace RedSilver2.Framework.Scenes
 
         public bool IsSceneUnlocked(int sceneIndex)
         {
+            return true;
+
             SceneAsset data = GetSceneData(sceneIndex);
+
             if (data != null) return data.IsUnlocked;
             return false;
         }
@@ -281,22 +302,17 @@ namespace RedSilver2.Framework.Scenes
             return true;
         }
 
-        protected void AddSceneAsset(SceneAsset asset)
+        public void AddSceneAsset(SceneAsset asset)
         {
-            if (asset == null || asset.Data == null) return;
+            Debug.Log(asset);
+            if (asset == null) return;
 
-            if (sceneAssetsInstances.Where(x => x.Compare(asset.Data.SceneIndex)).Count() == 0)
+            if (!sceneAssetsInstances.Contains(asset))
             {
-                sceneAssetsInstances.Add(asset);
-                if(onSceneAssetAdded != null) onSceneAssetAdded.Invoke(asset);
-            }
-        }
-        public void AddSceneAsset(SceneAsset[] assets)
-        {
-            if(assets != null)
-            {
-                assets = assets.Where(x => x != null).Distinct().ToArray();
-                foreach(SceneAsset sceneData in assets) AddSceneAsset(sceneData);
+                Debug.Log(sceneAssetsInstances.Count + " Add");
+
+                sceneAssetsInstances?.Add(asset);
+                onSceneAssetAdded?.Invoke(asset);
             }
         }
 
@@ -309,9 +325,9 @@ namespace RedSilver2.Framework.Scenes
             return results.ToArray();
         }
 
-        public SceneAsset   GetSceneData(string sceneName)
+        public SceneAsset GetSceneData(string scenePath)
         {
-            var results = sceneAssetsInstances.Where(x => x.Compare(sceneName));
+            var results = sceneAssetsInstances.Where(x => x.Compare(scenePath));
             if (results.Count() > 0) return results.First();
             return null;
         }
@@ -332,6 +348,7 @@ namespace RedSilver2.Framework.Scenes
 
         public SceneAsset GetSceneData(int sceneIndex)
         {
+
             var results = sceneAssetsInstances.Where(x => x.Compare(sceneIndex));
             if (results.Count() > 0) return results.First();
             return null;

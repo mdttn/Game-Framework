@@ -120,14 +120,14 @@ namespace RedSilver2.Framework.Scenes
                 return SceneManager.GetSceneByBuildIndex(Data.SceneIndex).isLoaded;
             }
 
-            public bool Compare(string sceneName) {
-                if (!string.IsNullOrEmpty(sceneName)) return sceneName.ToLower().Equals(Data.SceneName.ToLower());
+            public bool Compare(string scenePath) {
+                if (!string.IsNullOrEmpty(scenePath)) return scenePath.ToLower().Equals(Data.ScenePath.ToLower());
                 return false;
             }
 
             public bool Compare(int sceneIndex) {
                 if (Data == null) return false;
-                return sceneIndex == Data.SceneIndex;
+                return sceneIndex.Equals(Data.SceneIndex);
             }
 
             public Sprite GetThumbnail(int index) {

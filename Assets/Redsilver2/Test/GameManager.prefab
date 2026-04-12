@@ -49,8 +49,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 8831337903176810600}
-  rotationSpeed: 20
-  distance: 10
 --- !u!1 &552751096841785873
 GameObject:
   m_ObjectHideFlags: 0
@@ -109,6 +107,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -403,9 +402,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4035005125814667637}
-  - component: {fileID: 1909473224166414413}
   - component: {fileID: 2053699307077279143}
   - component: {fileID: 7866516065227655734}
+  - component: {fileID: 2105834022162428111}
+  - component: {fileID: 439736216404018596}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -431,18 +431,6 @@ Transform:
   - {fileID: 4877201901625225536}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1909473224166414413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1716793012066559017}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cd016e737f4e764b8f70e0252569752, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2053699307077279143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -455,6 +443,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 539f5f1dca288bb44bb3c2ffad56ad6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loadingScreens: []
+  defaultLoadingScreenIndex: 0
 --- !u!114 &7866516065227655734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -467,6 +457,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef4bffeda13d7a748973ff9204401c07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2105834022162428111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716793012066559017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2ba0bd66000144595362f24b34cebb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.Inputs.InputManager
+--- !u!114 &439736216404018596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716793012066559017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb737b4c94c11924a98ad3010f7c4057, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomGameManager
+  collectibleNotification: {fileID: 0}
+  sceneLoaderManager: {fileID: 2053699307077279143}
+  subtitleManager: {fileID: 0}
+  settingManager: {fileID: 0}
+  inputManager: {fileID: 2105834022162428111}
+  lightManager: {fileID: 0}
 --- !u!1 &5082940097826369228
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,6 +671,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -1143,6 +1164,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1413,6 +1435,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

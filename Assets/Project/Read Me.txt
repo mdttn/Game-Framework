@@ -1,10 +1,13 @@
 
 
-Font Link: 
+Music Link: 
+https://assetstore.unity.com/packages/audio/ambient/silent-dawn-game-music-vol-1-96702
+
+Footstep VFX Link: 
+https://dryoma.itch.io/footsteps-sounds
+
+Main Font Link: 
 https://www.dafont.com/pixelmix.font
-
-
-Sprite: 
 
 Git Hub Logo:
 https://www.flaticon.com/free-icon/github-logo_25231

@@ -16,10 +16,10 @@ namespace RedSilver2.Framework.Scenes
         [Space]
         [SerializeField] private Sprite[]  sceneThumbnails;
 
-        private string sceneName;
+        private string scenePath;
         private SceneLoaderManager.SceneAsset asset;
 
-        public string SceneName         => sceneName;
+        public string ScenePath         => scenePath;
         public string SceneDescription  => sceneDescription;
         public int    SceneIndex        => sceneIndex;
 
@@ -29,19 +29,20 @@ namespace RedSilver2.Framework.Scenes
         private void OnValidate() {
             int sceneCount = SceneManager.sceneCountInBuildSettings;
 
-            if (sceneCount > 0) {
+            if (sceneCount >= 0) {
                 sceneIndex = Mathf.Clamp(sceneIndex, 0, sceneCount - 1);
-                sceneName = SceneManager.GetSceneByBuildIndex(sceneIndex).name;
+                scenePath = SceneUtility.GetScenePathByBuildIndex(sceneIndex);
             }
             else {
                 sceneIndex = -1;
-                sceneName = string.Empty;
+                scenePath = string.Empty;
             }
          
         }
 
         public void Load() {
             this.asset = SceneLoaderManager.SceneAsset.CreateAndGet(this, defaultSceneUnlockedState);
+
             //string sceneAssetPath = Application.persistentDataPath + $"/Saves/{0}/Scene_Datas";
             //if(!Directory.Exists(sceneAssetPath)) { Directory.CreateDirectory(sceneAssetPath); }
 

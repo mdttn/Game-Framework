@@ -25,14 +25,17 @@ public class EndGame : MonoBehaviour
 
     private void Start()
     {
-
         SetPlayerHealthEvent();
-
-
-        // Do something here
+        SetOrbCollectedEvent();
 
         uiDisplayer?.SetActive(false);
         if (messageDisplayer != null) messageDisplayer.gameObject.SetActive(false);
+    }
+
+    private void OnDisable()
+    {
+        var gameManager = CustomGameManager.GetInstance();
+        gameManager?.RemoveOnOrbCollectedListener(OnOrbCollected);
     }
 
     private void SetPlayerHealthEvent()
@@ -50,11 +53,14 @@ public class EndGame : MonoBehaviour
     }
 
     private void SetOrbCollectedEvent() {
-
+        var gameManager = CustomGameManager.GetInstance();
+        gameManager?.AddOnOrbCollectedListener(OnOrbCollected);
     }
 
     private void OnOrbCollected(int count) {
-
+        if (count == 0) {
+            StartCoroutine(ApplyGameResults(winGameTexts, true));
+        }
     }
 
     private string GetRandomText(string[] texts)
@@ -72,6 +78,7 @@ public class EndGame : MonoBehaviour
             messageDisplayer.gameObject.SetActive(true);
         }
 
+        if (wonGame) CustomGameManager.GetInstance()?.UnlockNextGameMode();
         uiDisplayer?.SetActive(true);
 
         yield return new WaitForSeconds(1.5f);

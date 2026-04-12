@@ -59,7 +59,7 @@ namespace RedSilver2.Framework.Player
                 return;
             }
 
-            rotation += Time.deltaTime * Input.x * defaultSensitivityX;
+            rotation += Time.deltaTime * Input.x * OptionsMenu.GetSensitivityX();
         }
 
         protected virtual void UpdateHeadRotation(Transform head, ref float rotation)
@@ -69,7 +69,7 @@ namespace RedSilver2.Framework.Player
                 return;
             }
 
-            rotation += Time.deltaTime * -Input.y * defaultSensitivityY;
+            rotation += Time.deltaTime * -Input.y * OptionsMenu.GetSensitivityY();
         }
 
         public void SetOriginalHeadRotation(Vector3 rotation)

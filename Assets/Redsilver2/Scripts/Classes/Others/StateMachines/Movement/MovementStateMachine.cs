@@ -79,7 +79,7 @@ namespace RedSilver2.Framework.StateMachines {
                 }
             });
 
-            AddOnLateUpdateListener(() => { Debug.Log("?? " + moveSpeed); Move(); });
+            AddOnLateUpdateListener(() => { Move(); });
             AddOnGroundTagChangedListener(value => { groundTag = value; });
 
         }

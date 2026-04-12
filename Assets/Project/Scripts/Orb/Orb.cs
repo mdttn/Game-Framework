@@ -4,7 +4,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(AudioSource))]
 public class Orb : MonoBehaviour
 {
-    [SerializeField] private UnityEvent onCollected;
+    private UnityEvent onCollected;
   
     private Collider _collider;
     private MeshRenderer _renderer;
@@ -20,8 +20,11 @@ public class Orb : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
        gameManager?.AddOrb(this);
+        onCollected = new UnityEvent();
 
-        onCollected?.AddListener(() => {
+        if(_collider != null) _collider.isTrigger = true;
+
+       onCollected?.AddListener(() => {
             if (_collider != null) _collider.enabled = false;
             if (_renderer != null) _renderer.enabled = false;
         });

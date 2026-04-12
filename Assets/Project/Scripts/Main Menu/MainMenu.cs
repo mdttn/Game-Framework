@@ -39,9 +39,8 @@ public class MainMenu : MonoBehaviour
 
     private void InitializePlayButton()
     {
-        UIHandler.InitializeButton(creditsButton, () =>
-        {
-
+        UIHandler.InitializeButton(creditsButton, () => {
+            CustomGameManager.GetInstance()?.GetSelectedGameMode();
         }, "PLAY");
     }
 
@@ -72,8 +71,7 @@ public class MainMenu : MonoBehaviour
 
     private void InitializeHintsButton()
     {
-        UIHandler.InitializeButton(hintsButton, () =>
-        {
+        UIHandler.InitializeButton(hintsButton, () => {
 
         }, "?");
     }

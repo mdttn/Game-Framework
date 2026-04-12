@@ -8,7 +8,7 @@ public class QuitLevel : MonoBehaviour
     private void Update()
     {
         if(InputManager.GetKeyDown(KeyboardKey.Escape) || InputManager.GetKeyDown(GamepadButton.Start)){
-            GameManager.SceneLoaderManager?.LoadScene(0);
+            GameManager.SceneLoaderManager?.LoadSingleScene(0);
             CameraController.SetCursorVisibility(true);
         }
     }
