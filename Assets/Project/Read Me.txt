@@ -1,4 +1,14 @@
 
+Controls: 
+[A] Move Left / [D] Move Right / [W] Move Up / [D] Move Down / [R] Radar  
+
+How to use:
+
+Editor:
+Double Click On The Package -> Import -> Click on File (Top left of editor) -> Build and run (Make sure Main Menu and Map01 Scenes are setup correctly in order)
+
+Build:
+Locate the build -> Double click on the exe to play the game 
 
 
 Flashlight Model: 

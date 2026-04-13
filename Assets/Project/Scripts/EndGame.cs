@@ -17,9 +17,11 @@ public class EndGame : MonoBehaviour
     [SerializeField] private string[] winGameTexts;
 
     private UnityEvent<bool> onGameResultShown;
+    private bool isGameEnded;
 
     private void Awake()
     {
+        isGameEnded = false;
         onGameResultShown = new UnityEvent<bool>();
     }
 
@@ -44,6 +46,7 @@ public class EndGame : MonoBehaviour
             if (PlayerController.Current.TryGetComponent(out PlayerHealth health))  {
                 health.AddOnProgressChangedListener(value => {
                     if (value <= 0) {
+                        if (isGameEnded == true) return;
                         StartCoroutine(ApplyGameResults(gameOverTexts, false));
                         CameraController.SetCursorVisibility(true);
                     }
@@ -58,7 +61,7 @@ public class EndGame : MonoBehaviour
     }
 
     private void OnOrbCollected(int count) {
-        if (count == 0) {
+        if (count == 0 && !isGameEnded) {
             StartCoroutine(ApplyGameResults(winGameTexts, true));
         }
     }
@@ -72,6 +75,7 @@ public class EndGame : MonoBehaviour
     private IEnumerator ApplyGameResults(string[] texts, bool wonGame)
     {
         string text = GetRandomText(texts);
+        isGameEnded = true;
 
         if (messageDisplayer != null) {
             messageDisplayer.text = "<color=" + (wonGame ? "white" : "red") + $">{text}</color>";

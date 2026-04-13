@@ -103,6 +103,7 @@ public sealed class CustomGameManager : GameManager
     {
         if (IsGameModeUnlocked(gamemode)) {
             PlayerPrefs.SetInt(SELECTED_GAMEMODE, (int)gamemode);
+            PlayerPrefs.Save();
             onGamemodeSelected?.Invoke(gamemode);
         }
     }
@@ -133,11 +134,13 @@ public sealed class CustomGameManager : GameManager
         if (PlayerPrefs.HasKey(UNLOCKED_GAMEMODE)) {
             if (PlayerPrefs.GetInt(UNLOCKED_GAMEMODE, 0) > maxIndex)  {
                 PlayerPrefs.SetInt(UNLOCKED_GAMEMODE, maxIndex);
+                PlayerPrefs.Save(); 
                 return;
             }
         }
 
         PlayerPrefs.SetInt(UNLOCKED_GAMEMODE, Mathf.Clamp(index, 0, maxIndex));
+        PlayerPrefs.Save();
     }
 
     public bool WasFirstGameLaunch()

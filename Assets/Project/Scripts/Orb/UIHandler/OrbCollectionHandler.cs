@@ -68,10 +68,15 @@ public class OrbCollectionHandler : MonoBehaviour
 
     private void OnOrbCollected(int orbsLeft)
     {
-        if (orbsLeft <= 0) return;
+        if (orbsLeft <= 0) {
+            if (orbCountDisplayer != null) orbCountDisplayer.gameObject.SetActive(false);
+            return;
+        }
+
         PlayCollectedSound();
 
-        if(updateOrbCountDisplayer != null) 
+
+        if (updateOrbCountDisplayer != null) 
             StopCoroutine(updateOrbCountDisplayer);
 
         updateOrbCountDisplayer = UpdateDisplayerCoroutine(orbsLeft);

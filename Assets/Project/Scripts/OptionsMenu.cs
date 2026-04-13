@@ -124,7 +124,7 @@ public class OptionsMenu : MonoBehaviour {
         slider.minValue = minValue;
         
         slider.maxValue = maxValue;
-        slider.value = PlayerPrefs.GetFloat(keyName, Mathf.Lerp(minValue, maxValue, 0.5f));
+        slider.value = PlayerPrefs.HasKey(keyName) ? PlayerPrefs.GetFloat(keyName) : 50f;
     }
 
     private void InitializeVolumeSlider()
@@ -144,7 +144,7 @@ public class OptionsMenu : MonoBehaviour {
         volumeSlider.minValue = 0f;
        
         volumeSlider.maxValue = 100f;
-        volumeSlider.value = PlayerPrefs.GetFloat(VOLUME_KEY_NAME, Mathf.Lerp(0f, 100f, PlayerPrefs.GetFloat(VOLUME_KEY_NAME, 100f)));
+        volumeSlider.value = PlayerPrefs.HasKey(VOLUME_KEY_NAME) ? PlayerPrefs.GetFloat(VOLUME_KEY_NAME) : 50f;
     }
 
     private string[] GetStringResolutions(Resolution[] resolutions)
@@ -171,10 +171,10 @@ public class OptionsMenu : MonoBehaviour {
 
     public static float GetSensitivityX()
     {
-        return PlayerPrefs.GetFloat(SENSITIVITY_X_KEY_NAME, 50f);
+        return PlayerPrefs.HasKey(SENSITIVITY_X_KEY_NAME) ? PlayerPrefs.GetFloat(SENSITIVITY_X_KEY_NAME) : 50f;
     }
 
     public static float GetSensitivityY(){
-        return PlayerPrefs.GetFloat(SENSITIVITY_Y_KEY_NAME, 50f);
+        return PlayerPrefs.HasKey(SENSITIVITY_Y_KEY_NAME) ? PlayerPrefs.GetFloat(SENSITIVITY_Y_KEY_NAME) : 50f;
     }
 }
