@@ -410,8 +410,6 @@ GameObject:
   - component: {fileID: 2651787248791185710}
   - component: {fileID: 1983206791088800455}
   - component: {fileID: 8415747201256911513}
-  - component: {fileID: 2885052537291958369}
-  - component: {fileID: 1882534593439908314}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -557,41 +555,6 @@ MonoBehaviour:
   defaultSensitivityY: 5
   minRotationX: -45
   maxRotationX: 45
---- !u!114 &2885052537291958369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4749665884638100924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bbc428314a9a4f48bc41d3097a32315, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.Interactions.FPSInteractionHandlerModule
-  interactionRange: 5
-  pressInteractionSettings: {fileID: 0}
-  holdInteractionSettings: {fileID: 0}
-  releaseInteractionSettings: {fileID: 0}
-  allowedInteractionTypes: 
---- !u!114 &1882534593439908314
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4749665884638100924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d89ca475ad95c204da03155a03e1117a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.Player.Inventories.EquippableInventory
-  defaultItems:
-  - {fileID: 0}
-  allowDuplicateItems: 0
-  allowedItemTypes: 00000000
-  defaultSlotsCount: 0
-  leftHand: {fileID: 5987078452483140488}
 --- !u!1 &4904518419978987977
 GameObject:
   m_ObjectHideFlags: 0
@@ -834,6 +797,7 @@ Transform:
   m_Children:
   - {fileID: 5067071198072617189}
   - {fileID: 3928900074691020798}
+  - {fileID: 6897132123973476459}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &1591337009482166694
@@ -1066,6 +1030,96 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HurtSFX
   clips: []
+--- !u!1 &6006220835660587904
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6897132123973476459}
+  - component: {fileID: 5338429656830023388}
+  - component: {fileID: 8817796876263157778}
+  m_Layer: 12
+  m_Name: Player_Icon_Radar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6897132123973476459
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6006220835660587904}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 6.15, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1633049368063142901}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &5338429656830023388
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6006220835660587904}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &8817796876263157778
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6006220835660587904}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 25094f665a81497459ff42ee3088113f, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &6367757093867503774
 GameObject:
   m_ObjectHideFlags: 0

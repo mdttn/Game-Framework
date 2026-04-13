@@ -1,23 +1,25 @@
+using RedSilver2.Framework.StateMachines;
+using RedSilver2.Framework.StateMachines.Controllers;
 using RedSilver2.Framework.StateMachines.Handlers;
 using UnityEngine;
 
 public abstract class MovementStateExtension : MonoBehaviour
 {
-    protected MovementStateMachineEventHandler eventHandler;
+    protected MovementStateMachineController movementController;
 
-    private void Awake()
+    protected virtual void Start()
     {
-        eventHandler = transform.parent != null ? transform.parent.GetComponentInChildren<MovementStateMachineEventHandler>()
-                                                : GetComponentInChildren<MovementStateMachineEventHandler>();
+        movementController = transform.root != null ? transform.root.GetComponentInChildren<MovementStateMachineController>()
+                                                : GetComponentInChildren<MovementStateMachineController>();
     }
 
-    protected abstract void Start();    
+
+
     protected abstract void OnDisable();
     protected abstract void OnEnable();
-
-    public void SetEventHandler(MovementStateMachineEventHandler eventHandler) {
-        if(eventHandler != this.eventHandler) {
-            this.eventHandler = eventHandler;
-        }
+    private void OnStatMachineAdded(StateMachine stateMachine) {
+        OnStateMachineAdded(stateMachine as MovementStateMachine);
     }
+
+    protected abstract void OnStateMachineAdded(MovementStateMachine stateMachine);
 }

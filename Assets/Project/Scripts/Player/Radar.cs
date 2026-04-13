@@ -41,6 +41,8 @@ public class Radar : MonoBehaviour {
         interactInput = InputManager.GetOrCreatePressInput("RADAR_INTERACT_INPUT", KeyboardKey.R, GamepadButton.ButtonNorth);
         lookInput     = InputManager.GetOrCreateMouseVector2Input("RADAR_LOOK_INPUT", GamepadStick.RightStick);
 
+
+
         interactInput?.Enable();
         isWaitDelayFinished = true;
     }
@@ -76,6 +78,7 @@ public class Radar : MonoBehaviour {
     {
         if (!isWaitDelayFinished || isActivated) return;
         isActivated = true;
+        RenderSettings.fog = false;
 
         CameraController.Disable();
         PlayerController.Disable();
@@ -90,7 +93,8 @@ public class Radar : MonoBehaviour {
 
     public void Disable(float waitDelay) {
         if (!isWaitDelayFinished || !isActivated) return;
-        isActivated = false;  
+        isActivated = false;
+        RenderSettings.fog = true;
         lookInput?.Disable();
 
         CoroutineHandler.StopCoroutine(this, ref openCoroutine);
@@ -108,11 +112,9 @@ public class Radar : MonoBehaviour {
     private void SetCameraPosition(PlayerController controller)
     {
         if (_camera == null || controller == null) return;
-        Vector3 playerPosition = controller.transform.position;
+        _camera.transform.SetParent(controller.transform);
 
-        _camera.transform.position = Vector3.right   * playerPosition.x +
-                             Vector3.up      * (playerPosition.y + height) +
-                             Vector3.forward * playerPosition.z;
+        _camera.transform.localPosition = Vector3.zero + Vector3.up * height;
     }
 
     private void SetCameraRotation(PlayerController controller)
@@ -224,7 +226,7 @@ public class Radar : MonoBehaviour {
         while (lookInput != null)
         {
             if (!lookInput.IsEnabled) break;
-            transform.localEulerAngles += (Time.deltaTime * lookInput.Value.x * 5f) *  Vector3.up;
+            _camera.transform.localEulerAngles += (Time.deltaTime * lookInput.Value.x * 5f) * Vector3.up;
 
             yield return null;
         }

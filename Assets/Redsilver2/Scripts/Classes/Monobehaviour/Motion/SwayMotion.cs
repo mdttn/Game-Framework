@@ -1,3 +1,4 @@
+using RedSilver2.Framework.StateMachines;
 using UnityEngine;
 
 public class SwayMotion : MovementStateExtension
@@ -20,9 +21,15 @@ public class SwayMotion : MovementStateExtension
 
     protected override void Start()
     {
+        base.Start();
         SetOriginal(transform.localPosition);
-        eventHandler?.AddOnMoveListener(OnUpdate);
-        eventHandler?.AddOnLateUpdateListener(OnLateUpdate);
+
+        if (movementController != null)
+        {
+            MovementStateMachine stateMachine = movementController.GetStateMachine() as MovementStateMachine;
+            stateMachine?.AddOnMovedListener(OnUpdate);
+            stateMachine?.AddOnLateUpdateListener(OnLateUpdate);
+        }
     }
 
     public void SetOriginal(Vector3 localPosition)
@@ -86,13 +93,26 @@ public class SwayMotion : MovementStateExtension
 
     protected override void OnDisable()
     {
-        eventHandler?.RemoveOnMoveListener(OnUpdate);
-        eventHandler?.RemoveOnLateUpdateListener(OnLateUpdate);
+        if (movementController != null)
+        {
+            MovementStateMachine stateMachine = movementController.GetStateMachine() as MovementStateMachine;
+            stateMachine?.RemoveOnMovedListener(OnUpdate);
+            stateMachine?.RemoveOnLateUpdateListener(OnLateUpdate);
+        }
     }
 
     protected override void OnEnable()
     {
-        eventHandler?.AddOnMoveListener(OnUpdate);
-        eventHandler?.AddOnLateUpdateListener(OnLateUpdate);
+        if (movementController != null)
+        {
+            MovementStateMachine stateMachine = movementController.GetStateMachine() as MovementStateMachine;
+            stateMachine?.AddOnMovedListener(OnUpdate);
+            stateMachine?.AddOnLateUpdateListener(OnLateUpdate);
+        }
+    }
+
+    protected override void OnStateMachineAdded(MovementStateMachine stateMachine)
+    {
+        throw new System.NotImplementedException();
     }
 }

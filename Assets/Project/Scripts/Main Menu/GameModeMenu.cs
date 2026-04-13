@@ -19,15 +19,12 @@ public class GameModeMenu : MonoBehaviour
     private CustomGameManager gameManager;
 
     private Button[] buttons;
-    private MainMenu mainMenu;
 
     private UnityEvent<Button> onSelected;
     private UnityEvent<Button> onDeselected;
 
     private void Awake()
     {
-        mainMenu = FindAnyObjectByType<MainMenu>();
-
         onSelected   = new UnityEvent<Button>();
         onDeselected = new UnityEvent<Button>();
 

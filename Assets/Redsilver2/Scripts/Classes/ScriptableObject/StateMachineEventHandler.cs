@@ -9,9 +9,9 @@ namespace RedSilver2.Framework.StateMachines.Handlers
         private   StateMachineController controller;
         protected StateMachine           stateMachine;
 
-        protected virtual void Start() {
-            controller = transform.parent == null ? GetComponentInChildren<StateMachineController>()
-                                                 : transform.parent.GetComponentInChildren<StateMachineController>();
+        protected virtual void Awake() {
+       
+            controller = GetComponent<StateMachineController>();
 
             controller?.AddOnStateMachineChanged(SetStateMachine);
             SetStateMachine(controller.StateMachine);

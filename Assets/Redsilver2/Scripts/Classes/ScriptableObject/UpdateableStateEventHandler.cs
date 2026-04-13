@@ -22,10 +22,5 @@ namespace RedSilver2.Framework.StateMachines.Handlers
         {
             (stateMachine as UpdateableStateMachine)?.RemoveOnLateUpdateListener(action);
         }
-
-        protected override void SetStateMachine(StateMachine stateMachine) {
-            if(stateMachine is UpdateableStateMachine)
-                 base.SetStateMachine(stateMachine);
-        }
     }
 }

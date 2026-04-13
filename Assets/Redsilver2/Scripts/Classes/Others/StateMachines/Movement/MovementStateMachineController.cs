@@ -1,4 +1,5 @@
 using RedSilver2.Framework.StateMachines.Handlers;
+using RedSilver2.Framework.StateMachines.States.Conditions;
 using UnityEngine;
 
 namespace RedSilver2.Framework.StateMachines.Controllers
@@ -16,6 +17,22 @@ namespace RedSilver2.Framework.StateMachines.Controllers
         {
             if(stateMachine is MovementStateMachine)
                  base.SetStateMachine(stateMachine);
+        }
+
+
+        public bool IsMoving()
+        {
+            return MovementMoveCondition.IsMoving(GetStateMachine() as MovementStateMachine);
+        }
+
+        public bool IsRunning()
+        {
+            return MovementRunCondition.IsRunning(GetStateMachine() as MovementStateMachine);
+        }
+
+        public bool IsGrounded()
+        {
+            return MovementGroundCondition.IsGrounded(GetStateMachine() as MovementStateMachine);
         }
     }
 }

@@ -1,3 +1,4 @@
+using Mirror.BouncyCastle.Tsp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,7 +86,12 @@ public class OptionsMenu : MonoBehaviour {
             Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreenMode);
 
             PlayerPrefs.SetInt(RESOLUTION_KEY_NAME, value);
+            PlayerPrefs.Save();
         }, GetStringResolutions(resolutions), PlayerPrefs.GetInt(RESOLUTION_KEY_NAME, 0));
+
+        var res = resolutions[Mathf.Clamp(PlayerPrefs.GetInt(RESOLUTION_KEY_NAME, 0), 0, resolutions.Length - 1)];
+        Screen.SetResolution(res.width, res.height, Screen.fullScreenMode);
+
     }
 
     private void InitializeFullScreenModeDropdown()
@@ -93,10 +99,13 @@ public class OptionsMenu : MonoBehaviour {
         FullScreenMode[] fullScreenModes = (FullScreenMode[])Enum.GetValues(typeof(FullScreenMode));
 
         UIHandler.InitializeDropdown(fullscreenModeDropdown, value => {
-            FullScreenMode fullScreenMode = fullScreenModes[value];
-            Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, fullScreenMode);
-            PlayerPrefs.SetInt(FULLSCREEN_MODE_KEY_NAME, (int)fullScreenMode);
+
+            Screen.fullScreenMode = (FullScreenMode)value;
+            PlayerPrefs.SetInt(FULLSCREEN_MODE_KEY_NAME, value);
+            PlayerPrefs.Save();
         }, GetStringResolutions(fullScreenModes), PlayerPrefs.GetInt(FULLSCREEN_MODE_KEY_NAME, 0));
+
+        Screen.fullScreenMode = (FullScreenMode)PlayerPrefs.GetInt(FULLSCREEN_MODE_KEY_NAME, 0);
     }
 
     private void InitializeSensitivitySlider(Slider slider, TextMeshProUGUI displayer, string keyName, float minValue, float maxValue)
@@ -108,6 +117,7 @@ public class OptionsMenu : MonoBehaviour {
         slider.onValueChanged.AddListener(value => {
             if(displayer != null) displayer.text = value.ToString();
             PlayerPrefs.SetFloat(keyName, value);
+            PlayerPrefs.Save();
         });
 
         slider.wholeNumbers = true;
@@ -127,13 +137,14 @@ public class OptionsMenu : MonoBehaviour {
             if (volumeDisplayer != null) volumeDisplayer.text = value.ToString();
             AudioListener.volume = Mathf.Clamp01(value / volumeSlider.maxValue);
             PlayerPrefs.SetFloat(VOLUME_KEY_NAME, AudioListener.volume);
+            PlayerPrefs.Save();
         });
 
         volumeSlider.wholeNumbers = true;
         volumeSlider.minValue = 0f;
        
         volumeSlider.maxValue = 100f;
-        volumeSlider.value = PlayerPrefs.GetFloat(VOLUME_KEY_NAME, Mathf.Lerp(0f, 100f, PlayerPrefs.GetFloat(VOLUME_KEY_NAME, 1f)));
+        volumeSlider.value = PlayerPrefs.GetFloat(VOLUME_KEY_NAME, Mathf.Lerp(0f, 100f, PlayerPrefs.GetFloat(VOLUME_KEY_NAME, 100f)));
     }
 
     private string[] GetStringResolutions(Resolution[] resolutions)

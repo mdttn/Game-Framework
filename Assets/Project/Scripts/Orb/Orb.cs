@@ -1,32 +1,24 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(AudioSource))]
 public class Orb : MonoBehaviour
 {
     private UnityEvent onCollected;
   
     private Collider _collider;
-    private MeshRenderer _renderer;
     private CustomGameManager gameManager;
-
-    private AudioSource audioSource;
 
     private void Awake() {
         gameManager = CustomGameManager.GetInstance();
+        _collider = GetComponent<Collider>();
 
-        _collider   = GetComponent<Collider>();   
-        _renderer   = GetComponent<MeshRenderer>();
-        audioSource = GetComponent<AudioSource>();
-
-       gameManager?.AddOrb(this);
+        gameManager?.AddOrb(this);
         onCollected = new UnityEvent();
 
         if(_collider != null) _collider.isTrigger = true;
 
        onCollected?.AddListener(() => {
-            if (_collider != null) _collider.enabled = false;
-            if (_renderer != null) _renderer.enabled = false;
+           gameObject.SetActive(false);
         });
     }
 

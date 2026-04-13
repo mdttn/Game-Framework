@@ -9,11 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2422941121726193902}
-  - component: {fileID: 4941073316229621614}
-  - component: {fileID: 3361464839427669276}
-  - component: {fileID: 8793932231887304381}
-  - component: {fileID: 5776421470910204541}
-  - component: {fileID: 4485072942136738487}
   - component: {fileID: 7797138633406604959}
   - component: {fileID: 7146381032742956551}
   m_Layer: 0
@@ -39,96 +34,6 @@ Transform:
   - {fileID: 2477016634486749276}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 10, y: 10, z: 0}
---- !u!114 &4941073316229621614
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3413867596982251813}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a86f8173d0c77cf418057714777c7df9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.Interactions.PressInteractionModule
-  interactionName: 
-  type: 3
-  onInteract:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &3361464839427669276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3413867596982251813}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1b04e5353a5962419615a48c16381eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.Interactions.Items.Flashlight
-  data: {fileID: 0}
-  equippedAnimationData:
-    animationName: Equip_Flashlight
-    crossFadeTime: 0.1
-    timestampEvents: []
-  unequippedAnimationData:
-    animationName: Unequip_Flashlight
-    crossFadeTime: 0.1
-    timestampEvents: []
-  parentRotation: {x: 0, y: 0, z: 0}
-  parentPosition: {x: 0, y: 0, z: 0}
---- !u!114 &8793932231887304381
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3413867596982251813}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 975b02a1daa17b04a821624d814888c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.Items.TurnOffFlashlightAction
-  actionDelay: 0.5
-  settings: {fileID: 0}
-  turnAnimationData:
-    animationName: Turn_Off_Flashlight
-    crossFadeTime: 0.1
-    timestampEvents: []
-  defaultTurnEventTriggerTime: 0.5
---- !u!114 &5776421470910204541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3413867596982251813}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26de67b4405631c40bf00bc55310c8ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.Items.TurnOnFlashlightAction
-  actionDelay: 0.5
-  settings: {fileID: 0}
-  turnAnimationData:
-    animationName: Turn_On_Flashlight
-    crossFadeTime: 0.1
-    timestampEvents: []
-  defaultTurnEventTriggerTime: 0.5
---- !u!114 &4485072942136738487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3413867596982251813}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b30e2259f6a3dec46938c6e41c282a62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RedSilver2.Framework.Items.EquippableItemSwayUpdater
 --- !u!65 &7797138633406604959
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -162,7 +67,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 383dbdc64a957a848b380376d6b32e20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KeyboardPositionSwayMotion
-  settings: {fileID: 0}
   defaultLerpSpeed: 0
   min: {x: 0, y: 0}
   max: {x: 0, y: 0}
@@ -207,7 +111,7 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5067730702148848376}
   m_Enabled: 1
-  serializedVersion: 12
+  serializedVersion: 13
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 200
@@ -259,7 +163,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShapeRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1
@@ -304,7 +208,6 @@ GameObject:
   - component: {fileID: 2477016634486749276}
   - component: {fileID: 9102438733139063726}
   - component: {fileID: 3300566604512852011}
-  - component: {fileID: 2261327792830748196}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -386,25 +289,3 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!95 &2261327792830748196
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7082119004111447934}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 06615fc0c4599814c8da18ea402225db, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0

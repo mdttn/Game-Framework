@@ -1,4 +1,5 @@
 using RedSilver2.Framework;
+using RedSilver2.Framework.Player;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,8 @@ public sealed class CustomGameManager : GameManager
         onOrbCollected     = new UnityEvent<int>();
         onGamemodeSelected = new UnityEvent<Gamemode>();
 
+        if (!Application.isEditor) Debug.unityLogger.logEnabled = false;
+
     }
 
     private void Start() 
@@ -36,19 +39,19 @@ public sealed class CustomGameManager : GameManager
             PlayerPrefs.DeleteKey(SELECTED_GAMEMODE);
         }
 
-        SceneLoaderManager?.AddOnSingleSceneLoadStartedListener(sceneIndex => { orbs?.Clear(); });
+        SceneLoaderManager?.AddOnSingleSceneLoadStartedListener(sceneIndex => {
+            if(sceneIndex == 0) CameraController.SetCursorVisibility(true);
+            orbs?.Clear(); 
+
+        });
         CheckSceneLoad();
     }
 
     private void CheckSceneLoad()
     {
-        Debug.Log("1");
-
         if (WasFirstGameLaunch()) {
-
-            Debug.Log("1.5");
-
             PlayerPrefs.SetInt(FIRST_GAME_OPENING, 1);
+            PlayerPrefs.Save();
             SetUnlockedGameMode(0);
 
             SetGameMode(0);

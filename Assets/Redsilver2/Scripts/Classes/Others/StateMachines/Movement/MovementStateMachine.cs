@@ -88,7 +88,7 @@ namespace RedSilver2.Framework.StateMachines {
             if (action != null) onMoved?.AddListener(action);
         }
 
-        public void RemoveOnMoveListener(UnityAction<Vector2> action) {
+        public void RemoveOnMovedListener(UnityAction<Vector2> action) {
              if(action != null) onMoved?.RemoveListener(action);
         }
 

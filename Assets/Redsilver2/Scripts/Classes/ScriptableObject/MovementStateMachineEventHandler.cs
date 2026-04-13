@@ -11,7 +11,7 @@ namespace RedSilver2.Framework.StateMachines.Handlers
         }
 
         public void RemoveOnMoveListener(UnityAction<Vector2> action) {
-            (stateMachine as MovementStateMachine)?.RemoveOnMoveListener(action);
+            (stateMachine as MovementStateMachine)?.RemoveOnMovedListener(action);
         }
 
         public void AddOnGroundTagChangedListener(UnityAction<string> action)
@@ -24,19 +24,7 @@ namespace RedSilver2.Framework.StateMachines.Handlers
 
         protected override void SetStateMachine(StateMachine stateMachine) {
             if (stateMachine is MovementStateMachine)
-                base.SetStateMachine(stateMachine);
-        }
-
-        public bool IsMoving() {
-            return MovementMoveCondition.IsMoving(stateMachine as MovementStateMachine);
-        }
-
-        public bool IsRunning() {
-            return MovementRunCondition.IsRunning(stateMachine as MovementStateMachine);
-        }
-
-        public bool IsGrounded() {
-            return MovementGroundCondition.IsGrounded(stateMachine as MovementStateMachine);
+                base.SetStateMachine(stateMachine as MovementStateMachine);
         }
     }
 }
