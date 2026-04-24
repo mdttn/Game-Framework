@@ -1,2 +1,6 @@
 # Game-Framework
-Work In Progress
+
+Horror Maze
+
+Projet par Marvin Tanonkou et Thérèse Than Nguyen
+
