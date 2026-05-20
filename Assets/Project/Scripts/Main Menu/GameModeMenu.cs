@@ -1,3 +1,4 @@
+using RedSilver2.Framework.Inputs;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;

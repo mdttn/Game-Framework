@@ -1,0 +1,634 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CoroutineHandler">
+    <Position X="25.75" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Assets\Project\Scripts\Coroutine\CoroutineHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CustomGameManager">
+    <Position X="31.75" Y="40.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>iAAAAAAgQSEAUAAAAAAAQAiANAOQAAAAAAJkAgKAAEA=</HashCode>
+      <FileName>Assets\Project\Scripts\GameManager\CustomGameManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="FIRST_GAME_OPENING" />
+      <Field Name="onGamemodeSelected" />
+      <Field Name="onOrbCollected" />
+      <Field Name="orbs" />
+      <Field Name="SELECTED_GAMEMODE" />
+      <Field Name="UNLOCKED_GAMEMODE" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GameModeMenu">
+    <Position X="58.75" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>pEACoAAAAKAQAAAgIAAAAMCAAQCACEAKAAAAAAEACEA=</HashCode>
+      <FileName>Assets\Project\Scripts\Main Menu\GameModeMenu.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="backButton" />
+      <Field Name="buttonParent" />
+      <Field Name="buttonPrefab" />
+      <Field Name="gameManager" />
+      <Field Name="gameModeButton" />
+      <Field Name="mainPanel" />
+      <Field Name="onDeselected" />
+      <Field Name="onSelected" />
+      <Field Name="selectedButton" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="buttons" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="QuitGame">
+    <Position X="45.25" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAoAAAgAAAAAAAAAAQAAAQAAAAAAAAAAAAAAAAAMA=</HashCode>
+      <FileName>Assets\Project\Scripts\Main Menu\QuitGame.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OrbCollectionHandler">
+    <Position X="65.5" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QkQAACCAADAAAAIgAAMAIAAAAAAAAACIhBAAAAAACEA=</HashCode>
+      <FileName>Assets\Project\Scripts\Orb\UIHandler\OrbCollectionHandler.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="collectedClips" />
+      <Field Name="gameManager" />
+      <Field Name="maxPositionOffsetX" />
+      <Field Name="orbCountDisplayer" />
+      <Field Name="shakeUpdateSpeed" />
+      <Field Name="shakeUpdateTime" />
+      <Field Name="source" />
+      <Field Name="updateOrbCountDisplayer" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Orb">
+    <Position X="61" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAACAAgAAAAAAACBAAAAAAAAAAAAAAQAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Project\Scripts\Orb\Orb.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Radar">
+    <Position X="67.75" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CASAgANBkEIAAgQAICAQyAAAAgAACFAQAIAgADAAAkA=</HashCode>
+      <FileName>Assets\Project\Scripts\Player\Radar.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_camera" />
+      <Field Name="backgroundBottom" />
+      <Field Name="backgroundTop" />
+      <Field Name="cameras" />
+      <Field Name="height" />
+      <Field Name="interactInput" />
+      <Field Name="isActivated" />
+      <Field Name="isWaitDelayFinished" />
+      <Field Name="lookInput" />
+      <Field Name="openCoroutine" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Tutorial">
+    <Position X="54.25" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgQACAIAAAAAAEAAAAAAAAABAAJAAAAACAAAMA=</HashCode>
+      <FileName>Assets\Project\Scripts\Tutorial\Tutorial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UIHandler">
+    <Position X="28" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Assets\Project\Scripts\UI\UIHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EndGame">
+    <Position X="34" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AggAACAAgGJAAAQAEAAAAAAAAAAAAAAIAAyQAAAAAEA=</HashCode>
+      <FileName>Assets\Project\Scripts\EndGame.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HurtSFX">
+    <Position X="70" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAQIAAAAAAAAAAgAgAACIAAAAAAAACAg=</HashCode>
+      <FileName>Assets\Project\Scripts\HurtSFX.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OptionsMenu">
+    <Position X="56.5" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAEIBBASCAAAAgAgACAAACAEVQFCgAAQAABAAAAAAA=</HashCode>
+      <FileName>Assets\Project\Scripts\OptionsMenu.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="backButton" />
+      <Field Name="FULLSCREEN_MODE_KEY_NAME" />
+      <Field Name="fullscreenModeDropdown" />
+      <Field Name="mainPanel" />
+      <Field Name="menuPanel" />
+      <Field Name="optionsButton" />
+      <Field Name="quitGame" />
+      <Field Name="RESOLUTION_KEY_NAME" />
+      <Field Name="resolutionDropdown" />
+      <Field Name="SENSITIVITY_X_KEY_NAME" />
+      <Field Name="SENSITIVITY_Y_KEY_NAME" />
+      <Field Name="sensitivityXDisplayer" />
+      <Field Name="sensitivityXSlider" />
+      <Field Name="sensitivityYDisplayer" />
+      <Field Name="sensitivityYSlider" />
+      <Field Name="VOLUME_KEY_NAME" />
+      <Field Name="volumeDisplayer" />
+      <Field Name="volumeSlider" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PlayMenu">
+    <Position X="29.5" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAgAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Project\Scripts\PlayMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QuitLevel">
+    <Position X="63.25" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Project\Scripts\QuitLevel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Stalker">
+    <Position X="22.75" Y="53.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AwAAAAAAESAAAQAAgAAgQAAAAAABHAAQCAAAAAEAAAA=</HashCode>
+      <FileName>Assets\Project\Scripts\Stalker.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="currentAggressionTime" />
+      <Field Name="damageAmount" />
+      <Field Name="defaultSpeed" />
+      <Field Name="maxAgressionTime" />
+      <Field Name="maxRestDistanceToPlayer" />
+      <Field Name="minAgressionTime" />
+      <Field Name="resetSpots" />
+      <Field Name="runSpeed" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="StalkerStateMachine">
+    <Position X="23.5" Y="26.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQA=</HashCode>
+      <FileName>Assets\Project\Scripts\StalkerStateMachine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedSilver2.Framework.StateMachines.Extensions.MovementSoundData">
+    <Position X="18.25" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAIAAg=</HashCode>
+      <FileName>Assets\Project\Scripts\MovementSoundData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedSilver2.Framework.StateMachines.Extensions.MovementSoundExtension" Collapsed="true">
+    <Position X="74.5" Y="38" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAoAAAAECAAAAIAAAAAAAAAAAAAAAAYAgAAAgEICBA=</HashCode>
+      <FileName>Assets\Project\Scripts\MovementSoundExtension.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedSilver2.Framework.Stats.Extensions.PlayerBloodVFX">
+    <Position X="25" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgCAAAAQAAAAAAAEIAAAgAAAAIAIAAEAAAAg=</HashCode>
+      <FileName>Assets\Project\Scripts\PlayerBloodVFX.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="health" />
+      <Field Name="bloodVFXDisplayer" />
+      <Field Name="originalVFXColor" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RedSilver2.Framework.GameManager">
+    <Position X="31.75" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAJAACAAAgBACAAAAAgAAAAAhQAIAoAAAAaQAAAUQ=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Monobehaviour\Game\GameManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="instance" />
+      <Field Name="AI_LAYER_NAME" />
+      <Field Name="collectibleNotification" />
+      <Field Name="GROUND_LAYER_NAME" />
+      <Field Name="inputManager" />
+      <Field Name="lightManager" />
+      <Field Name="PLAYER_LAYER_NAME" />
+      <Field Name="sceneLoaderManager" />
+      <Field Name="settingManager" />
+      <Field Name="subtitleManager" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UnityEngine.MonoBehaviour">
+    <Position X="48.75" Y="31.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="UnityEngine.ScriptableObject">
+    <Position X="19.5" Y="21.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="UnityEngine.Object">
+    <Position X="49.75" Y="14.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="UnityEngine.Behaviour">
+    <Position X="49.75" Y="29" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="UnityEngine.Component">
+    <Position X="51" Y="21.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RedSilver2.Framework.StateMachines.StateMachine">
+    <Position X="23.5" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAIQaAQAGBUCAAAEACgRAAQQAgQAAAAIoIAACRAI=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Others\StateMachines\StateMachine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Object">
+    <Position X="25.75" Y="14.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RedSilver2.Framework.StateMachines.Controllers.AIMovementController">
+    <Position X="22.75" Y="47" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAUgCAQAAIAAgIBAAAAIAKEAABAIIgAEAAEI=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Monobehaviour\StateMachines\Controllers\AI\AIMovementController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedSilver2.Framework.StateMachines.Controllers.MovementStateMachineController">
+    <Position X="22.75" Y="43.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAgAAAAAAAAAQAAKAAAACAEAAAAACAAAAAA=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Others\StateMachines\Movement\MovementStateMachineController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="GroundCheckRange" />
+      <Property Name="Is2DMovement" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RedSilver2.Framework.StateMachines.Controllers.UpdateableStateMachineController">
+    <Position X="22.75" Y="40.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAiAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Monobehaviour\StateMachines\Controllers\UpdateableStateMachineController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateMachineController">
+    <Position X="22.75" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAiAACAAAAAAAAAAAAACBAAIABAAAAAACEA=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Monobehaviour\StateMachines\Controllers\StateMachineController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="stateMachine" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RedSilver2.Framework.Stats.PlayerHealth">
+    <Position X="72.25" Y="49" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Others\Stats\PlayerHealth.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedSilver2.Framework.Stats.Health">
+    <Position X="72.25" Y="47" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Monobehaviour\Stats\Health.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RedSilver2.Framework.Stats.RegenerativeNumberStat">
+    <Position X="72.25" Y="41.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAIAAQQgQAIAggAAAMDAAAAAAAIARAAAAAAAEAAAFA=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Others\Stats\RegenerativeNumberStat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedSilver2.Framework.Stats.NumberStat">
+    <Position X="72.25" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>UAAAAAAAAEAAAAAABIAAAAQAAAAAACAAIACgAECAAEA=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Others\Stats\NumberStat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MovementStateExtension" Collapsed="true">
+    <Position X="74.5" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACEAAAAAAAAAAAAAAAAAAAAYAAAAAAAACAg=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\ScriptableObject\MovementStateExtension.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnityEngine.UI.Image" Collapsed="true">
+    <Position X="27.25" Y="41" Width="1.5" />
+    <NestedTypes>
+      <Class Name="UnityEngine.UI.Image.Type" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="UnityEngine.UI.Image.FillMethod" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="UnityEngine.UI.Image.OriginHorizontal" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="UnityEngine.UI.Image.OriginVertical" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="UnityEngine.UI.Image.Origin90" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="UnityEngine.UI.Image.Origin180" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="UnityEngine.UI.Image.Origin360" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnityEngine.UI.MaskableGraphic" Collapsed="true">
+    <Position X="27.25" Y="39.5" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnityEngine.UI.Graphic" Collapsed="true">
+    <Position X="27.25" Y="38" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnityEngine.EventSystems.UIBehaviour" Collapsed="true">
+    <Position X="27.25" Y="36.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="UnityEngine.UI.Button" Collapsed="true">
+    <Position X="58" Y="35" Width="1.5" />
+    <NestedTypes>
+      <Class Name="UnityEngine.UI.Button.ButtonClickedEvent" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.String" Collapsed="true">
+    <Position X="46.25" Y="42" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TMPro.TMP_Dropdown" Collapsed="true">
+    <Position X="55.5" Y="34.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnityEngine.GameObject" Collapsed="true">
+    <Position X="81.25" Y="21.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="TMPro.TextMeshProUGUI" Collapsed="true">
+    <Position X="60.75" Y="34.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnityEngine.UI.Slider" Collapsed="true">
+    <Position X="56.5" Y="40.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnityEngine.Transform" Collapsed="true">
+    <Position X="79" Y="29" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="UnityEngine.Events.UnityEvent&lt;T0&gt;" Collapsed="true">
+    <Position X="46.25" Y="43.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="UnityEngine.AudioClip" Collapsed="true">
+    <Position X="61.5" Y="42.25" Width="1.5" />
+    <NestedTypes>
+      <Class Name="UnityEngine.AudioClip.PCMReaderCallback" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="UnityEngine.AudioClip.PCMSetPositionCallback" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Single" Collapsed="true">
+    <Position X="61" Y="40.5" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnityEngine.AudioSource" Collapsed="true">
+    <Position X="65.5" Y="34.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="UnityEngine.Camera" Collapsed="true">
+    <Position X="76.75" Y="31.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RedSilver2.Framework.Inputs.SingleInput" Collapsed="true">
+    <Position X="67.75" Y="43" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAEAAILAABAAAAAAAAAAAIAQAIAAgAAAAIEA=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Others\Input\Handler\Single\SingleInput.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Boolean" Collapsed="true">
+    <Position X="54.25" Y="40.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RedSilver2.Framework.Inputs.Vector2Input" Collapsed="true">
+    <Position X="67.75" Y="35" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAIIAAAAAABAAAAAEAgAAAAAAAAAAgAAAAIAA=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Others\Input\Handler\Vector2\Vector2Input.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.Generic.List&lt;T&gt;" Collapsed="true">
+    <Position X="35.5" Y="46.25" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RedSilver2.Framework.Interactions.Collectibles.CollectibleNotificationManager">
+    <Position X="36.25" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACEACAAEAAAAAAAACEABAAIIAAAAABCgDABAQYAIEA=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Monobehaviour\Game\CollectibleNotificationManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedSilver2.Framework.Inputs.InputManager">
+    <Position X="38.5" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>oqUDABOxhAgFIVgkMBRxMZ9aIQpi5AAAiIYA4gKwIdU=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Others\Input\InputManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="GAMEPAD_ICONS_PATH" />
+      <Field Name="GAMEPAD_ROOT_PATH" />
+      <Field Name="gamepadButtonsControls" />
+      <Field Name="inputConfigurations" />
+      <Field Name="inputHandlers" />
+      <Field Name="KEYBOARD_ICONS_PATH" />
+      <Field Name="KEYBOARD_ROOT_PATH" />
+      <Field Name="keyboardKeysControls" />
+      <Field Name="MOUSE_ICONS_PATH" />
+      <Field Name="MOUSE_ROOT_PATH" />
+      <Field Name="mouseButtonsControls" />
+      <Field Name="XR_CONTROLLER_ROOT_PATH" />
+      <Field Name="XR_ICONS_PATH" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RedSilver2.Framework.Performance.Lights.LightManager">
+    <Position X="40.75" Y="36.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="RedSilver2.Framework.Performance.Lights.LightManager.LightOptimizer" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Redsilver2\Scripts\Classes\Monobehaviour\Light\LightOptimizer.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AACIAAAgCCGAAACAAAGSAAAAAAJAAAAAAAIAAAAQAEA=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Monobehaviour\Light\LightManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="canDebugLightOptimization" />
+      <Field Name="isDynamicallyOptimizingLight" />
+      <Field Name="lightOptimizationDelay" />
+      <Field Name="lightOptimizationDistanceChecks" />
+      <Field Name="ligthOptimizations" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RedSilver2.Framework.Scenes.SceneLoaderManager">
+    <Position X="43" Y="36.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="RedSilver2.Framework.Scenes.SceneLoaderManager.SceneAsset" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Redsilver2\Scripts\Classes\Others\Scene\Assets\SceneAsset.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>CACQAIggACIEIPAAEI0oOBBAAAYkCCUAkCAKACQhCGA=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Monobehaviour\Scene\SceneLoaderManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="currentLoadingScreen" />
+      <Field Name="loadingScreens" />
+      <Field Name="onSceneAssetAdded" />
+      <Field Name="onSceneAssetRemoved" />
+      <Field Name="onSingleSceneLoadFinished" />
+      <Field Name="onSingleSceneLoadProgressChanged" />
+      <Field Name="onSingleSceneLoadStarted" />
+      <Field Name="SCENE_ROOT_PATH" />
+      <Field Name="sceneAssetsInstances" />
+      <Field Name="sceneDatas" />
+      <Field Name="sceneLoadingOperations" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RedSilver2.Framework.Settings.SettingManager" Collapsed="true">
+    <Position X="49.75" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEgOAAQAAAAgAIAAAAEAAAABAAAZEAhCAQAAgAAFg=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Others\Settings\Index\FullScreenModeSetting.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedSilver2.Framework.Subtitles.SubtitleManager" Collapsed="true">
+    <Position X="52" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAQAAEAAACAEAEALAAAABgBEAAAAAAgBAAAAAQAAAkE=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Monobehaviour\Subtitle\SubtitleManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedSilver2.Framework.Scenes.LoadingScreen" Collapsed="true">
+    <Position X="47.5" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAEAAAAAAEAAABAAEAAAkAAAgAAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\Monobehaviour\UI\Scene\LoadingScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnityEngine.Events.UnityEvent&lt;T0, T1&gt;" Collapsed="true">
+    <Position X="46" Y="40.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="RedSilver2.Framework.Scenes.SceneData" Collapsed="true">
+    <Position X="20.5" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgKAAAAACAAAAAgECAAAAEgAAADAAAAAgAAAAAIg=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Classes\ScriptableObject\Scenes\SceneData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.Generic.Dictionary&lt;TKey, TValue&gt;" Collapsed="true">
+    <Position X="35.5" Y="44" Width="1.5" />
+    <NestedTypes>
+      <Class Name="System.Collections.Generic.Dictionary&lt;TKey, TValue&gt;.Enumerator" Collapsed="true">
+        <TypeIdentifier />
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="System.Collections.Generic.Dictionary&lt;TKey, TValue&gt;.KeyCollection" Collapsed="true">
+        <TypeIdentifier />
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="System.Collections.Generic.Dictionary&lt;TKey, TValue&gt;.ValueCollection" Collapsed="true">
+        <TypeIdentifier />
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnityEngine.Color" Collapsed="true">
+    <Position X="25" Y="34.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Struct Name="RedSilver2.Framework.Performance.Lights.LightOptimizerDistanceCheck" Collapsed="true">
+    <Position X="40.75" Y="34.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAEAAAAAAAAAAAAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Structs\Light\LightOptimizerDistanceCheck.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="RedSilver2.Framework.Stats.IHittable" Collapsed="true">
+    <Position X="83.75" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Redsilver2\Scripts\Interfaces\IHittable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Collections.IEnumerator" Collapsed="true">
+    <Position X="64.75" Y="41.5" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Enum Name="Gamemode" Collapsed="true">
+    <Position X="83.75" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Project\Scripts\Gamemode\Gamemode.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

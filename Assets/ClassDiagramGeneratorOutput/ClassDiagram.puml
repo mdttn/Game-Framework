@@ -1,0 +1,113 @@
+@startuml
+class CoroutineHandler {
+}
+class EndGame {
+    - onGameResultShown : UnityEvent<bool>
+    - isGameEnded : bool
+}
+class CustomGameManager {
+    - onOrbCollected : UnityEvent<int>
+    - onGamemodeSelected : UnityEvent<Gamemode>
+    - orbs : List<Orb>
+    - FIRST_GAME_OPENING : string
+    - UNLOCKED_GAMEMODE : string
+    - SELECTED_GAMEMODE : string
+}
+class HurtSFX {
+    - health : Health
+    - source : AudioSource
+    - currentProgress : float
+}
+class GameModeMenu {
+    - selectedButton : Button
+    - gameManager : CustomGameManager
+    - buttons : Button[]
+    - onSelected : UnityEvent<Button>
+    - onDeselected : UnityEvent<Button>
+}
+class QuitGame {
+    - isUIOpened : bool
+}
+class MovementSoundData {
+    + groundTag : string
+    + moveAudioClips : AudioClip[]
+    + landAudioClips : AudioClip[]
+}
+class MovementSoundExtension {
+    - source : AudioSource
+    - currentData : MovementSoundData
+    - currentMoveSoundTriggerTime : float
+}
+class OptionsMenu {
+    - RESOLUTION_KEY_NAME : string
+    - FULLSCREEN_MODE_KEY_NAME : string
+    - SENSITIVITY_X_KEY_NAME : string
+    - SENSITIVITY_Y_KEY_NAME : string
+    - VOLUME_KEY_NAME : string
+    - isUIOpen : bool
+}
+class Orb {
+    - onCollected : UnityEvent
+    - _collider : Collider
+    - gameManager : CustomGameManager
+}
+class OrbCollectionHandler {
+    - originalPosition : Vector3
+    - updateOrbCountDisplayer : IEnumerator
+    - source : AudioSource
+    - gameManager : CustomGameManager
+}
+class Radar {
+    - interactInput : SingleInput
+    - lookInput : Vector2Input
+    - radarUses : uint
+    - isActivated : bool
+    - isWaitDelayFinished : bool
+    - openCoroutine : IEnumerator
+    - cameras : Camera[]
+}
+class PlayerBloodVFX {
+    - currentVFXUpdateTime : float
+    - originalVFXColor : Color
+    - currentVFXAlpha : float
+    - desiredVFXAlpha : float
+    - health : PlayerHealth
+}
+class PlayMenu {
+}
+class QuitLevel {
+}
+class Stalker {
+    - currentAggressionTime : float
+}
+class StalkerStateMachine {
+    - phaseTriggerDuration : float
+    + PhaseTriggerDuration : float
+}
+class Tutorial {
+    - showMessages : IEnumerator
+}
+class UIHandler {
+}
+MonoBehaviour <|-- EndGame
+GameManager <|-- CustomGameManager
+MonoBehaviour <|-- HurtSFX
+MonoBehaviour <|-- GameModeMenu
+MonoBehaviour <|-- QuitGame
+ScriptableObject <|-- MovementSoundData
+MovementStateExtension <|-- MovementSoundExtension
+MonoBehaviour <|-- OptionsMenu
+MonoBehaviour <|-- Orb
+MonoBehaviour <|-- OrbCollectionHandler
+MonoBehaviour <|-- Radar
+MonoBehaviour <|-- PlayerBloodVFX
+MonoBehaviour <|-- PlayMenu
+MonoBehaviour <|-- QuitLevel
+AIMovementController <|-- Stalker
+StateMachine <|-- StalkerStateMachine
+MonoBehaviour <|-- Tutorial
+GameModeMenu --> CustomGameManager : field
+MovementSoundExtension --> MovementSoundData : field
+Orb --> CustomGameManager : field
+OrbCollectionHandler --> CustomGameManager : field
+@enduml
